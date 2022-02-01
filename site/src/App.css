@@ -1,0 +1,19 @@
+.App {
+}
+
+.App-header {
+  border: 1px solid black;
+  /*background-color: #282c34;*/
+  min-height: 100vh;
+  /*display: flex;*/
+  /*flex-direction: column;*/
+  /*align-items: center;*/
+  /*justify-content: center;*/
+  font-size: calc(10px + 2vmin);
+  /*color: white;*/
+}
+
+.maindiv {
+  border: 1px solid blue;
+  margin-top: 50px;
+}
