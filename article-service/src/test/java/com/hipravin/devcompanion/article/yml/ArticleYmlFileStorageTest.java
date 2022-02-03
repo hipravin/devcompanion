@@ -12,14 +12,14 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ArticleYmlFileRepositoryTest {
+class ArticleYmlFileStorageTest {
     final Path articleSampleRepo = Paths.get("src/test/resources/articles-repo-sample");
 
     @Test
     void testFindAll() {
-        ArticleYmlFileRepository repository = new ArticleYmlFileRepository(articleSampleRepo);
+        ArticleYmlFileStorage repository = new ArticleYmlFileStorage(articleSampleRepo);
 
-        List<ArticleDto> articles = repository.findAll().toList();
+        List<ArticleDto> articles = repository.loadAll().toList();
         assertEquals(3, articles.size());
 
         Set<Long> ids = articles.stream()
@@ -32,15 +32,15 @@ class ArticleYmlFileRepositoryTest {
     @Test
     void testLoadException() {
         assertThrows(UncheckedIOException.class,
-                () -> ArticleYmlFileRepository.loadFromPath(Paths.get("badpath")));
+                () -> ArticleYmlFileStorage.loadFromPath(Paths.get("badpath")));
     }
 
     @Test
     void testLoadFromPath() {
-        Path sampleArticlePath = ArticleYmlFileRepository.findArticleFilesRecursively(articleSampleRepo)
+        Path sampleArticlePath = ArticleYmlFileStorage.findArticleFilesRecursively(articleSampleRepo)
                 .stream().findFirst().orElseThrow();
 
-        ArticleDto sampleArticle = ArticleYmlFileRepository.loadFromPath(sampleArticlePath);
+        ArticleDto sampleArticle = ArticleYmlFileStorage.loadFromPath(sampleArticlePath);
         assertNotNull(sampleArticle);
 
         assertEquals(1000001, sampleArticle.getId());
@@ -50,7 +50,7 @@ class ArticleYmlFileRepositoryTest {
     @Test
     void testFindArticlesRecursively() {
 
-        List<String> articleFiles = ArticleYmlFileRepository.findArticleFilesRecursively(articleSampleRepo)
+        List<String> articleFiles = ArticleYmlFileStorage.findArticleFilesRecursively(articleSampleRepo)
                 .stream()
                 .map(p -> p.getFileName().toString())
                 .toList();

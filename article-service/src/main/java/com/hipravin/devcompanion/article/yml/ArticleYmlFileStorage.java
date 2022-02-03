@@ -1,6 +1,6 @@
 package com.hipravin.devcompanion.article.yml;
 
-import com.hipravin.devcompanion.article.ArticleRepository;
+import com.hipravin.devcompanion.article.ArticleStorage;
 import com.hipravin.devcompanion.article.dto.ArticleDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,19 +16,19 @@ import java.nio.file.PathMatcher;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class ArticleYmlFileRepository implements ArticleRepository {
-    private static final Logger log = LoggerFactory.getLogger(ArticleYmlFileRepository.class);
+public class ArticleYmlFileStorage implements ArticleStorage {
+    private static final Logger log = LoggerFactory.getLogger(ArticleYmlFileStorage.class);
 
     private final Path articlesRootPath;
 
-    public ArticleYmlFileRepository(Path articlesRootPath) {
+    public ArticleYmlFileStorage(Path articlesRootPath) {
         this.articlesRootPath = articlesRootPath;
     }
 
     @Override
-    public Stream<ArticleDto> findAll() {
+    public Stream<ArticleDto> loadAll() {
         return findArticleFilesRecursively(articlesRootPath).parallelStream()
-                .map(ArticleYmlFileRepository::loadFromPath);
+                .map(ArticleYmlFileStorage::loadFromPath);
     }
 
     static ArticleDto loadFromPath(Path articleFilePath) {
@@ -37,18 +37,22 @@ public class ArticleYmlFileRepository implements ArticleRepository {
                 new FileReader(articleFilePath.toFile(), StandardCharsets.UTF_8))) {
             return yaml.load(reader);
         } catch (IOException e) {
+            log.error("failed to load article from path '{}'", articleFilePath, e);
             throw new UncheckedIOException(e);
         }
     }
 
     static List<Path> findArticleFilesRecursively(Path root) {
+        log.debug("loading articles from path '{}'", root.toString());
+
         PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:**.yml");
-        try {
-            return Files.walk(root)
+        try (Stream<Path> walkRoot = Files.walk(root)) {
+            return walkRoot
                     .filter(Files::isRegularFile)
                     .filter(matcher::matches)
                     .toList();
         } catch (IOException e) {
+            log.error("failed to load articles from path '{}'", root, e);
             throw new UncheckedIOException(e);
         }
     }

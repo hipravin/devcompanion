@@ -10,6 +10,16 @@ public class ArticleDto {
 
     private List<CodeBlockDto> codeBlocks = new ArrayList<>();
 
+    public ArticleDto() {
+    }
+
+    public ArticleDto(long id, String title, String description, List<CodeBlockDto> codeBlocks) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.codeBlocks = List.copyOf(codeBlocks);
+    }
+
     public long getId() {
         return id;
     }

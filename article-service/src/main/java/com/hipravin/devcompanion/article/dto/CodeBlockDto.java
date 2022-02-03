@@ -4,6 +4,14 @@ public class CodeBlockDto {
     private String title;
     private String code;
 
+    public CodeBlockDto() {
+    }
+
+    public CodeBlockDto(String title, String code) {
+        this.title = title;
+        this.code = code;
+    }
+
     public String getTitle() {
         return title;
     }
