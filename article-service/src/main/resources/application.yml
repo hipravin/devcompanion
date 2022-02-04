@@ -1,1 +1,22 @@
+spring:
+  profiles:
+    active: local, initrunners
+
+application:
+  articlesMaxResponseLimit: 1000
+  articlesDefaultResponseLimit: 20
+
+## to disable swagger ui on prod
+#springdoc:
+#  swagger-ui:
+#    enabled: false
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+application:
+  acticlesYamlPath: C:/dev/projects/devcompanion/article-service/src/test/resources/articles-repo-sample
 

@@ -1,0 +1,6 @@
+application:
+  acticlesYamlPath: src/test/resources/articles-repo-sample
+
+logging:
+  level:
+    org.springframework.web: DEBUG

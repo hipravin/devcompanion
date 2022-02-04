@@ -32,7 +32,7 @@ class ArticleYmlFileStorageTest {
     @Test
     void testLoadException() {
         assertThrows(UncheckedIOException.class,
-                () -> ArticleYmlFileStorage.loadFromPath(Paths.get("badpath")));
+                () -> ArticleYmlFileStorage.loadFromPath(Paths.get("badpath expected")));
     }
 
     @Test
