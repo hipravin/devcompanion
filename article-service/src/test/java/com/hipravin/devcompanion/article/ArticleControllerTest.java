@@ -54,7 +54,7 @@ class ArticleControllerTest {
     }
 
     ResponseEntity<List<ArticleDto>> search(String query, int limit) {
-        String uri = "http://localhost:" + port + "/api/v1/articles/search?q={query}&&lmt={limit}";
+        String uri = "http://localhost:" + port + "/api/v1/articles/search?q={query}&lmt={limit}";
 
         ResponseEntity<List<ArticleDto>> response = restTemplate.exchange(
                 uri,
@@ -65,4 +65,6 @@ class ArticleControllerTest {
 
         return response;
     }
+
+
 }

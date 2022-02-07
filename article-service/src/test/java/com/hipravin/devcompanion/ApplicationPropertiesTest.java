@@ -1,5 +1,6 @@
 package com.hipravin.devcompanion;
 
+import com.hipravin.devcompanion.config.ApplicationProperties;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

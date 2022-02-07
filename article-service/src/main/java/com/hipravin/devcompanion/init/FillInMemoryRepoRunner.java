@@ -28,9 +28,6 @@ public class FillInMemoryRepoRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         log.info("Filling in-memory from storage started...");
-        //TODO: figure out how to properly handle service init delay since
-        // it can take a while due to in-memory structures preloading
-        Thread.sleep(10_000);
         articleInMemoryRepository.fillFromStorage(articleStorage);
 
         log.info("Filling in-memory from storage - completed.");

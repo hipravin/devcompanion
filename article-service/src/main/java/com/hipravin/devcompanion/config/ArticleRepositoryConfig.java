@@ -1,4 +1,4 @@
-package com.hipravin.devcompanion;
+package com.hipravin.devcompanion.config;
 
 import com.hipravin.devcompanion.article.ArticleStorage;
 import com.hipravin.devcompanion.article.inmemory.ArticleInMemoryRepository;
@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 @Configuration
 @EnableConfigurationProperties({
         ApplicationProperties.class})
-public class ArticleConfig {
+public class ArticleRepositoryConfig {
 
     @Autowired
     ApplicationProperties applicationProperties;

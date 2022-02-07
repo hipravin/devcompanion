@@ -1,4 +1,4 @@
-package com.hipravin.devcompanion;
+package com.hipravin.devcompanion.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
