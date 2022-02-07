@@ -1,4 +1,7 @@
 .App {
+  margin-top: 10px;
+  margin-left: 30px;
+  margin-right: 30px;
 }
 
 .App-header {
@@ -13,7 +16,3 @@
   /*color: white;*/
 }
 
-.maindiv {
-  border: 1px solid blue;
-  margin-top: 50px;
-}

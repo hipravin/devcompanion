@@ -2,31 +2,43 @@ import logo from './logo.svg';
 import './App.css';
 import React from "react";
 import TopNavBar from "./components/TopNavBar/TopNavBar";
+import {searchArticlesApiMethod} from "./lib/api/articles";
+import ArticleList from "./components/ArticleList/ArticleList";
 
 
-class App extends React.Component{
-  constructor(props) {
-    super(props);
-    this.state = {
+class App extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            articles: []
+        };
+    }
 
-    };
-  }
+    componentDidMount() {
+        this.performSearch("");
+    }
 
-  componentDidMount() {
-  }
+    performSearch(searchString) {
+        searchArticlesApiMethod(searchString)
+            .then(res => this.setState({articles: res}))
+            .catch(err => console.error(err));
 
-  render() {
-    return (
-        <div className="App">
-            <TopNavBar/>
+    }
 
-          <div className="maindiv">
+    handleSearch = (searchString) => {
+        this.performSearch(searchString);
+    }
 
-          </div>
-        </div>
-    );
-  }
+    render() {
+        const articles = this.state.articles;
 
+        return (
+            <div className="App">
+                <TopNavBar onSearch={this.handleSearch}/>
+                <ArticleList articles={articles}/>
+            </div>
+        );
+    }
 }
 
 export default App;

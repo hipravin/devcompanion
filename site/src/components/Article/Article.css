@@ -1,0 +1,9 @@
+.Article {
+    margin-top:10px;
+    border: 1px solid black;
+}
+
+.ArticleTitle {
+    font-weight: bolder;
+    font-size: 1.2em;
+}

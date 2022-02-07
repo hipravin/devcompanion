@@ -1,0 +1,8 @@
+.CodeBlock {
+    border: 1px solid blue;
+}
+
+.CodeBlockCode {
+    font-family: monospace;
+    white-space: pre;
+}
