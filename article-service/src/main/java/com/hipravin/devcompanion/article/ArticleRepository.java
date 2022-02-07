@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public interface ArticleRepository<ID, T> {
+public interface ArticleRepository<T, ID> {
     Optional<T> findById(ID articleId);
 
     /**

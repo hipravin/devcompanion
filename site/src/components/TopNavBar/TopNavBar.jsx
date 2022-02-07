@@ -35,8 +35,9 @@ class TopNavBar extends React.Component {
                 <TextField id="topNavSearchInput"
                            onChange={event => this.setSearchString(event.target.value)}
                            onKeyDown={this.keyPress}
-                           label="Outlined" variant="outlined"/>
-                <Button variant="outlined" onClick={this.handleSearch}>Find</Button>
+                           size="small"
+                           variant="outlined"/>
+                <Button variant="outlined" size="big" onClick={this.handleSearch}>Find</Button>
 
             </div>
         );

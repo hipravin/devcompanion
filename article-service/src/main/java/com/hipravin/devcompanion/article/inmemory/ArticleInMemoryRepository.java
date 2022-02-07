@@ -11,7 +11,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-public class ArticleInMemoryRepository implements ArticleRepository<Long, Article> {
+public class ArticleInMemoryRepository implements ArticleRepository<Article, Long> {
 
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock(false);
     private final Lock readLock = readWriteLock.readLock();

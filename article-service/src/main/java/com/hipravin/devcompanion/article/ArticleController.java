@@ -17,10 +17,10 @@ public class ArticleController {
     private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
 
     private final ApplicationProperties applicationProperties;
-    private final ArticleRepository<Long, Article> articleRepository;
+    private final ArticleRepository<Article, Long> articleRepository;
 
     public ArticleController(ApplicationProperties applicationProperties,
-                             ArticleRepository<Long, Article> articleRepository) {
+                             ArticleRepository<Article, Long> articleRepository) {
         this.applicationProperties = applicationProperties;
         this.articleRepository = articleRepository;
     }

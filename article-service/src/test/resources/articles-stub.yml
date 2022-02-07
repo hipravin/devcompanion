@@ -1,0 +1,12 @@
+id: stub
+title: titlestub
+description: descriptionstub
+codeBlocks:
+  - title: block1titlestub
+    code: |-
+      System.out.println("block1codestub");
+      System.out.println("block1codestub");
+  - title: block2titlestub another
+    code: |-
+      System.out.println("block2codestub another");
+      System.out.println("block2codestub another");
