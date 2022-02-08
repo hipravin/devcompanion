@@ -1,0 +1,26 @@
+id: 1000002
+title: Java Spring application.yml config profile groups
+description: Group Spring profiles in order to enforce valid-only profile combinations
+codeBlocks:
+  - title: Define profile groups
+    code: |-
+      spring:
+        profiles:
+          active: local
+          group:
+            dev:
+              - "local"
+              - "swagger"
+              - "runners"
+            prod:
+              - "runners"
+              - "prometheus"
+  - title: Config on-profile
+    code: |-
+      spring:
+        config:
+          activate:
+            on-profile: local
+        redis:
+          port: 6379
+          host: localhost

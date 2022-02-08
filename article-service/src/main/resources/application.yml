@@ -18,6 +18,5 @@ spring:
       on-profile: local
 
 application:
-#  acticlesYamlPath: C:/dev/projects/devcompanion/article-service/src/test/resources/articles-repo-sample
-  acticlesYamlPath: C:/dev/projects/devcompanion/articles-stub-repo
+  acticlesYamlPath: C:/dev/projects/devcompanion/articles-repo
 

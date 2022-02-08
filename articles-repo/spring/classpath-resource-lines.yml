@@ -1,0 +1,17 @@
+id: 1000001
+title: Java Spring load file from classpath as string lines
+description: Using @Value annotation and Resources class
+codeBlocks:
+  - title: Autowire resource
+    code: |-
+      @Value("classpath:somefile.txt")
+      Resource someFileResource;
+  - title: Read lines
+    code: |-
+      private static List<String> readLines(Resource resource) throws IOException {
+        try (BufferedReader reader = new BufferedReader(
+              new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8));
+              Stream<String> lines = reader.lines()) {
+          return lines.collect(Collectors.toList());
+        }
+      }

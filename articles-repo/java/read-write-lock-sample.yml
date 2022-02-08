@@ -1,0 +1,27 @@
+id: 1000003
+title: Java ReadWriteLock in-memory structures protection sample
+description: To be used in in-memory repository backed by non-thread safe collections such as HashMap
+codeBlocks:
+  - title: declaration and wrapper functions
+    code: |-
+      private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock(false);
+      private final Lock readLock = readWriteLock.readLock();
+      private final Lock writeLock = readWriteLock.writeLock();
+
+      <T> T getWithReadLock(Supplier<? extends T> supplier) {
+          readLock.lock();
+          try {
+              return supplier.get();
+          } finally {
+              readLock.unlock();
+          }
+      }
+
+      void updateWithWriteLock(Runnable updateFunction) {
+          writeLock.lock();
+          try {
+              updateFunction.run();
+          } finally {
+              writeLock.unlock();
+          }
+      }
