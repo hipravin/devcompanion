@@ -21,9 +21,11 @@ class Article extends React.Component {
             <div className="Article">
                 <div className="ArticleTitle">{article.title}</div>
                 <div className="ArticleDescription">{article.description}</div>
+
                 <div className="ArticleCodeBlocks">
                     {codeBlockComponents}
                 </div>
+                <hr style={{marginTop: '15px' }}/>
             </div>
         );
     }

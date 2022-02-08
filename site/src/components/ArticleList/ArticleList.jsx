@@ -17,10 +17,20 @@ class ArticleList extends React.Component {
             }
         );
 
+        if(articles.length > 0) {
+            return (
+                <div className="ArticleList">
+                    {articles}
+                </div>
+            );
+        } else {
+            return this.emptyResult();
+        }
+    }
+
+    emptyResult() {
         return (
-            <div className="ArticleList">
-                {articles}
-            </div>
+            <div className="EmptyResult">No results</div>
         );
     }
 }

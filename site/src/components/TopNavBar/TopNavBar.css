@@ -1,7 +1,13 @@
 .TopNavBar {
+    padding: 5px 10px;
+
+    background-color: gainsboro;
+
     display: flex;
     justify-content: flex-start;
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
+
+    gap: 10px;
 }

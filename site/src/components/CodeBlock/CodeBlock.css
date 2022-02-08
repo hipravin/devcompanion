@@ -1,8 +1,19 @@
 .CodeBlock {
-    border: 1px solid blue;
+    /*border: 1px solid blue;*/
+}
+
+.CodeBlockTitle {
+    margin: 15px 18px 5px 18px;
+    font-style: italic;
 }
 
 .CodeBlockCode {
+    margin: 5px 18px 5px 18px;
+    border-left: 3px solid green;
+    padding: 5px 10px;
+
+    font-size: 1em;
+    line-height: 1.5em;
     font-family: monospace;
     white-space: pre;
     background-color: aliceblue;

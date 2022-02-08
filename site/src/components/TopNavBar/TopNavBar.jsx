@@ -1,7 +1,7 @@
 import React from 'react';
 import './TopNavBar.css';
 import {Button, TextField} from "@material-ui/core";
-
+import logo from '../../img/icons8-java-black.svg'
 
 class TopNavBar extends React.Component {
     constructor(props) {
@@ -31,14 +31,14 @@ class TopNavBar extends React.Component {
     render() {
         return (
             <div className="TopNavBar">
-                LOGO
+                <img src={logo} alt="Logo" />
                 <TextField id="topNavSearchInput"
                            onChange={event => this.setSearchString(event.target.value)}
                            onKeyDown={this.keyPress}
                            size="small"
                            variant="outlined"/>
-                <Button variant="outlined" size="big" onClick={this.handleSearch}>Find</Button>
 
+                <Button variant="outlined" size="large" onClick={this.handleSearch}>Find</Button>
             </div>
         );
     }

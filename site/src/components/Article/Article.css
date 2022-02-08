@@ -1,6 +1,15 @@
 .Article {
     margin-top:10px;
-    border: 1px solid black;
+    margin-left: 50px;
+    margin-right: 50px;
+    /*border: 1px solid black;*/
+}
+
+.ArticleDescription {
+    border-left: 3px solid black;
+    padding-left: 10px;
+
+    margin: 5px 18px 5px 18px;
 }
 
 .ArticleTitle {
