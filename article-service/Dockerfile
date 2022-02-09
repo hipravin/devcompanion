@@ -10,4 +10,4 @@ RUN addgroup -S ${group} && adduser -S ${user} -G ${group}
 #USER ${user}
 
 COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","/app.jar","--spring.profiles.active=initrunners"]
+ENTRYPOINT ["java","-jar","/app.jar","--spring.profiles.active=docker,initrunners"]
