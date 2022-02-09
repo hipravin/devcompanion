@@ -43,7 +43,7 @@ public class ArticleYmlFileStorage implements ArticleStorage {
     }
 
     static List<Path> findArticleFilesRecursively(Path root) {
-        log.debug("loading articles from path '{}'", root.toString());
+        log.info("loading articles from path '{}'", root.toString());
 
         PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:**.yml");
         try (Stream<Path> walkRoot = Files.walk(root)) {

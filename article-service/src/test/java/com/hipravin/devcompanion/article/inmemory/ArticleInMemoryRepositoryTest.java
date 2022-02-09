@@ -27,6 +27,12 @@ class ArticleInMemoryRepositoryTest {
     }
 
     @Test
+    void testCount() {
+        long count = articleInMemoryRepository.count();
+        assertEquals(3, count);
+    }
+
+    @Test
     void testFindByIdNotFound() {
         Optional<Article> notFound = articleInMemoryRepository.findById(-1L);
         assertTrue(notFound.isEmpty());

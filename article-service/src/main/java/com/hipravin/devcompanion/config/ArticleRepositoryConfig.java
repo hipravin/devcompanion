@@ -3,6 +3,8 @@ package com.hipravin.devcompanion.config;
 import com.hipravin.devcompanion.article.ArticleStorage;
 import com.hipravin.devcompanion.article.inmemory.ArticleInMemoryRepository;
 import com.hipravin.devcompanion.article.yml.ArticleYmlFileStorage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +16,7 @@ import java.nio.file.Paths;
 @EnableConfigurationProperties({
         ApplicationProperties.class})
 public class ArticleRepositoryConfig {
+    private static final Logger log = LoggerFactory.getLogger(ArticleRepositoryConfig.class);
 
     @Autowired
     ApplicationProperties applicationProperties;

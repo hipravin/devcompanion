@@ -17,4 +17,6 @@ public interface ArticleRepository<T, ID> {
      * should be used in try-with-resources clause in order to properly close Stream
      */
     Stream<T> findAll();
+
+    long count();
 }

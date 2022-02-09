@@ -26,10 +26,10 @@ public class FillInMemoryRepoRunner implements ApplicationRunner {
     }
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         log.info("Filling in-memory from storage started...");
         articleInMemoryRepository.fillFromStorage(articleStorage);
 
-        log.info("Filling in-memory from storage - completed.");
+        log.info("Filling in-memory from storage - completed. Size: {}", articleInMemoryRepository.count());
     }
 }

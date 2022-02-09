@@ -72,6 +72,11 @@ public class ArticleInMemoryRepository implements ArticleRepository<Article, Lon
         // but enforces consistency without necessity to create a copy of entire storage
     }
 
+    @Override
+    public long count() {
+        return getWithReadLock(articlesById::size);
+    }
+
     <T> T getWithReadLock(Supplier<? extends T> supplier) {
         readLock.lock();
         try {

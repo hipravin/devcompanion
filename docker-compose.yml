@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  storage:
+    build: .
+    volumes:
+      - article-repo-volume:/usr/local/article-repo:rw
+
+  article-service:
+    build: ./article-service
+    image: hipravin/devcompanion-article-service
+    ports:
+      - "8080:8080"
+    volumes:
+      - article-repo-volume:/usr/local/article-repo:ro
+    environment:
+      - ARTICLES_REPO_PATH=/usr/local/article-repo
+    depends_on:
+      - storage
+
+  frontend:
+    build: ./site
+    ports:
+      - "3000:3000"
+
+volumes:
+  article-repo-volume:
