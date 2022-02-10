@@ -13,6 +13,7 @@
 
     <modules>
         <module>article-service</module>
+        <module>gateway</module>
     </modules>
 
     <build>

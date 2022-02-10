@@ -6,11 +6,22 @@ services:
     volumes:
       - article-repo-volume:/usr/local/article-repo:rw
 
+  gateway:
+    build: ./gateway
+    image: hipravin/devcompanion-gateway
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+    labels:
+      collect_logs_with_filebeat: "true"
+      decode_log_event_to_json_object: "true"
+
   article-service:
     build: ./article-service
     image: hipravin/devcompanion-article-service
-    ports:
-      - "8080:8080"
+    expose:
+      - "8082"
     volumes:
       - article-repo-volume:/usr/local/article-repo:ro
     environment:
@@ -23,6 +34,7 @@ services:
 
   frontend:
     build: ./site
+    image: hipravin/devcompanion-ui
     ports:
       - "3000:3000"
 

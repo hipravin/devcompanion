@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +25,12 @@ public class ArticleController {
                              ArticleRepository<Article, Long> articleRepository) {
         this.applicationProperties = applicationProperties;
         this.articleRepository = articleRepository;
+    }
+
+    @GetMapping("/log")
+    public ResponseEntity<?> log(HttpServletRequest request, HttpServletResponse response) {
+        System.out.println(request);
+        return ResponseEntity.ok("article-service-log");
     }
 
     @GetMapping("/search")
