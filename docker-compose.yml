@@ -36,7 +36,7 @@ services:
     build: ./site
     image: hipravin/devcompanion-ui
     ports:
-      - "3000:3000"
+      - "80:80"
 
 #ELK works somehow, but lags way too much to work with on laptop :(
 #  elasticsearch:

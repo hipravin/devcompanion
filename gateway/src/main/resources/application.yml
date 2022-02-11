@@ -7,7 +7,7 @@ spring:
       globalcors:
         corsConfigurations:
           '[/**]':
-            allowedOrigins: "http://localhost:3000"
+            allowedOrigins: "*"
             allowedMethods: "*"
             allowedHeaders: "*"
   thymeleaf:
@@ -24,3 +24,23 @@ logging:
   level:
     root: INFO
     org.springframework.web: TRACE
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+app:
+  routes:
+    article-service-uri: "http://localhost:8082"
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+
+app:
+  routes:
+    article-service-uri: "http://article-service:8082"

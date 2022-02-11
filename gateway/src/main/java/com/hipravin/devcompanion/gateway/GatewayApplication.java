@@ -3,20 +3,20 @@ package com.hipravin.devcompanion.gateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.gateway.filter.factory.TokenRelayGatewayFilterFactory;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
-
-import java.util.Arrays;
 
 @Controller
 @SpringBootApplication
+@EnableConfigurationProperties({
+        AppRouteProperties.class})
 public class GatewayApplication {
+
+    @Autowired
+    private AppRouteProperties appRouteProperties;
 
 //    @Autowired
 //    private TokenRelayGatewayFilterFactory filterFactory;
@@ -24,10 +24,10 @@ public class GatewayApplication {
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route("artices", r -> r.path("/api/v1/articles/**")
+                .route("article-service", r -> r.path("/api/v1/articles/**")
 //                        .filters(f -> f.filters(filterFactory.apply())
 //                                .removeRequestHeader("Cookie")) // Prevents cookie being sent downstream
-                        .uri("http://article-service:8082")) //localhost won't work inside docker
+                        .uri(appRouteProperties.getArticleServiceUri()))
                 .build();
     }
 
