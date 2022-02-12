@@ -1,0 +1,16 @@
+id: 8000001
+title: Dockerfile spring boot with profile and non-root user jdk 17
+description: Simple without unpack
+codeBlocks:
+  - title: Dockerfile contents
+    code: |-
+      FROM openjdk:17-alpine
+      ARG user=spring
+      ARG group=spring
+      ARG JAR_FILE=target/*.jar
+
+      RUN addgroup -S ${group} && adduser -S ${user} -G ${group}
+      USER ${user}
+      COPY ${JAR_FILE} app.jar
+
+      ENTRYPOINT ["java","-jar","/app.jar","--spring.profiles.active=docker"]

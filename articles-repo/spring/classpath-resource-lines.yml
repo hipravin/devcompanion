@@ -1,4 +1,4 @@
-id: 1000001
+id: 2000001
 title: Java Spring load file from classpath as string lines
 description: Using @Value annotation and Resources class
 codeBlocks:

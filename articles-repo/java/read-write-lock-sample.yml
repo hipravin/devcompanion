@@ -1,4 +1,4 @@
-id: 1000003
+id: 1000001
 title: Java ReadWriteLock in-memory structures protection sample
 description: To be used in in-memory repository backed by non-thread safe collections such as HashMap
 codeBlocks:

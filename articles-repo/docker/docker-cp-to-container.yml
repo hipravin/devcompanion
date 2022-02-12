@@ -1,0 +1,17 @@
+id: 8000002
+title: Docker copy to named volume with mapped container
+description: |-
+  Given named volume devcompanion_article-repo-volume and container devcompanion_storage_1
+  while image devcompanion_storage is created with mapping: article-repo-volume:/usr/local/article-repo:rw
+codeBlocks:
+  - title: Copies folder articles-repo to /usr/local/article-repo/usr/local/article-repo which means VOLUME/article-repo/... (article-repo folder is created)
+    code: |-
+      docker cp articles-repo devcompanion_storage_1:/usr/local/article-repo/...
+  - title: Copies folder contents of articles-repo to /usr/local/article-repo/usr/local/article-repo which means VOLUME/... (article-repo folder is not created)
+    code: |-
+      docker cp articles-repo/. devcompanion_storage_1:/usr/local/article-repo
+  - title: |-
+      Creates a dummy container that can be used if existing such as devcompanion_storage_1 isn't available.
+      No need to start that container. After copy complete it can be removed.
+    code: |-
+      docker container create --name dummy -v devcompanion_article-repo-volume:/root hello-world

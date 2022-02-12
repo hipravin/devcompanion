@@ -1,0 +1,13 @@
+id: 9000001
+title: React simple script commands create-app generate component npm
+description: Miscellaneous simple commands
+codeBlocks:
+  - title: create new application
+    code: |-
+      npx create-react-app my-app
+  - title: create react component
+    code: |-
+      npx generate-react-cli component MyComponent
+  - title: build application
+    code: |-
+      npm run build
