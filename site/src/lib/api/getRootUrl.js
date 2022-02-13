@@ -1,8 +1,9 @@
 function getRootUrl() {
-  // const dev = process.env.NODE_ENV !== 'production';
-  // const ROOT_URL = dev ? process.env.URL_APP : process.env.PRODUCTION_URL_APP;
+  const dev = process.env.NODE_ENV !== 'production';
 
-  const ROOT_URL = "http://localhost:8080";
+  const DEV_ROOT_URL = "http://localhost:8080";
+  const DOCKER_URL = "";//relative path from same context, because nginx handles reverse proxy
+  const ROOT_URL = dev ?  DEV_ROOT_URL : DOCKER_URL;
   return ROOT_URL;
 }
 
