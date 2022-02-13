@@ -20,11 +20,6 @@ spring:
 #            client-id: ${GITHUB_CLIENT_ID}
 #            client-secret: ${GITHUB_CLIENT_SECRET}
 
-logging:
-  level:
-    root: INFO
-    org.springframework.web: TRACE
-
 ---
 spring:
   config:

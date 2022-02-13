@@ -27,12 +27,6 @@ public class ArticleController {
         this.articleRepository = articleRepository;
     }
 
-    @GetMapping("/log")
-    public ResponseEntity<?> log(HttpServletRequest request, HttpServletResponse response) {
-        System.out.println(request);
-        return ResponseEntity.ok("article-service-log");
-    }
-
     @GetMapping("/search")
     public ResponseEntity<?> findBySearchString(
             @RequestParam(value = "q", required = true) String query,

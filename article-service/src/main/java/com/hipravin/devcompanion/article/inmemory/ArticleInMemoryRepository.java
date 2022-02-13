@@ -2,9 +2,13 @@ package com.hipravin.devcompanion.article.inmemory;
 
 import com.hipravin.devcompanion.article.ArticleRepository;
 import com.hipravin.devcompanion.article.ArticleStorage;
+import com.hipravin.devcompanion.article.ArticleStorageUpdateWatcher;
 import com.hipravin.devcompanion.article.inmemory.model.Article;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -12,23 +16,31 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class ArticleInMemoryRepository implements ArticleRepository<Article, Long> {
+    private static final Logger log = LoggerFactory.getLogger(ArticleInMemoryRepository.class);
 
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock(false);
     private final Lock readLock = readWriteLock.readLock();
     private final Lock writeLock = readWriteLock.writeLock();
 
-    private final Map<Long, Article> articlesById = new HashMap<>();
+    private volatile Map<Long, Article> articlesById = new HashMap<>();
 
-    public void fillFromStorage(ArticleStorage articleStorage) {
+    public synchronized void fillFromStorage(ArticleStorage articleStorage) {
+        log.info("Start loading in-memory from storage, size before: {}", articlesById.size());
+
         Stream<Article> articlesFromStorage = articleStorage.loadAll()
                 .map(Article::fromDto);
 
+        final Map<Long, Article> articleByIdUpdated = new HashMap<>();
+
+        articlesFromStorage
+                .sequential() //storage may return parallel stream, but HashMap is not thread-safe
+                .forEach(a -> articleByIdUpdated.put(a.id(), a));
+
+        //won't switch reference until all readers are completed and write lock is acquired
         updateWithWriteLock(() -> {
-            articlesById.clear();
-            articlesFromStorage
-                    .sequential() //storage may return parallel stream, but HashMap is not thread-safe
-                    .forEach(a -> articlesById.put(a.id(), a));
+            articlesById = articleByIdUpdated;
         });
+        log.info("Finished loading in-memory from storage, size after: {}", articlesById.size());
     }
 
     @Override
