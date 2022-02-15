@@ -14,3 +14,9 @@
   /*color: white;*/
 }
 
+.BeforeSearch {
+  margin: 10px 50px;
+
+  font-weight: bolder;
+  font-size: 1.2em;
+}

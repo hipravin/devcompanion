@@ -34,13 +34,20 @@ public class ArticleInMemoryRepository implements ArticleRepository<Article, Lon
 
         articlesFromStorage
                 .sequential() //storage may return parallel stream, but HashMap is not thread-safe
-                .forEach(a -> articleByIdUpdated.put(a.id(), a));
+                .forEach(a -> putOnDuplicateThrow(articleByIdUpdated, a));//in case of exception on reload keep old reference
 
-        //won't switch reference until all readers are completed and write lock is acquired
+        //won't switch references until all readers are completed and write lock is acquired
         updateWithWriteLock(() -> {
             articlesById = articleByIdUpdated;
         });
         log.info("Finished loading in-memory from storage, size after: {}", articlesById.size());
+    }
+
+    static void putOnDuplicateThrow(Map<Long, Article> map, Article a) {
+        map.merge(a.id(), a, (a1, a2) -> {
+            throw new IllegalArgumentException(
+                    "Duplicate key for article with id: %d, '%s' / '%s'".formatted(a.id(), a1.title(), a2.title()));
+        });
     }
 
     @Override

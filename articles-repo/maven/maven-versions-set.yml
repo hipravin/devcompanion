@@ -1,0 +1,13 @@
+id: 3000003
+title: Maven set project modules versions with versions set
+description: Updates versions for parent and all modules listed in <modules> either with different parent
+codeBlocks:
+  - title: set versions
+    code: |-
+      mvn versions:set -DnewVersion=1.1-SNAPSHOT
+  - title: remove temporary maven files (not a git commit)
+    code: |-
+      mvn versions:commit
+  - title: rollback changes in pom.xml and remove temporary maven files (not a git roolback)
+    code: |-
+      mvn versions:revert

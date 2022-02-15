@@ -1,0 +1,12 @@
+id: 3000002
+title: Maven parent spring boot starter
+description: Check out for newer versions first
+codeBlocks:
+  - title: pom.xml
+    code: |-
+      <parent>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-parent</artifactId>
+          <version>2.6.3</version>
+          <relativePath/> <!-- lookup parent from repository -->
+      </parent>

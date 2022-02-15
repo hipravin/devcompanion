@@ -33,6 +33,7 @@ class TopNavBar extends React.Component {
             <div className="TopNavBar">
                 <img src={logo} alt="Logo" />
                 <TextField id="topNavSearchInput"
+                           autoFocus
                            onChange={event => this.setSearchString(event.target.value)}
                            onKeyDown={this.keyPress}
                            size="small"

@@ -10,12 +10,12 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            articles: []
+            articles: undefined
         };
     }
 
     componentDidMount() {
-        this.performSearch("");
+        // this.performSearch("");
     }
 
     performSearch(searchString) {
@@ -32,11 +32,21 @@ class App extends React.Component {
     render() {
         const articles = this.state.articles;
 
+        const resultView = (articles === undefined)
+            ? this.beforeSearchArticlesLlist()
+            : <ArticleList articles={articles}/>;
+
         return (
             <div className="App">
                 <TopNavBar onSearch={this.handleSearch}/>
-                <ArticleList articles={articles}/>
+                {resultView}
             </div>
+        );
+    }
+
+    beforeSearchArticlesLlist() {
+        return (
+            <div className="BeforeSearch">Have a good copy-paste!</div>
         );
     }
 }

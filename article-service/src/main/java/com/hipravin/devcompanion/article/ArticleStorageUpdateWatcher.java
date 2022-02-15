@@ -47,8 +47,12 @@ public class ArticleStorageUpdateWatcher implements DisposableBean {
     }
 
     void handleStorageUpdate(Set<Path> paths) {
-        log.info("Storage paths updated: {}", paths);
-        articleInMemoryRepository.fillFromStorage(articleStorage);
+        try {
+            log.info("Storage paths updated: {}", paths);
+            articleInMemoryRepository.fillFromStorage(articleStorage);
+        } catch (RuntimeException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     @Override
