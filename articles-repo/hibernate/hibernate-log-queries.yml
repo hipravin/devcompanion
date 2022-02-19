@@ -1,0 +1,26 @@
+id: 4000001
+title: Hibernate JPA log queries with parameters and statistics in spring boot applicaiton
+description: Prints SQL queries to strout or log files, with parameters or without
+codeBlocks:
+  - title: application.yaml
+    code: |-
+      logging:
+        level:
+          org.hibernate.SQL: DEBUG
+          org.hibernate.type.descriptor.sql: TRACE
+
+  - title: application.properties (if not yaml)
+    code: |-
+     logging.level.org.hibernate.SQL=DEBUG
+     logging.level.org.hibernate.type.descriptor.sql=TRACE
+
+  - title: alternative - log to stdout, not recommended. application.properties
+    code: |-
+      spring.jpa.show-sql=true
+      spring.jpa.properties.hibernate.format_sql=true
+
+  - title: hibernate statistics (i.e. 23423000 nanoseconds spent executing...). application.properties
+    code: |-
+      spring.jpa.properties.hibernate.generate_statistics=true
+      logging.level.org.hibernate.stat=DEBUG
+

@@ -1,0 +1,30 @@
+id: 4000002
+title: Java JPA hibernate id column with postgres sequence
+description: >
+  Id values used by hibernate will start from ${start_value-allocation_size}.
+  Thus need to provide start value other than zero to prevent from negative ids.
+  allocationSize allows hibernate to create a bunch of new instances without asking database for new id value each time.
+  Note that 'increment by' should be equal to allocationSize or at least greater than it.
+codeBlocks:
+  - title: JPA table and id column definition
+    code: |-
+      @Entity
+      @Table(name ="EMPLOYEE")
+      public class EmployeeEntity {
+        @Id
+        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "empSeq")
+        @SequenceGenerator(sequenceName = "EMP_ID_SEQ", allocationSize = 1000, name = "empSeq")
+        @Column(name = "ID")
+        private Long id;
+
+  - title: sql to create sequence, table (for reference)
+    code: |-
+      CREATE SEQUENCE EMP_ID_SEQ START WITH 1000 INCREMENT BY 1000;
+
+      CREATE TABLE EMPLOYEE (
+        ID NUMERIC(19,0) NOT NULL PRIMARY KEY,
+        EMAIL VARCHAR(50) NOT NULL,
+        FIRST_NAME VARCHAR(50) NOT NULL,
+        LAST_NAME VARCHAR(50) NOT NULL
+      );
+
