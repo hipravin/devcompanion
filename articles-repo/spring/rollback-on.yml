@@ -1,0 +1,10 @@
+id: 2000003
+title: Java Spring rollback on Exception and RuntimeException
+description: |-
+  By default transaction is being committed when application exception (extends Exception) is throwm and rolled back
+  when system exception (extends RuntimeException) is thrown.
+  To change this use rollbackOn.
+codeBlocks:
+  - title: class or method annotation
+    code: |-
+      @Transactional(rollbackOn = { ApplicationException.class })

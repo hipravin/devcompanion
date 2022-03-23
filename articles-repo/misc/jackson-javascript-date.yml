@@ -1,0 +1,50 @@
+id: 11000001
+title: Java Jackson serialize date ISO 8601 javascript compatible
+description: |-
+  Serialize date the way it can be parsed in javascript without necessity of explicit format or timezone specification.
+  Example: '2022-03-10T07:14:32.173Z'.
+  Code sample: https://github.com/hipravin/samples-timezones
+codeBlocks:
+  - title: Java 8 OffsetDateTime
+    code: |-
+      @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+      private OffsetDateTime meetingTimeOffsetDateTime;
+  - title: old Date
+    code: |-
+      @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+      private Date meetingTimeDate;
+  - title: Java 8 witout jackson (e.g. '2022-03-10T11:48:56.7972052+03:00')
+    code: |-
+      OffsetDateTime now = OffsetDateTime.now();
+      String formatterIso = DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(now);
+  - title: javascript parse
+    code: |-
+      const date = Date.parse(jsonValue);
+      const date2 = Date.parse("2022-03-10T07:14:32.173Z");
+      const dateDate = new Date(date);
+
+  - title: javascript format local timezone (e.g. 'чт 11:31')
+    code: |-
+      function formatLocal(date) {
+          var localDf = new Intl.DateTimeFormat("ru", {
+              weekday: "short",
+              hour: "numeric",
+              minute: "numeric",
+              timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+          });
+
+          return localDf.format(date);
+      }
+  - title: javascript format America/New_York timezone (e.g. 'Thu 3:31 AM')
+    code: |-
+      function formatNy(date) {
+          var nyDf = new Intl.DateTimeFormat("en-US", {
+              weekday: "short",
+              hour: "numeric",
+              minute: "numeric",
+              timeZone: "America/New_York"
+          });
+
+          return nyDf.format(date);
+      }
+
