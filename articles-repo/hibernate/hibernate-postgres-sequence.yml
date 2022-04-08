@@ -5,6 +5,7 @@ description: >
   Thus need to provide start value other than zero to prevent from negative ids.
   allocationSize allows hibernate to create a bunch of new instances without asking database for new id value each time.
   Note that 'increment by' should be equal to allocationSize or at least greater than it.
+  Article updated 1000 -> 100. NUMRIC(19,0) -> BIGSERIAL.
 codeBlocks:
   - title: JPA table and id column definition
     code: |-
@@ -13,18 +14,20 @@ codeBlocks:
       public class EmployeeEntity {
         @Id
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "empSeq")
-        @SequenceGenerator(sequenceName = "EMP_ID_SEQ", allocationSize = 1000, name = "empSeq")
+        @SequenceGenerator(sequenceName = "EMPLOYEE_ID_SEQ", allocationSize = 100, name = "empSeq")
         @Column(name = "ID")
         private Long id;
 
   - title: sql to create sequence, table (for reference)
     code: |-
-      CREATE SEQUENCE EMP_ID_SEQ START WITH 1000 INCREMENT BY 1000;
-
       CREATE TABLE EMPLOYEE (
-        ID NUMERIC(19,0) NOT NULL PRIMARY KEY,
-        EMAIL VARCHAR(50) NOT NULL,
-        FIRST_NAME VARCHAR(50) NOT NULL,
-        LAST_NAME VARCHAR(50) NOT NULL
+        ID BIGSERIAL PRIMARY KEY,
+        EMAIL TEXT NOT NULL,
+        FIRST_NAME TEXT NOT NULL,
+        LAST_NAME TEXT NOT NULL,
+        CONSTRAINT email_length CHECK (length(EMAIL) <= 256),
+        CONSTRAINT first_name_length CHECK (length(FIRST_NAME) <= 512),
+        CONSTRAINT last_name_length CHECK (length(LAST_NAME) <= 512)
       );
 
+      ALTER SEQUENCE EMPLOYEE_ID_SEQ INCREMENT BY 100 RESTART 100;
