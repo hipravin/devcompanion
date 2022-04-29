@@ -45,6 +45,8 @@
                     </schemas>
                     <url>jdbc:postgresql://localhost:5432/playground</url>
                     <user>postgres</user>
+                    <!--  mvn ... -Dflyway.password=s3cret ...-->
+                    <!--<password>s3cret</password> -->
                 </configuration>
                 <dependencies>
                     <dependency>
