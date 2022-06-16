@@ -38,8 +38,7 @@ public class ArticleStorageUpdateWatcher implements DisposableBean {
     public void onApplicationReady(ApplicationReadyEvent applicationReadyEvent) {
         log.info("Application ready, starting watching on dir: '{}'", applicationProperties.getActiclesYamlPath());
 
-        Runnable watchRunnable = FileWatchUtil
-                .watchForUpdatesRunnable(
+        Runnable watchRunnable = FileWatchUtil.watchForUpdatesRunnable(
                         Paths.get(applicationProperties.getActiclesYamlPath()),
                         this::handleStorageUpdate);
 

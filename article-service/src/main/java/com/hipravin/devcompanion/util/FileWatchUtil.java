@@ -48,6 +48,13 @@ public abstract class FileWatchUtil {
                     Thread.currentThread().interrupt();
                 }
             }
+            if(watchService != null) {
+                try {
+                    watchService.close();
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+            }
         };
     }
 

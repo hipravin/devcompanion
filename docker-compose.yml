@@ -5,6 +5,7 @@ services:
     build: .
     volumes:
       - article-repo-volume:/usr/local/article-repo:rw
+    restart: unless-stopped
 
   gateway:
     build: ./gateway
@@ -14,6 +15,7 @@ services:
     labels:
       collect_logs_with_filebeat: "true"
       decode_log_event_to_json_object: "true"
+    restart: unless-stopped
 
   article-service:
     build: ./article-service
@@ -29,13 +31,14 @@ services:
     labels:
       collect_logs_with_filebeat: "true"
       decode_log_event_to_json_object: "true"
+    restart: unless-stopped
 
   frontend:
     build: ./site
     image: hipravin/devcompanion-ui
     ports:
       - "80:80"
-
+    restart: unless-stopped
 #ELK works somehow, but lags way too much to work with on laptop :(
 #  elasticsearch:
 #    image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
