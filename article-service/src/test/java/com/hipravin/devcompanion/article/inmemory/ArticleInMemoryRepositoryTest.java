@@ -80,7 +80,7 @@ class ArticleInMemoryRepositoryTest {
         List<Article> result = articleInMemoryRepository.findByTitleMatches(terms, lmt);
 
         assertEquals(1, result.size());
-        assertEquals(1000001L, result.get(0).id());
+        assertEquals(1000001, result.get(0).id());
     }
 
     @Test
@@ -89,5 +89,25 @@ class ArticleInMemoryRepositoryTest {
 
         List<Article> result = articleInMemoryRepository.findByTitleMatches(terms, lmt);
         assertEquals(2, result.size());
+    }
+
+    @Test
+    void testFindBynyMatches01() {
+        String terms = "spring Bufferedreader";
+
+        List<Article> result = articleInMemoryRepository.findByAnyMatches(terms, lmt);
+
+        assertEquals(1, result.size());
+        assertEquals(1000001, result.get(0).id());
+    }
+
+    @Test
+    void testFindBynyMatches02() {
+        String terms = "t3";
+
+        List<Article> result = articleInMemoryRepository.findByAnyMatches(terms, lmt);
+
+        assertEquals(1, result.size());
+        assertEquals(1000003, result.get(0).id());
     }
 }

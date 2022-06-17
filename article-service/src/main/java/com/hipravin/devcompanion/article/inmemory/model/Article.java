@@ -4,6 +4,7 @@ import com.hipravin.devcompanion.article.dto.ArticleDto;
 import com.hipravin.devcompanion.article.dto.CodeBlockDto;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 public record Article(
         long id,
@@ -24,5 +25,13 @@ public record Article(
                 .toList();
 
         return new ArticleDto(id, title, description, codeBlocks);
+    }
+
+    public Stream<String> textBlocks() {
+        Stream<String> articleFields = Stream.of(title, description);
+        Stream<String> blockFields = codeBlocks.stream()
+                .flatMap(CodeBlock::textBlocks);
+
+        return Stream.concat(articleFields, blockFields);
     }
 }

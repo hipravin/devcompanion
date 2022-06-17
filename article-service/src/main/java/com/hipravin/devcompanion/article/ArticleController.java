@@ -1,15 +1,16 @@
 package com.hipravin.devcompanion.article;
 
-import com.hipravin.devcompanion.config.ApplicationProperties;
 import com.hipravin.devcompanion.article.dto.ArticleDto;
 import com.hipravin.devcompanion.article.inmemory.model.Article;
+import com.hipravin.devcompanion.config.ApplicationProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +21,8 @@ public class ArticleController {
 
     private final ApplicationProperties applicationProperties;
     private final ArticleRepository<Article, Long> articleRepository;
+
+    private static final String TITLE_SEARCH_PREFIX = "title:";
 
     public ArticleController(ApplicationProperties applicationProperties,
                              ArticleRepository<Article, Long> articleRepository) {
@@ -37,8 +40,15 @@ public class ArticleController {
     }
 
     private List<ArticleDto> search(String query, int limit) {
-        List<ArticleDto> result = articleRepository.findByTitleMatches(query, limit)
-                .stream().map(Article::toDto).toList();
+        List<ArticleDto> result;
+
+        if(query.toLowerCase().startsWith(TITLE_SEARCH_PREFIX)) {
+            result = articleRepository.findByTitleMatches(query.substring(TITLE_SEARCH_PREFIX.length()), limit)
+                    .stream().map(Article::toDto).toList();
+        } else {
+            result = articleRepository.findByAnyMatches(query, limit)
+                    .stream().map(Article::toDto).toList();
+        }
 
         return result;
     }

@@ -36,9 +36,11 @@ class App extends React.Component {
             ? this.beforeSearchArticlesLlist()
             : <ArticleList articles={articles}/>;
 
+        const articlesCount = articles ? articles.length : 0;
+
         return (
             <div className="App">
-                <TopNavBar onSearch={this.handleSearch}/>
+                <TopNavBar resultArticlesCount={articlesCount} onSearch={this.handleSearch}/>
                 {resultView}
             </div>
         );

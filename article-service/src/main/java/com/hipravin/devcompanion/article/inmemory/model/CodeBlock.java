@@ -2,6 +2,8 @@ package com.hipravin.devcompanion.article.inmemory.model;
 
 import com.hipravin.devcompanion.article.dto.CodeBlockDto;
 
+import java.util.stream.Stream;
+
 public record CodeBlock(
         String title,
         String code) {
@@ -12,5 +14,9 @@ public record CodeBlock(
 
     public CodeBlockDto toDto() {
         return new CodeBlockDto(title, code);
+    }
+
+    public Stream<String> textBlocks() {
+        return Stream.of(title, code);
     }
 }

@@ -39,8 +39,8 @@ class ArticleControllerTest {
     }
 
     @Test
-    void testFind() {
-        ResponseEntity<List<ArticleDto>> response = search("java", 20);
+    void testFindByTitle() {
+        ResponseEntity<List<ArticleDto>> response = search("title:java", 20);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         List<ArticleDto> articleDtos = response.getBody();
@@ -51,6 +51,20 @@ class ArticleControllerTest {
         assertEquals(2, articleDtos.size());
         assertTrue(articleDtos.stream().allMatch(a -> a.getTitle().toLowerCase().contains("java")));
         assertEquals(Set.of(1000001L,1000002L), ids);
+    }
+    @Test
+    void testFind() {
+        ResponseEntity<List<ArticleDto>> response = search("java @Value", 20);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        List<ArticleDto> articleDtos = response.getBody();
+        Set<Long> ids = articleDtos.stream()
+                .map(ArticleDto::getId)
+                .collect(Collectors.toSet());
+
+        assertEquals(1, articleDtos.size());
+        assertTrue(articleDtos.stream().allMatch(a -> a.getTitle().toLowerCase().contains("java")));
+        assertEquals(Set.of(1000001L), ids);
     }
 
     ResponseEntity<List<ArticleDto>> search(String query, int limit) {

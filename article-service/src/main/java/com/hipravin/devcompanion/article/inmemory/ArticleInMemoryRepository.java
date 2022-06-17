@@ -61,6 +61,11 @@ public class ArticleInMemoryRepository implements ArticleRepository<Article, Lon
         return getWithReadLock(() -> byTitleMatches(titleSearchString, limit));
     }
 
+    @Override
+    public List<Article> findByAnyMatches(String titleSearchString, int limit) {
+        return getWithReadLock(() -> byAnyMatches(titleSearchString, limit));
+    }
+
     private List<Article> byTitleMatches(String titleSearchString, int limit) {
         List<String> termsLowerCase = Arrays.asList(
                 titleSearchString.toLowerCase().split("\\s+"));
@@ -71,10 +76,28 @@ public class ArticleInMemoryRepository implements ArticleRepository<Article, Lon
                 .limit(limit)
                 .toList();
     }
+    private List<Article> byAnyMatches(String titleSearchString, int limit) {
+        List<String> termsLowerCase = Arrays.asList(
+                titleSearchString.toLowerCase().split("\\s+"));
 
+        return articlesById.values()
+                .stream()
+                .filter(article -> containsAllTerms(article.textBlocks(), termsLowerCase))
+                .limit(limit)
+                .toList();
+    }
     private static boolean containsAllTerms(String value, List<String> terms) {
         return terms.stream()
                 .allMatch(value::contains);
+    }
+    private static boolean containsAllTerms(Stream<String> textBlocks, List<String> terms) {
+        final Set<String> notMatchedTerms = new HashSet<>(terms);
+
+        textBlocks.forEach(tb -> {
+            notMatchedTerms.removeIf(term -> tb.toLowerCase().contains(term));
+        });
+
+        return notMatchedTerms.isEmpty();
     }
 
     /**

@@ -40,6 +40,7 @@ class TopNavBar extends React.Component {
                            variant="outlined"/>
 
                 <Button variant="outlined" size="large" onClick={this.handleSearch}>Find</Button>
+                <span className="ResultCount">Shown: {this.props.resultArticlesCount||0} articles</span>
             </div>
         );
     }
