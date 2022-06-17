@@ -1,7 +1,7 @@
 package com.hipravin.devcompanion.article;
 
 import com.hipravin.devcompanion.article.dto.ArticleDto;
-import com.hipravin.devcompanion.article.inmemory.model.Article;
+import com.hipravin.devcompanion.article.search.ArticleSearchService;
 import com.hipravin.devcompanion.config.ApplicationProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,14 +20,11 @@ public class ArticleController {
     private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
 
     private final ApplicationProperties applicationProperties;
-    private final ArticleRepository<Article, Long> articleRepository;
+    private final ArticleSearchService articleSearchService;
 
-    private static final String TITLE_SEARCH_PREFIX = "title:";
-
-    public ArticleController(ApplicationProperties applicationProperties,
-                             ArticleRepository<Article, Long> articleRepository) {
+    public ArticleController(ApplicationProperties applicationProperties, ArticleSearchService articleSearchService) {
         this.applicationProperties = applicationProperties;
-        this.articleRepository = articleRepository;
+        this.articleSearchService = articleSearchService;
     }
 
     @GetMapping("/search")
@@ -35,22 +32,10 @@ public class ArticleController {
             @RequestParam(value = "q", required = true) String query,
             @RequestParam(value = "lmt", required = false) Integer limit) {
 
-        List<ArticleDto> articlesFound = search(query, ensureCorrectLimit(limit));
-        return ResponseEntity.ok(articlesFound);
-    }
+        List<ArticleDto> articlesFound = articleSearchService.search(query, ensureCorrectLimit(limit));
+        throw new RuntimeException("something went wrong");
 
-    private List<ArticleDto> search(String query, int limit) {
-        List<ArticleDto> result;
-
-        if(query.toLowerCase().startsWith(TITLE_SEARCH_PREFIX)) {
-            result = articleRepository.findByTitleMatches(query.substring(TITLE_SEARCH_PREFIX.length()), limit)
-                    .stream().map(Article::toDto).toList();
-        } else {
-            result = articleRepository.findByAnyMatches(query, limit)
-                    .stream().map(Article::toDto).toList();
-        }
-
-        return result;
+//        return ResponseEntity.ok(articlesFound);
     }
 
     private int ensureCorrectLimit(Integer limitParam) {

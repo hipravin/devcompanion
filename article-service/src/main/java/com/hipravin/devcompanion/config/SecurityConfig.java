@@ -12,7 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 public class SecurityConfig {
     @Configuration
     @Order(SecurityProperties.BASIC_AUTH_ORDER - 90)
-    public static class PublicApiConfig extends WebSecurityConfigurerAdapter {
+    public static class ApiSecurityConfig extends WebSecurityConfigurerAdapter {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
@@ -23,7 +23,7 @@ public class SecurityConfig {
 
     @Configuration
     @Order(SecurityProperties.BASIC_AUTH_ORDER - 100)
-    public static class DenyApiConfig extends WebSecurityConfigurerAdapter {
+    public static class OpenApiUiSecurityConfig extends WebSecurityConfigurerAdapter {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {

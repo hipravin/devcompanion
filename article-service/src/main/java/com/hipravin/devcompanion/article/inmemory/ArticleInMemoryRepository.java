@@ -2,20 +2,19 @@ package com.hipravin.devcompanion.article.inmemory;
 
 import com.hipravin.devcompanion.article.ArticleRepository;
 import com.hipravin.devcompanion.article.ArticleStorage;
-import com.hipravin.devcompanion.article.ArticleStorageUpdateWatcher;
 import com.hipravin.devcompanion.article.inmemory.model.Article;
+import com.hipravin.devcompanion.article.search.ArticleSearchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-public class ArticleInMemoryRepository implements ArticleRepository<Article, Long> {
+public class ArticleInMemoryRepository implements ArticleRepository<Article, Long>, ArticleSearchService {
     private static final Logger log = LoggerFactory.getLogger(ArticleInMemoryRepository.class);
 
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock(false);
@@ -57,13 +56,13 @@ public class ArticleInMemoryRepository implements ArticleRepository<Article, Lon
     }
 
     @Override
-    public List<Article> findByTitleMatches(String titleSearchString, int limit) {
-        return getWithReadLock(() -> byTitleMatches(titleSearchString, limit));
+    public List<Article> findByTitleMatches(String searchString, int limit) {
+        return getWithReadLock(() -> byTitleMatches(searchString, limit));
     }
 
     @Override
-    public List<Article> findByAnyMatches(String titleSearchString, int limit) {
-        return getWithReadLock(() -> byAnyMatches(titleSearchString, limit));
+    public List<Article> findByAnyMatches(String searchString, int limit) {
+        return getWithReadLock(() -> byAnyMatches(searchString, limit));
     }
 
     private List<Article> byTitleMatches(String titleSearchString, int limit) {
@@ -93,9 +92,11 @@ public class ArticleInMemoryRepository implements ArticleRepository<Article, Lon
     private static boolean containsAllTerms(Stream<String> textBlocks, List<String> terms) {
         final Set<String> notMatchedTerms = new HashSet<>(terms);
 
-        textBlocks.forEach(tb -> {
-            notMatchedTerms.removeIf(term -> tb.toLowerCase().contains(term));
-        });
+        Iterator<String> textBlockIterator = textBlocks.iterator();
+        while(textBlockIterator.hasNext() && !notMatchedTerms.isEmpty()) {
+            String textBlock = textBlockIterator.next();
+            notMatchedTerms.removeIf(term -> textBlock.toLowerCase().contains(term));
+        }
 
         return notMatchedTerms.isEmpty();
     }
