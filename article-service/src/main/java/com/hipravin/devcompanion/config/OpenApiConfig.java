@@ -21,7 +21,7 @@ public class OpenApiConfig {
     public OpenAPI springShopOpenAPI() {
         return new OpenAPI()
                 .info(new Info().title("Articles API")
-                        .description("App description")
+                        .description("Miscellaneous recipes to help with application development")
                         .version("v0.0.1")
                         .license(new License().name("Apache 2.0").url("http://springdoc.org")));
     }
