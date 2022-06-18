@@ -1,0 +1,20 @@
+id: 12000002
+title: Aptitude (apt-get) linux bash command samples
+description: Install, search, update linux packages
+codeBlocks:
+  - title: Update database from remote storage
+    code: |-
+      apt-get update
+  - title: Search for package vsftpd
+    code: |-
+      apt-cache search vsftpd
+      apt-cache show vsftpd
+  - title: Install package vsftpd
+    code: |-
+      apt-get install vsftpd
+  - title: Upgrade package vsftpd
+    code: |-
+      apt-get upgrade vsftpd
+  - title: List installed packages
+    code: |-
+      apt-cache pkgnames | less

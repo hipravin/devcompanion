@@ -11,6 +11,14 @@ application:
 
   acticles-yaml-path: ${ARTICLES_REPO_PATH}
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  server:
+    port: 8083
+
 ---
 spring:
   config:

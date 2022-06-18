@@ -20,6 +20,14 @@ spring:
 #            client-id: ${GITHUB_CLIENT_ID}
 #            client-secret: ${GITHUB_CLIENT_SECRET}
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  server:
+    port: 8081
+
 ---
 spring:
   config:

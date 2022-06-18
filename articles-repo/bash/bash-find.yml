@@ -1,0 +1,25 @@
+id: 12000001
+title: Linux bash find command samples
+description: Miscellaneous find commands
+codeBlocks:
+  - title: By name mask ignoring case recursively in directory /etc
+    code: |-
+      find /etc/ -iname '*passw*'
+  - title: Large files
+    code: |-
+      find /bigdata -size +500M
+  - title: Files not owned by root user
+    code: |-
+      find /var/spool -not -user root -ls
+  - title: Recently modified files (less than 10 minutes)
+    code: |-
+      find /home -mmin -10
+  - title: Files with write permission to 'others'
+    code: |-
+      find . -perm -002 -type f -ls
+  - title: Find and exec command for each result element without confirmation
+    code: |-
+      find /usr/share -size +5M -size -10M -exec cp {} /tmp/FILES \;
+  - title: Find and exec (ok) command for each result element with confirmation
+    code: |-
+      find /usr/share -size +5M -size -10M -ok cp {} /tmp/FILES \;

@@ -1,0 +1,44 @@
+id: 13000001
+title: Start kubernetes dashboard locally
+description: Install, start, skip login. Permission management is applicable only on local development.
+codeBlocks:
+  - title: Create deployment kubernetes-dashboard
+    code: |-
+      kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml
+  - title: Start listening locally on 8081
+    code: |-
+      kubectl proxy
+  - title: Edit deployment manifest to add login bypass. Notepad will be opened
+    code: |-
+      kubectl edit deployment kubernetes-dashboard -n kubernetes-dashboard
+  - title: Add line "- --enable-skip-login", save
+    code: |-
+      spec:
+        template:
+          spec:
+            containers:
+              - args:
+                  - --auto-generate-certificates
+                  - --namespace=kubernetes-dashboard
+                  - --enable-skip-login                 # add this argument
+                image: kubernetesui/dashboard:v2.2.0
+  - title: Open dashboard in browser, skip login
+    code: |-
+      http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+  - title: Grant admin permissions (create file permissions-kubernetes-dashboard.yaml)
+    code: |-
+      apiVersion: rbac.authorization.k8s.io/v1
+      kind: ClusterRoleBinding
+      metadata:
+        name: system:serviceaccount:kubernetes-dashboard:kubernetes-dashboard
+      roleRef:
+        apiGroup: rbac.authorization.k8s.io
+        kind: ClusterRole
+        name: cluster-admin
+      subjects:
+        - kind: ServiceAccount
+          name: kubernetes-dashboard
+          namespace: kubernetes-dashboard
+  - title: apply permissions config
+    code: |-
+      kubectl apply -f permissions-kubernetes-dashboard.yaml

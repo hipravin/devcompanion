@@ -33,9 +33,8 @@ public class ArticleController {
             @RequestParam(value = "lmt", required = false) Integer limit) {
 
         List<ArticleDto> articlesFound = articleSearchService.search(query, ensureCorrectLimit(limit));
-        throw new RuntimeException("something went wrong");
 
-//        return ResponseEntity.ok(articlesFound);
+        return ResponseEntity.ok(articlesFound);
     }
 
     private int ensureCorrectLimit(Integer limitParam) {
