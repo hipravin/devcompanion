@@ -4,29 +4,56 @@ import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableWebSecurity
 public class SecurityConfig {
-    @Bean
-    @Order(SecurityProperties.BASIC_AUTH_ORDER - 100)
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.antMatcher("/swagger-ui/**")
-                .csrf().disable()
-                .authorizeRequests().anyRequest().authenticated()
-                .and()
-                .httpBasic();
-        return http.build();
-    }
     @Bean(name = "apiSecurityFilterChain")
-    @Order(SecurityProperties.BASIC_AUTH_ORDER - 90)
+    @Order(SecurityProperties.BASIC_AUTH_ORDER - 100)
     public SecurityFilterChain articlesApifilterChain(HttpSecurity http) throws Exception {
         http.antMatcher("/api/**")
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 .authorizeRequests().anyRequest().permitAll();
         return http.build();
     }
+
+    @Bean
+    @Order(SecurityProperties.BASIC_AUTH_ORDER - 90)
+    public SecurityFilterChain swaggerFilterChain(HttpSecurity http) throws Exception {
+        http.antMatcher("/swagger-ui/**")
+                .authorizeRequests().anyRequest().authenticated()
+                .and()
+                .httpBasic(Customizer.withDefaults());
+        return http.build();
+    }
+    @Bean
+    @Order(SecurityProperties.BASIC_AUTH_ORDER - 80)
+    public SecurityFilterChain actuatorFilterChain(HttpSecurity http) throws Exception {
+        http.antMatcher("/actuator/**")
+                .authorizeRequests().anyRequest().permitAll();
+        return http.build();
+    }
+
+    @Bean
+    @Order(SecurityProperties.BASIC_AUTH_ORDER - 70)
+    public SecurityFilterChain errorFilterChain(HttpSecurity http) throws Exception {
+        http.antMatcher("/error")
+                .authorizeRequests().anyRequest().permitAll();
+        return http.build();
+    }
+
+    @Bean
+    @Order(SecurityProperties.BASIC_AUTH_ORDER - 60)
+    public SecurityFilterChain fallbackFilterChain(HttpSecurity http) throws Exception {
+        http.antMatcher("/**")
+                .authorizeRequests().anyRequest().denyAll();
+        return http.build();
+    }
+
+
 }

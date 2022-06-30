@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ArticleInMemoryRepositoryTest {
-    static final Path articleSampleRepo = Paths.get("src/test/resources/articles-repo-sample");
+    static final Path articleSampleRepo = Paths.get("src/test/resources/article-repo-sample");
     static final ArticleYmlFileStorage articleYmlFileStorage = new ArticleYmlFileStorage(articleSampleRepo);
     static final ArticleInMemoryRepository articleInMemoryRepository = new ArticleInMemoryRepository();
 

@@ -1,12 +1,6 @@
 version: "3.9"
 
 services:
-  storage:
-    build: .
-    volumes:
-      - article-repo-volume:/usr/local/article-repo:rw
-    restart: unless-stopped
-
   gateway:
     build: ./gateway
     image: hipravin/devcompanion-gateway
@@ -26,8 +20,6 @@ services:
       - article-repo-volume:/usr/local/article-repo:ro
     environment:
       - ARTICLES_REPO_PATH=/usr/local/article-repo
-    depends_on:
-      - storage
     labels:
       collect_logs_with_filebeat: "true"
       decode_log_event_to_json_object: "true"

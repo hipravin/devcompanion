@@ -5,6 +5,10 @@ spring:
 server:
   port: 8082
 
+  tomcat:
+    accesslog:
+      enabled: true
+
 application:
   articles-max-response-limit: 1000
   articles-default-response-limit: 20
@@ -16,8 +20,15 @@ management:
     web:
       exposure:
         include: "*"
+
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
   server:
     port: 8083
+
 
 ---
 spring:
@@ -26,7 +37,8 @@ spring:
       on-profile: local
 
 application:
-  acticles-yaml-path: C:/dev/projects/devcompanion/articles-repo
+  acticles-yaml-path: C:/dev/projects/devcompanion/article-repo
+
 
 ---
 spring:

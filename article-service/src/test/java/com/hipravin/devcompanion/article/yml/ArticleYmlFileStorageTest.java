@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ArticleYmlFileStorageTest {
-    final Path articleSampleRepo = Paths.get("src/test/resources/articles-repo-sample");
+    final Path articleSampleRepo = Paths.get("src/test/resources/article-repo-sample");
 
     @Test
     void testFindAll() {

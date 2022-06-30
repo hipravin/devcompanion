@@ -1,0 +1,27 @@
+id: 13000002
+title: Kubernetes kubectl commands
+description: Miscellaneous kubectl commands
+codeBlocks:
+  - title: Show available context and change active one
+    code: |-
+      kubectl config get-contexts
+      kubectl config use-context docker-desktop
+  - title: Show nodes or everything
+    code: |-
+      kubectl get nodes
+      kubectl get all
+  - title: Create deployment yml with dry-run.
+    code: |-
+      kubectl create deployment mysql --image=mysql:5.7 --dry-run=client -o=yaml > mysql-deployment.yml
+      kubectl apply -f mysql-deployment.yml
+      kubectl create service clusterip mysql --tcp=3306:3306 --dry-run=client -o=yaml > mysql-service.yml  
+
+      kubectl create deployment article-service --image=hipravin/devcompanion-article-service:latest --dry-run=client -o=yaml > article-service-deployment.yml
+      kubectl create service clusterip article-service --tcp=8082:8082 --dry-run=client -o=yaml > article-service.yml
+      
+      kubectl create service nodeport gateway --tcp=8080:8080 --dry-run=client -o=yaml > gateway-service.yml
+
+  - title: Simple pod restart (there is no explicit 'kubectl restart' command)
+    code: |-    
+      kubectl scale deployment article-service --replicas=0
+      kubectl scale deployment article-service --replicas=1

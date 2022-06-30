@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Disabled
 class ArticleYmlMainFileStorageIT {
-    final Path articleSampleRepo = Paths.get("../articles-repo");
+    final Path articleSampleRepo = Paths.get("../article-repo");
 
     @Test
     void testFindAll() {

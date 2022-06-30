@@ -4,17 +4,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles({"test","initrunners"})
@@ -33,7 +33,7 @@ class SecurityConfigTest {
     }
 
     ResponseEntity<String> swaggerUiNoAuth() {
-        String uri = "http://localhost:" + port + "/swagger-ui.html";
+        String uri = "http://localhost:" + port + "/swagger-ui/index.html";
 
         ResponseEntity<String> response = restTemplate.exchange(
                 uri,

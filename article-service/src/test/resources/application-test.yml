@@ -1,5 +1,5 @@
 application:
-  acticles-yaml-path: src/test/resources/articles-repo-sample
+  acticles-yaml-path: src/test/resources/article-repo-sample
 
 logging:
   level:

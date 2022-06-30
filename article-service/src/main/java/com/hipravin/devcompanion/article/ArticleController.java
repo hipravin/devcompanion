@@ -1,17 +1,16 @@
 package com.hipravin.devcompanion.article;
 
 import com.hipravin.devcompanion.article.dto.ArticleDto;
+import com.hipravin.devcompanion.article.dto.SearchRequestDto;
 import com.hipravin.devcompanion.article.search.ArticleSearchService;
 import com.hipravin.devcompanion.config.ApplicationProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -33,6 +32,16 @@ public class ArticleController {
             @RequestParam(value = "lmt", required = false) Integer limit) {
 
         List<ArticleDto> articlesFound = articleSearchService.search(query, ensureCorrectLimit(limit));
+
+        return ResponseEntity.ok(articlesFound);
+    }
+
+    @PostMapping("/search-post")
+    public ResponseEntity<?> findBySearchStringPost(
+            @RequestBody SearchRequestDto searchRequestDto) {
+
+        Objects.requireNonNull(searchRequestDto);
+        List<ArticleDto> articlesFound = articleSearchService.search(searchRequestDto.getQuery(), ensureCorrectLimit(searchRequestDto.getLimit()));
 
         return ResponseEntity.ok(articlesFound);
     }

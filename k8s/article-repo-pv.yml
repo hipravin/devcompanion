@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: article-repo-pv
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    #working path found: https://stackoverflow.com/questions/54073794/kubernetes-persistent-volume-on-docker-desktop-windows
+    path: "/run/desktop/mnt/host/c/dev/projects/devcompanion/article-repo"

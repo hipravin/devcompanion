@@ -34,7 +34,7 @@ class FileWatchUtilTest {
         //then write file
         Files.writeString(tmpFile, UUID.randomUUID() + " " + LocalDateTime.now());
 
-        Thread.sleep(100);
+        Thread.sleep(200);
         watchThread.interrupt();
         watchThread.join();
 

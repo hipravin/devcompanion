@@ -1,0 +1,27 @@
+id: 1000002
+title: Java double checked locking
+description: Used initialize instance fields lazy. Source - java effective programming.
+codeBlocks:
+  - title: Important - synchronized, volatile. Less important - local variable 'result' - ~25% performance gain.
+    code: |-
+      private volatile FieldType field;
+      private FieldType getField() {
+          FieldType result = field;
+      
+          if (result == null) {
+              synchronized (this) {
+                 if (field == null)
+                   field = result = computeFieldValue();
+              }
+          }
+          return result;
+      }
+  - title: Single check in case repeated initialization is required or acceptable
+    code: |-
+      private volatile FieldType field;
+      private FieldType getField()  {
+          FieldType result = field;
+          if (result == null)
+              field = result = computeFieldValue();
+          return result;
+      }
