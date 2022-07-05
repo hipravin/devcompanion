@@ -2,35 +2,49 @@ version: "3.9"
 
 services:
   gateway:
-    build: ./gateway
     image: hipravin/devcompanion-gateway
     expose:
       - "8080"
+    environment:
+      - JAVA_TOOL_OPTIONS="-Xmx256m"
+
     labels:
       collect_logs_with_filebeat: "true"
       decode_log_event_to_json_object: "true"
-    restart: unless-stopped
 
   article-service:
-    build: ./article-service
     image: hipravin/devcompanion-article-service
     expose:
       - "8082"
+      - "8083"
     volumes:
-      - article-repo-volume:/usr/local/article-repo:ro
+      - article-repo-volume:/usr/local/article-repo:rw
     environment:
       - ARTICLES_REPO_PATH=/usr/local/article-repo
+      - JAVA_TOOL_OPTIONS=-Xmx256m
+      - ADMIN_SERVER_URL=http://admin:8070
+      - MANAGEMENT_BASE_URL=http://article-service:8083
+      - ADMIN_SERVER_USERNAME=admin
+      - ADMIN_SERVER_PASSWORD=admin
     labels:
       collect_logs_with_filebeat: "true"
       decode_log_event_to_json_object: "true"
-    restart: unless-stopped
+
+  admin:
+    image: hipravin/devcompanion-admin
+    expose:
+      - "8070"
+    ports:
+      - "8070:8070"
+    labels:
+      collect_logs_with_filebeat: "true"
+      decode_log_event_to_json_object: "true"
 
   frontend:
-    build: ./site
     image: hipravin/devcompanion-ui
     ports:
       - "80:80"
-    restart: unless-stopped
+#    restart: unless-stopped
 #ELK works somehow, but lags way too much to work with on laptop :(
 #  elasticsearch:
 #    image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0

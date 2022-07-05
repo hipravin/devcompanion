@@ -4,8 +4,6 @@ ARG JAR_FILE=target/*.jar
 #LABEL project.name=${project.artifactId} \
 #      project.version=${project.version}
 
-LABEL custom.label="article-service-docker-image-custom-label"
-
 COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java", "-jar","/app.jar","--spring.profiles.active=initrunners"]
+ENTRYPOINT ["java","-jar","/app.jar"]
 

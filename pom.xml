@@ -12,8 +12,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>article-service</module>
+        <module>admin</module>
         <module>gateway</module>
+        <module>article-service</module>
     </modules>
 
     <build>

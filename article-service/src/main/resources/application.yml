@@ -1,40 +1,67 @@
 spring:
   application:
     name: article-service
+  boot:
+    admin:
+      client:
+        url: ${ADMIN_SERVER_URL}
+        username: ${ADMIN_SERVER_USERNAME}
+        password: ${ADMIN_SERVER_PASSWORD}
+        instance:
+          management-base-url: ${MANAGEMENT_BASE_URL}
 
+###
 server:
   port: 8082
-
   tomcat:
     accesslog:
       enabled: true
 
+###
 application:
   articles-max-response-limit: 1000
   articles-default-response-limit: 20
-
   acticles-yaml-path: ${ARTICLES_REPO_PATH}
 
+###
 management:
   endpoints:
     web:
       exposure:
         include: "*"
-
   endpoint:
     health:
+      show-details: always
       probes:
         enabled: true
-
+    loggers:
+      enabled: true
   server:
     port: 8083
 
+###
+#disable openapi
+springdoc:
+  swagger-ui:
+    enabled: false
 
 ---
 spring:
   config:
     activate:
       on-profile: local
+
+#source: https://www.baeldung.com/spring-boot-admin
+
+  boot:
+    admin:
+      client:
+        url: http://localhost:8070
+        username: admin
+        password: admin
+        instance:
+          management-base-url: http://localhost:8083
+
 
 application:
   acticles-yaml-path: C:/dev/projects/devcompanion/article-repo
@@ -44,8 +71,9 @@ application:
 spring:
   config:
     activate:
-      on-profile: docker
+      on-profile: swagger
 
 springdoc:
   swagger-ui:
-    enabled: false
+    enabled: true
+

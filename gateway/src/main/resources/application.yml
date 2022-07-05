@@ -1,9 +1,10 @@
 server:
   port: 8080
-
   tomcat:
     accesslog:
       enabled: true
+
+###
 spring:
   cloud:
     gateway:
@@ -23,17 +24,16 @@ spring:
 #            client-id: ${GITHUB_CLIENT_ID}
 #            client-secret: ${GITHUB_CLIENT_SECRET}
 
+###
 management:
   endpoints:
     web:
       exposure:
         include: "*"
-
   endpoint:
     health:
       probes:
         enabled: true
-
   server:
     port: 8081
 

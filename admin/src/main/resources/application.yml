@@ -1,0 +1,17 @@
+server:
+  port: 8070
+
+spring:
+  security:
+    user:
+      name: admin
+      password: admin
+
+  boot:
+    admin:
+      client:
+        instance:
+          metadata:
+            user:
+              name: ${spring.security.user.name}
+              password: ${spring.security.user.password}

@@ -1,3 +1,5 @@
+call kubectl delete -f .\admin-service.yml
+call kubectl delete -f .\admin-deployment.yml
 call kubectl delete -f .\devcompanion-ui-service.yml
 call kubectl delete -f .\devcompanion-ui-deployment.yml
 call kubectl delete -f .\gateway-deployment.yml

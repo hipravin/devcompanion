@@ -35,6 +35,7 @@ public class SecurityConfig {
     @Order(SecurityProperties.BASIC_AUTH_ORDER - 80)
     public SecurityFilterChain actuatorFilterChain(HttpSecurity http) throws Exception {
         http.antMatcher("/actuator/**")
+                .csrf().disable()
                 .authorizeRequests().anyRequest().permitAll();
         return http.build();
     }

@@ -2,14 +2,18 @@ id: 8000002
 title: Docker copy to named volume with mapped container
 description: |-
   Given named volume devcompanion_article-repo-volume and container devcompanion_storage_1
-  while image devcompanion_storage is created with mapping: article-repo-volume:/usr/local/article-repo:rw
+  while image devcompanion_storage is created with mapping: article-repo-volume:/usr/local/article-repo:rw.
+  After a while separate storage container was removed and article-service container is used instead. 
+  Now project build phase doesn't imply persistent volume population.
 codeBlocks:
   - title: Copies folder article-repo to /usr/local/article-repo/usr/local/article-repo which means VOLUME/article-repo/... (article-repo folder is created)
     code: |-
       docker cp article-repo devcompanion_storage_1:/usr/local/article-repo/...
+      docker cp article-repo devcompanion_article-service_1:/usr/local/article-repo/...
   - title: Copies folder contents of article-repo to /usr/local/article-repo/usr/local/article-repo which means VOLUME/... (article-repo folder is not created)
     code: |-
       docker cp article-repo/. devcompanion_storage_1:/usr/local/article-repo
+      docker cp article-repo/. devcompanion_article-service_1:/usr/local/article-repo
   - title: |-
       Creates a dummy container that can be used if existing such as devcompanion_storage_1 isn't available.
       No need to start that container. After copy complete it can be removed.

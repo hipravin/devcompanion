@@ -1,7 +1,16 @@
+docker-compose down
 cd site
 call npm run build --production
 cd ..
 call .\mvnw.cmd clean package
-docker-compose down
-docker-compose up --build -d
+cd article-service
+call docker build -t hipravin/devcompanion-article-service .
+cd ..\gateway
+call docker build -t hipravin/devcompanion-gateway .
+cd ..\site
+call docker build -t hipravin/devcompanion-ui .
+cd ..\admin
+call docker build -t hipravin/devcompanion-admin .
+cd ..
+docker-compose up -d
 pause;

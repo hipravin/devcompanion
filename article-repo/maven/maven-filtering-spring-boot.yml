@@ -1,0 +1,51 @@
+id: 3000004
+title: Maven resources filtering when using spring boot parent
+description: |- 
+  When using spring boot parent project maven resource plugin picks up some non-default configuration.
+  This includes alternative value delimiter which is '@property@' while default is '${property}'.
+codeBlocks:
+  - title: Add additional resources and keep spring boot defaults
+    code: |-
+      <build>
+           <resources>
+               <resource>
+                   <directory>${basedir}/src/main/resources</directory>
+                   <filtering>true</filtering>
+                   <includes>
+                       <include>**/application*.yml</include>
+                       <include>**/application*.yaml</include>
+                       <include>**/application*.properties</include>
+                       <include>version.properties</include> <!--add this line-->
+                   </includes>
+               </resource>
+               <resource>
+                   <directory>${basedir}/src/main/resources</directory>
+                   <excludes>
+                       <exclude>**/application*.yml</exclude>
+                       <exclude>**/application*.yaml</exclude>
+                       <exclude>**/application*.properties</exclude>
+                       <exclude>version.properties</exclude> <!--add this line-->
+                   </excludes>
+               </resource>
+           </resources>
+  - title: version.properties content example
+    code: |-
+      groupId = @project.groupId@
+      artifactId = @project.artifactId@
+      version = @project.version@
+  - title: Build just resources
+    code: |-
+      mvn resources:resources
+  - title: Maven resources plugin configuration from spring-boot-starter-parent-2.7.0.pom for reference
+    code: |-
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <configuration>
+              <propertiesEncoding>${project.build.sourceEncoding}</propertiesEncoding>
+                  <delimiters>
+                    <delimiter>${resource.delimiter}</delimiter>
+                  </delimiters>
+              <useDefaultDelimiters>false</useDefaultDelimiters>
+          </configuration>
+      </plugin>
