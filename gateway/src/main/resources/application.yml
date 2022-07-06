@@ -6,6 +6,8 @@ server:
 
 ###
 spring:
+  application:
+    name: gateway
   cloud:
     gateway:
       globalcors:
@@ -16,6 +18,16 @@ spring:
             allowedHeaders: "*"
   thymeleaf:
     cache: false
+
+  boot:
+    admin:
+      client:
+        url: ${ADMIN_SERVER_URL}
+        username: ${ADMIN_SERVER_USERNAME}
+        password: ${ADMIN_SERVER_PASSWORD}
+        instance:
+          management-base-url: ${MANAGEMENT_BASE_URL}
+
 #  security:
 #    oauth2:
 #      client:
@@ -25,6 +37,7 @@ spring:
 #            client-secret: ${GITHUB_CLIENT_SECRET}
 
 ###
+###
 management:
   endpoints:
     web:
@@ -32,8 +45,11 @@ management:
         include: "*"
   endpoint:
     health:
+      show-details: always
       probes:
         enabled: true
+    loggers:
+      enabled: true
   server:
     port: 8081
 
@@ -43,9 +59,19 @@ spring:
     activate:
       on-profile: local
 
+  boot:
+    admin:
+      client:
+        url: http://localhost:8070
+        username: admin
+        password: admin
+        instance:
+          management-base-url: http://localhost:8081
+
 app:
   routes:
     article-service-uri: "http://localhost:8082"
+
 
 ---
 spring:

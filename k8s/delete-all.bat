@@ -8,3 +8,4 @@ call kubectl delete -f .\article-service-deployment.yml
 call kubectl delete -f .\article-service.yml
 call kubectl delete -f .\article-repo-pv-claim.yml
 call kubectl delete -f .\article-repo-pv.yml
+call kubectl delete -f .\boot-admin-secret.yml

@@ -6,10 +6,11 @@ codeBlocks:
     code: |-
       kubectl config get-contexts
       kubectl config use-context docker-desktop
-  - title: Show nodes or everything
+  - title: Show nodes or everything or events
     code: |-
       kubectl get nodes
       kubectl get all
+      kubectl get events
   - title: Create deployment yml with dry-run.
     code: |-
       kubectl create deployment mysql --image=mysql:5.7 --dry-run=client -o=yaml > mysql-deployment.yml

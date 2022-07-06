@@ -6,8 +6,11 @@ services:
     expose:
       - "8080"
     environment:
-      - JAVA_TOOL_OPTIONS="-Xmx256m"
-
+      - JAVA_TOOL_OPTIONS=-Xmx256m
+      - ADMIN_SERVER_URL=http://admin:8070
+      - MANAGEMENT_BASE_URL=http://gateway:8081
+      - ADMIN_SERVER_USERNAME=admin
+      - ADMIN_SERVER_PASSWORD=admin
     labels:
       collect_logs_with_filebeat: "true"
       decode_log_event_to_json_object: "true"

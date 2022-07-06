@@ -1,3 +1,4 @@
+call kubectl apply -f .\boot-admin-secret.yml
 call kubectl apply -f .\article-repo-pv.yml
 call kubectl apply -f .\article-repo-pv-claim.yml
 call kubectl apply -f .\article-service.yml
