@@ -1,0 +1,33 @@
+id: 11000002
+title: Kubernetes Ingress self signed certificate
+description: |-
+  Warning: Chrome doesn't validate certificate created this way even after manual import as root certificate!
+  Resources: https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-in-ubuntu-16-04
+  https://devopscube.com/configure-ingress-tls-kubernetes/
+codeBlocks:
+  - title: Generate key and crt files, interactive
+    code: |-
+      openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout devcompanion-selfsigned.key -out devcompanion-selfsigned.crt
+  - title: Create secret yaml
+    code: |-
+      kubectl create secret tls devcompanion-tls --namespace default --key devcompanion-selfsigned.key --cert devcompanion-selfsigned.crt --dry-run=client -o=yaml > devcompanion-tls.yml
+  - title: Amend Ingress configuration
+    code: |-
+      ingressClassName: nginx
+      tls:
+        - hosts:
+            - devcompanion.hipravin.ru
+          secretName: devcompanion-tls
+  - title: Amend Ingress configuration then apply
+    code: |-
+      ingressClassName: nginx
+      tls:
+        - hosts:
+            - devcompanion.hipravin.ru
+          secretName: devcompanion-tls
+  - title: Check certificate with curl
+    code: |-
+      curl https://devcompanion.hipravin.ru -kv
+  - title: Check ingress controller container logs
+    code: |-
+      W0707 07:14:37.702002       7 controller.go:1348] Unexpected error validating SSL certificate "default/devcompanion-tls" for server "devcompanion.hipravin.ru": x509: certificate relies on legacy Common Name field, use SANs instead

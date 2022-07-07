@@ -1,4 +1,3 @@
-docker-compose down
 cd site
 call npm run build --production
 cd ..
@@ -12,5 +11,4 @@ call docker build -t hipravin/devcompanion-ui .
 cd ..\admin
 call docker build -t hipravin/devcompanion-admin .
 cd ..
-docker-compose up -d
 pause;

@@ -9,3 +9,5 @@ call kubectl apply -f .\devcompanion-ui-service.yml
 call kubectl apply -f .\devcompanion-ui-deployment.yml
 call kubectl apply -f .\admin-deployment.yml
 call kubectl apply -f .\admin-service.yml
+call kubectl apply -f .\cert\devcompanion-tls.yml
+call kubectl apply -f .\ingress.yml

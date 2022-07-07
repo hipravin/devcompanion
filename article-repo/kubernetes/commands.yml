@@ -26,3 +26,7 @@ codeBlocks:
     code: |-    
       kubectl scale deployment article-service --replicas=0
       kubectl scale deployment article-service --replicas=1
+  - title: Configure ingress. https://kubernetes.github.io/ingress-nginx/deploy/
+    code: |-     
+      kubectl describe ingress
+      
