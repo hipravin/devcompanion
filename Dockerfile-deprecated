@@ -1,3 +1,0 @@
-FROM alpine:3.14
-RUN rm -rf /usr/local/article-repo
-COPY article-repo /usr/local/article-repo

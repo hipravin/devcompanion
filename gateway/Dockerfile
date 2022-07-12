@@ -9,4 +9,4 @@ RUN addgroup -S ${group} && adduser -S ${user} -G ${group}
 #can't find tomcat access logs with non-root user
 
 COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","/app.jar","--spring.profiles.active=docker"]
+ENTRYPOINT ["java","-jar","/app.jar"]

@@ -20,9 +20,9 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: devcompanion-ui
+                name: gateway
                 port:
-                  number: 80
+                  number: 8080
     - host: devcompanion-admin.hipravin.ru
       http:
         paths:

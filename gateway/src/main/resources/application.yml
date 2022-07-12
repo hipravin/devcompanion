@@ -1,8 +1,10 @@
 server:
   port: 8080
-  tomcat:
-    accesslog:
-      enabled: true
+
+app:
+  routes:
+    article-service-uri: ${ARTICLE_SERVICE_URI}
+    frontend-uri: ${FRONTEND_URI}
 
 ###
 spring:
@@ -10,12 +12,18 @@ spring:
     name: gateway
   cloud:
     gateway:
-      globalcors:
-        corsConfigurations:
-          '[/**]':
-            allowedOrigins: "*"
-            allowedMethods: "*"
-            allowedHeaders: "*"
+      routes:
+        - id: article-service
+          uri: ${app.routes.article-service-uri}
+          predicates:
+            - Path=/api/v1/articles/**
+#          filters:
+#            - TokenRelay=
+        - id: frontend
+          uri: ${app.routes.frontend-uri}
+          predicates:
+            - Path=/**
+
   thymeleaf:
     cache: false
 
@@ -71,14 +79,14 @@ spring:
 app:
   routes:
     article-service-uri: "http://localhost:8082"
+    frontend-uri: "http://localhost:3000"
 
-
----
-spring:
-  config:
-    activate:
-      on-profile: docker
-
-app:
-  routes:
-    article-service-uri: "http://article-service:8082"
+#---
+#spring:
+#  config:
+#    activate:
+#      on-profile: docker
+#
+#app:
+#  routes:
+#    article-service-uri: "http://article-service:8082"

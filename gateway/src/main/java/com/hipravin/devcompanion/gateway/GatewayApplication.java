@@ -11,25 +11,20 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 @SpringBootApplication
-@EnableConfigurationProperties({
-        AppRouteProperties.class})
 public class GatewayApplication {
-
-    @Autowired
-    private AppRouteProperties appRouteProperties;
 
 //    @Autowired
 //    private TokenRelayGatewayFilterFactory filterFactory;
 
-    @Bean
-    public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
-        return builder.routes()
-                .route("article-service", r -> r.path("/api/v1/articles/**")
-//                        .filters(f -> f.filters(filterFactory.apply())
-//                                .removeRequestHeader("Cookie")) // Prevents cookie being sent downstream
-                        .uri(appRouteProperties.getArticleServiceUri()))
-                .build();
-    }
+//    @Bean
+//    public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
+//        return builder.routes()
+//                .route("article-service", r -> r.path("/api/v1/articles/**")
+////                        .filters(f -> f.filters(filterFactory.apply())
+////                                .removeRequestHeader("Cookie")) // Prevents cookie being sent downstream
+//                        .uri(appRouteProperties.getArticleServiceUri()))
+//                .build();
+//    }
 
 //    @GetMapping("/")
 //    public String index(Model model,
