@@ -22,7 +22,7 @@ spec:
               service:
                 name: gateway
                 port:
-                  number: 8080
+                  number: 8000
     - host: devcompanion-admin.hipravin.ru
       http:
         paths:

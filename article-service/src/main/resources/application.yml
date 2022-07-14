@@ -1,6 +1,12 @@
 spring:
   application:
     name: article-service
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_URL}/auth/realms/HiRealm
   boot:
     admin:
       client:
@@ -63,9 +69,8 @@ spring:
           management-base-url: http://localhost:8083
 
 
-application:
-  acticles-yaml-path: C:/dev/projects/devcompanion/article-repo
-
+ARTICLES_REPO_PATH: "C:/dev/projects/devcompanion/article-repo"
+KEYCLOAK_URL: "http://keycloak.hipravin.ru:8080"
 
 ---
 spring:

@@ -3,13 +3,12 @@ package com.hipravin.devcompanion.article;
 import com.hipravin.devcompanion.article.dto.ArticleDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
@@ -29,9 +28,19 @@ class ArticleControllerTest {
     @Autowired
     TestRestTemplate restTemplate;
 
+    @Value("${app.test.eternaljwt}")
+    String eternalJwt;
+
+    @Test
+    void testFindUnauthorized() {
+        ResponseEntity<List<ArticleDto>> response = search("java", 1, false);
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+    }
+
     @Test
     void testFindLimit1() {
-        ResponseEntity<List<ArticleDto>> response = search("java", 1);
+        ResponseEntity<List<ArticleDto>> response = search("java", 1, true);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(1, response.getBody().size());
@@ -40,7 +49,7 @@ class ArticleControllerTest {
 
     @Test
     void testFindByTitle() {
-        ResponseEntity<List<ArticleDto>> response = search("title:java", 20);
+        ResponseEntity<List<ArticleDto>> response = search("title:java", 20, true);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         List<ArticleDto> articleDtos = response.getBody();
@@ -54,7 +63,7 @@ class ArticleControllerTest {
     }
     @Test
     void testFind() {
-        ResponseEntity<List<ArticleDto>> response = search("java @Value", 20);
+        ResponseEntity<List<ArticleDto>> response = search("java @Value", 20, true);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         List<ArticleDto> articleDtos = response.getBody();
@@ -67,13 +76,18 @@ class ArticleControllerTest {
         assertEquals(Set.of(1000001L), ids);
     }
 
-    ResponseEntity<List<ArticleDto>> search(String query, int limit) {
+    ResponseEntity<List<ArticleDto>> search(String query, int limit, boolean withBearerAuth) {
         String uri = "http://localhost:" + port + "/api/v1/articles/search?q={query}&lmt={limit}";
+
+        HttpHeaders headers = new HttpHeaders();
+        if(withBearerAuth) {
+            headers.add("Authorization", "Bearer " + eternalJwt);
+        }
 
         ResponseEntity<List<ArticleDto>> response = restTemplate.exchange(
                 uri,
                 HttpMethod.GET,
-                null,
+                new HttpEntity<>(headers),
                 new ParameterizedTypeReference<>() {},
                 Map.of("query", query, "limit", limit));
 

@@ -1,6 +1,26 @@
 application:
   acticles-yaml-path: src/test/resources/article-repo-sample
 
-logging:
-  level:
-    org.springframework.web: DEBUG
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: #override to empty value
+          public-key-location: classpath:jwt/jwtRS256.key.pub
+          jws-algorithm: RS256
+
+  boot:
+    admin:
+      client:
+        url: #override to empty for tests in order to disable
+        instance:
+          management-base-url: #override to empty for tests in order to disable
+
+app:
+  test:
+    eternaljwt: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlByYXZpbiIsImFkbWluIjp0cnVlLCJpYXQiOjI1MTYyMzkwMjJ9.C-aCCGot0Gl79vhf880Xw55T-BW5OTGQDGwcu2sZmbxlLkS917khWpzB99bwKlzGkC62uueVmZK8o0X_yFSllBIb3VZu4LKVUtcPVl6AZ74hxYkVZi-9JYZyPjlu06XdLm7a_-T9Si_iYz5SEaLODpsPdamjGWSo5c8-XC0LLk8ArQJmjlI8XEpQHk-n1UQ3T2n7879F_2u7c2kZvt9hkZdLssJc_aZRfUWp9oI8O-dQfqYEck6gk74tpOYqouFemJFSKsDkgpjWyjk9JdDj5vBFK06nxomLzQUUXAFuc7zGfBT1S3Q0F5l7OzWPNmPHAzl3D4bZg0ziqKX59ZKUYD0pbFwL3Vjzjg9XcakdAnDpDENbHPsEwkAM5-ot7E_D_hOFc1Xkxz6BrGAIA1zbkMhek-tABiVY8NC_Z030JH2IVwAsEPbIAfXWAUxrc_b0SR5O1dsszpnHjjVtZiYO-lc4rmo9KCfioxpVwLwm2wawU9Mr4EjUS1EIhWiXi87ohI51iUyVwghUqJH6wZiRPuFYVwpv6kMaLzVkIUeNZuCuROc1rWSsGisj_sWLL8z3PWa99BMfra3NiV6aj9L9BIGmkApfJAXf6RL84K2GcyeoUHOh_Jbk_vcHZVRT3iA-oMVRvBWI_TuIy7a4Q6ytmNc__3g6Ea290XKxDRueMe4
+
+#logging:
+#  level:
+#    org.springframework.web: DEBUG

@@ -1,26 +1,33 @@
 server:
-  port: 8080
-
-app:
-  routes:
-    article-service-uri: ${ARTICLE_SERVICE_URI}
-    frontend-uri: ${FRONTEND_URI}
+  port: 8000
 
 ###
 spring:
   application:
     name: gateway
+
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: devcompanion
+#            client-secret: devcompanion-keycloak-secret  #if client set to 'confidential' in admin console
+            scope: openid
+        provider:
+          keycloak:
+            issuer-uri: ${KEYCLOAK_URL}/auth/realms/HiRealm
   cloud:
     gateway:
       routes:
         - id: article-service
-          uri: ${app.routes.article-service-uri}
+          uri: ${ARTICLE_SERVICE_URI}
           predicates:
             - Path=/api/v1/articles/**
-#          filters:
-#            - TokenRelay=
+          filters:
+            - TokenRelay=
         - id: frontend
-          uri: ${app.routes.frontend-uri}
+          uri: ${FRONTEND_URI}
           predicates:
             - Path=/**
 
@@ -35,14 +42,6 @@ spring:
         password: ${ADMIN_SERVER_PASSWORD}
         instance:
           management-base-url: ${MANAGEMENT_BASE_URL}
-
-#  security:
-#    oauth2:
-#      client:
-#        registration:
-#          github:
-#            client-id: ${GITHUB_CLIENT_ID}
-#            client-secret: ${GITHUB_CLIENT_SECRET}
 
 ###
 ###
@@ -59,7 +58,7 @@ management:
     loggers:
       enabled: true
   server:
-    port: 8081
+    port: 8002
 
 ---
 spring:
@@ -76,10 +75,9 @@ spring:
         instance:
           management-base-url: http://localhost:8081
 
-app:
-  routes:
-    article-service-uri: "http://localhost:8082"
-    frontend-uri: "http://localhost:3000"
+ARTICLE_SERVICE_URI: "http://localhost:8082"
+FRONTEND_URI: "http://localhost:3000"
+KEYCLOAK_URL: "http://keycloak.hipravin.ru:8080"
 
 #---
 #spring:
