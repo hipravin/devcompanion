@@ -73,7 +73,7 @@ spring:
         username: admin
         password: admin
         instance:
-          management-base-url: http://localhost:8081
+          management-base-url: http://localhost:8002
 
 ARTICLE_SERVICE_URI: "http://localhost:8082"
 FRONTEND_URI: "http://localhost:3000"
