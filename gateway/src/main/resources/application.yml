@@ -23,9 +23,10 @@ spring:
         - id: article-service
           uri: ${ARTICLE_SERVICE_URI}
           predicates:
-            - Path=/api/v1/articles/**
+            - Path=/api/v1/articles/**,/api/v1/users/**
           filters:
-            - TokenRelay=
+#            - TokenRelay=
+            - TokenRelay
         - id: frontend
           uri: ${FRONTEND_URI}
           predicates:
@@ -69,16 +70,20 @@ spring:
   boot:
     admin:
       client:
-        url: http://localhost:8070
+        url: #http://localhost:8070
         username: admin
         password: admin
         instance:
-          management-base-url: http://localhost:8002
+          management-base-url: #http://localhost:8002
 
 ARTICLE_SERVICE_URI: "http://localhost:8082"
 FRONTEND_URI: "http://localhost:3000"
-KEYCLOAK_URL: "http://keycloak.hipravin.ru:8080"
+KEYCLOAK_URL: "http://host.docker.internal:8080"
 
+logging:
+  level:
+    org.springframework: DEBUG
+    org.springframework.security: TRACE
 #---
 #spring:
 #  config:

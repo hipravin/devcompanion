@@ -11,3 +11,7 @@
 
     gap: 10px;
 }
+
+.UserInfo {
+    outline: 1px solid darkgray;
+}

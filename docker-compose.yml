@@ -1,5 +1,5 @@
 version: "3.9"
-
+#TODO: outdated - bff, sso missing
 services:
   gateway:
     image: hipravin/devcompanion-gateway
