@@ -11,3 +11,4 @@ call kubectl delete -f .\article-repo-pv.yml
 call kubectl delete -f .\boot-admin-secret.yml
 call kubectl delete -f .\ingress.yml
 call kubectl delete -f .\cert\devcompanion-tls.yml
+

@@ -1,10 +1,21 @@
 server:
   port: 8000
 
+#  servlet:
+#    session:
+#      timeout: 1m #short-lived session for testing
+#      timeout: 1440m #24h long-lived session for testing
+
 ###
 spring:
   application:
     name: gateway
+
+  session:
+    store-type: ${SESSION_STORE_PROVIDER} #redis|none
+  redis:
+    host: ${REDIS_HOST}
+    port: 6379
 
   security:
     oauth2:
@@ -17,23 +28,20 @@ spring:
         provider:
           keycloak:
             issuer-uri: ${KEYCLOAK_URL}/auth/realms/HiRealm
-  cloud:
-    gateway:
-      routes:
-        - id: article-service
-          uri: ${ARTICLE_SERVICE_URI}
-          predicates:
-            - Path=/api/v1/articles/**,/api/v1/users/**
-          filters:
-#            - TokenRelay=
-            - TokenRelay
-        - id: frontend
-          uri: ${FRONTEND_URI}
-          predicates:
-            - Path=/**
-
-  thymeleaf:
-    cache: false
+#  cloud:
+#    gateway:
+#      routes:
+#        - id: article-service
+#          uri: ${ARTICLE_SERVICE_URI}
+#          predicates:
+#            - Path=/api/v1/articles/**,/api/v1/users/**
+#          filters:
+##            - TokenRelay=
+#            - TokenRelay
+#        - id: frontend
+#          uri: ${FRONTEND_URI}
+#          predicates:
+#            - Path=/**
 
   boot:
     admin:
@@ -44,7 +52,11 @@ spring:
         instance:
           management-base-url: ${MANAGEMENT_BASE_URL}
 
-###
+app:
+  routes:
+    article-service-uri: ${ARTICLE_SERVICE_URI}
+    frontend-uri: ${FRONTEND_URI}
+
 ###
 management:
   endpoints:
@@ -61,35 +73,3 @@ management:
   server:
     port: 8002
 
----
-spring:
-  config:
-    activate:
-      on-profile: local
-
-  boot:
-    admin:
-      client:
-        url: #http://localhost:8070
-        username: admin
-        password: admin
-        instance:
-          management-base-url: #http://localhost:8002
-
-ARTICLE_SERVICE_URI: "http://localhost:8082"
-FRONTEND_URI: "http://localhost:3000"
-KEYCLOAK_URL: "http://host.docker.internal:8080"
-
-logging:
-  level:
-    org.springframework: DEBUG
-    org.springframework.security: TRACE
-#---
-#spring:
-#  config:
-#    activate:
-#      on-profile: docker
-#
-#app:
-#  routes:
-#    article-service-uri: "http://article-service:8082"

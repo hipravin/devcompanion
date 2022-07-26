@@ -7,6 +7,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +25,7 @@ public class UserController {
         return ResponseEntity.ok(userDto);
     }
 
-    @GetMapping("/me/info")
+    @PostMapping("/me/info")
     public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal Jwt principal) {
         Map<String, String> claims = new HashMap<>();
         claims.put("user_name", principal.getClaimAsString("preferred_username"));
@@ -32,7 +33,7 @@ public class UserController {
         return ResponseEntity.ok(claims);
     }
 
-    @GetMapping("/me/authorities")
+    @PostMapping("/me/authorities")
     public ResponseEntity<?> getPrincipalInfo(JwtAuthenticationToken principal) {
 
         Collection<String> authorities = principal.getAuthorities()

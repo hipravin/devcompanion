@@ -1,4 +1,4 @@
-package com.hipravin.devcompanion.gateway;
+package com.hipravin.devcompanion.gateway.filter;
 
 import org.springframework.boot.web.server.Cookie;
 import org.springframework.http.ResponseCookie;
@@ -16,6 +16,8 @@ import java.time.Duration;
 // first of all it has produced NPE because 'token' was null
 //second - it is applied on any request irrespective of whether it's needed or not
 // however I've fixed it and kept to see it in action
+//and lastly - it's redundant because cookie such cookie is created automatically
+//the only difference with standard is in max age
 public class CsrfCookieWebFilter implements WebFilter {
 
 	@Override
@@ -25,9 +27,9 @@ public class CsrfCookieWebFilter implements WebFilter {
 		Mono<CsrfToken> csrfToken = csrfTokenAttribute != null ? csrfTokenAttribute : Mono.empty();
 		return csrfToken.doOnSuccess(token -> {
 			if(token != null) {
-				ResponseCookie cookie = ResponseCookie.from("XSRF-TOKEN", token.getToken()).maxAge(Duration.ofHours(1))
+				ResponseCookie cookie = ResponseCookie.from("X-XSRF-TOKEN", token.getToken()).maxAge(Duration.ofHours(1))
 						.httpOnly(false).path("/").sameSite(Cookie.SameSite.LAX.attributeValue()).build();
-				exchange.getResponse().getCookies().add("XSRF-TOKEN", cookie);
+				exchange.getResponse().getCookies().add("X-XSRF-TOKEN", cookie);
 			}
 		}).then(chain.filter(exchange));
 	}

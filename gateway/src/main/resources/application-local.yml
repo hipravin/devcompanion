@@ -1,0 +1,23 @@
+spring:
+  boot:
+    admin:
+      client:
+        url: #http://localhost:8070
+        username: admin
+        password: admin
+        instance:
+          management-base-url: #http://localhost:8002
+
+ARTICLE_SERVICE_URI: "http://localhost:8082"
+FRONTEND_URI: "http://localhost:3000"
+KEYCLOAK_URL: "http://host.docker.internal:8080"
+
+REDIS_HOST: "host.docker.internal"
+SESSION_STORE_PROVIDER: "none"
+
+POD_IP: "127.0.0.1"
+
+logging:
+  level:
+    org.springframework: DEBUG
+    org.springframework.security: TRACE

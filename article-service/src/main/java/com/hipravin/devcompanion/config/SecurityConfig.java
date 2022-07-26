@@ -57,6 +57,4 @@ public class SecurityConfig {
                 .authorizeRequests().anyRequest().denyAll();
         return http.build();
     }
-
-
 }

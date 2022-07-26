@@ -1,6 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
 import React from "react";
+import notify from "./lib/notify";
+import Notifier from "./components/Notifier";
 import TopNavBar from "./components/TopNavBar/TopNavBar";
 import {searchArticlesApiMethod} from "./lib/api/articles";
 import {userInfoApiMethod} from "./lib/api/users";
@@ -26,7 +28,10 @@ class App extends React.Component {
 
         searchArticlesApiMethod(searchString)
             .then(res => this.setState({articles: res, user: user}))
-            .catch(err => console.error(err));
+            .catch(err => {
+                console.error(err);
+                notify(err);
+            });
 
     }
 
@@ -56,6 +61,7 @@ class App extends React.Component {
 
         return (
             <div className="App">
+                <Notifier/>
                 <TopNavBar resultArticlesCount={articlesCount} userInfo={userInfo} onSearch={this.handleSearch}/>
                 {resultView}
             </div>
