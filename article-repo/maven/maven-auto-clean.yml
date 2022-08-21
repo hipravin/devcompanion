@@ -1,0 +1,27 @@
+id: 3000005
+title: Maven auto-clean with clean plugin in default lifecycle
+description: Auto-clean maven project on any default build command. 'initialize' is the first phase in default lifecycle.
+codeBlocks:
+  - title: pom.xml
+    code: |-
+      <project>
+        [...]
+        <build>
+          <plugins>
+            <plugin>
+              <artifactId>maven-clean-plugin</artifactId>
+              <version>2.5</version>
+              <executions>
+                <execution>
+                <id>auto-clean</id>
+                  <phase>initialize</phase>
+                  <goals>
+                    <goal>clean</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </build>
+       [...]
+      </project>
