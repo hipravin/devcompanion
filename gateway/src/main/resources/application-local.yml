@@ -13,7 +13,8 @@ FRONTEND_URI: "http://localhost:3000"
 KEYCLOAK_URL: "http://host.docker.internal:8080"
 
 REDIS_HOST: "host.docker.internal"
-SESSION_STORE_PROVIDER: "none"
+SESSION_STORE_PROVIDER: "redis"
+#SESSION_STORE_PROVIDER: "none"
 
 POD_IP: "127.0.0.1"
 
