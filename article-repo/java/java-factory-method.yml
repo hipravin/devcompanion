@@ -1,0 +1,28 @@
+id: 1000003
+title: Java factory method pattern naming conventions
+description: Examples from Joshua Bloch's effective java book. Useful for better and consistent method naming.
+codeBlocks:
+  - title: from. Метод преобразования типа, который получает один параметр и возвращает соответствующий экземпляр требуемого типа.
+    code: |-
+      Date d = Date.from(instant);
+  - title: of. метод агрегации, который получает несколько параметров и возвращает соответствующий экземпляр требуемого типа, объединяющий их.
+    code: |-
+      Set<Rank> faceCards = EnumSet.of(JACK, QUEEN, KING);
+  - title: valueOf. более многословная альтернатива from и of
+    code: |-
+      Biginteger prime = Biginteger.valueOf(Integer.MAX_VALUE);
+  - title: instance, getlnstance. Возвращает экземпляр, описываемый параметрами (если таковые имеются), но о котором нельзя сказать, что он имеет то же значение.
+    code: |-
+      StackWalker luke = StackWalker.getlnstance(options);
+  - title: create, newlnstance. Подобен instance или getlnstance, но отличается тем, что гарантирует, что каждый вызов дает новый экземпляр.
+    code: |-
+      StackWalker luke = StackWalker.getlnstance(options);
+  - title: getType. Подобен getlnstance, но используется, если фабричный метод находится в другом классе.
+    code: |-
+      Filestore fs = Files.getFileStore(path);
+  - title: newType. Подобен newInstance, но используется, если фабричный метод находится в другом классе.
+    code: |-
+      BufferedReader br = Files.newBufferedReader(path);
+  - title: type. Краткая альтернатива для get Type и new Type
+    code: |-
+      List<Complaint> litany = Collections.list(legacyLitany);

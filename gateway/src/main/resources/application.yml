@@ -11,11 +11,11 @@ spring:
   application:
     name: gateway
 
-  session:
-    store-type: ${SESSION_STORE_PROVIDER} #redis|none
-  redis:
-    host: ${REDIS_HOST}
-    port: 6379
+#  session:
+#    store-type: ${SESSION_STORE_PROVIDER} #redis|none
+#  redis:
+#    host: ${REDIS_HOST}
+#    port: 6379
 
   security:
     oauth2:

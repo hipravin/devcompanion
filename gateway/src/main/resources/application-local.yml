@@ -19,5 +19,7 @@ POD_IP: "127.0.0.1"
 
 logging:
   level:
-    org.springframework: DEBUG
-    org.springframework.security: TRACE
+    org.springframework: INFO
+    org.springframework.security: INFO
+#    org.springframework: DEBUG
+#    org.springframework.security: TRACE

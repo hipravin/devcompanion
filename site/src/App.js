@@ -6,6 +6,7 @@ import Notifier from "./components/Notifier";
 import TopNavBar from "./components/TopNavBar/TopNavBar";
 import {searchArticlesApiMethod} from "./lib/api/articles";
 import {userInfoApiMethod} from "./lib/api/users";
+import {sesionInfoApiMethod, sessionInfoApiMethod} from "./lib/api/session";
 import ArticleList from "./components/ArticleList/ArticleList";
 
 
@@ -21,6 +22,9 @@ class App extends React.Component {
     componentDidMount() {
         // this.performSearch("");
         this.requestUserInfo();
+
+        this.scheduleUserInfoBounce(60000);
+        this.scheduleSessionBounce(20000);
     }
 
     performSearch(searchString) {
@@ -42,6 +46,30 @@ class App extends React.Component {
             .then(res => this.setState({articles: articles, user: res}))
             .catch(err => console.error(err));
 
+    }
+
+    logSessionInfo() {
+        sessionInfoApiMethod()
+            .then(res => console.log('session info: ' + res))
+            .catch(err => console.error('failed session info: ' + err));
+    }
+
+    logUserInfo() {
+        userInfoApiMethod()
+            .then(res => console.log('user info: ' + res))
+            .catch(err => console.error('failed user info: ' + err));
+    }
+
+    scheduleSessionBounce(delayMillis) {
+        setInterval(() => {
+            this.logSessionInfo();
+        }, delayMillis);
+    }
+
+    scheduleUserInfoBounce(delayMillis) {
+        setInterval(() => {
+            this.logUserInfo();
+        }, delayMillis);
     }
 
     handleSearch = (searchString) => {
