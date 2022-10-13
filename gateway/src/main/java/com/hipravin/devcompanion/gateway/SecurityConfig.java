@@ -39,7 +39,8 @@ public class SecurityConfig {
         http
                 .securityMatcher(new PathPatternParserServerWebExchangeMatcher("/**"))
                 .headers(headers -> headers.contentSecurityPolicy("script-src 'self'"))
-                .authorizeExchange((spec) -> spec.pathMatchers("/manifest.json", "/favicon.ico", "/static/**").permitAll())
+                .authorizeExchange((spec) -> spec.pathMatchers(
+                        "/manifest.json", "/favicon.ico", "/static/**", "/logo192.png", "/logo512.png").permitAll())
                 .authorizeExchange((spec) -> spec.anyExchange().authenticated()) //interesting thing: gateway itself doesn't check/refresh oidc jwt token stored as session attribute
                 .oauth2Login(login -> login.authorizationRequestResolver(pkceResolver))
                 .csrf(csrf -> csrf.csrfTokenRepository(CookieServerCsrfTokenRepository.withHttpOnlyFalse()));

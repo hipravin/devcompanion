@@ -1,7 +1,6 @@
 package com.hipravin.devcompanion.util;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,7 +10,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FileWatchUtilTest {
     @Test

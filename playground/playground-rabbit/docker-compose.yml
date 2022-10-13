@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    volumes:
+#      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.config
+      - rabbitmq:/etc/rabbitmq/
+      - rabbitmq:/var/lib/rabbitmq/
+      - rabbitmq:/var/log/rabbitmq/
+    environment:
+      - RABBITMQ_DEFAULT_USER=rabbit
+      - RABBITMQ_DEFAULT_PASS=rrabbit
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+volumes:
+  rabbitmq:
