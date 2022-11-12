@@ -1,0 +1,20 @@
+id: 14000001
+title: PostgreSQL repeatable read isolation and lost update prevention
+description: |-
+  Default transaction isolation level in Postgres is read committed which doesn't prevent from non-repeatable
+  read and lost update anomalies despite the fact that Postgres internally use MVCC. Using repeatable read isolation level 
+  could be an alternative of using explicit database locks.
+codeBlocks:
+  - title: Set RR isolation level per session
+    code: |-
+      SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL REPEATABLE  READ;
+  - title: Show actual transaction isolation level
+    code: |-
+      SHOW TRANSACTION ISOLATION LEVEL;
+  - title: Error throwm on collision (lost update simulation)
+    code: |-
+      [40001] ERROR: could not serialize access due to concurrent update
+      
+      
+
+      
