@@ -29,4 +29,7 @@ codeBlocks:
   - title: Configure ingress. https://kubernetes.github.io/ingress-nginx/deploy/
     code: |-     
       kubectl describe ingress
+  - title: Copy file from pod to local
+    code: |-
+      kubectl cp default/article-service-5dc687d598-m2ssc:flight.jfr ./flight.jfr
       

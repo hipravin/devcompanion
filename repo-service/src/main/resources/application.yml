@@ -1,0 +1,82 @@
+
+spring:
+  application:
+    name: repo-service
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_URL}/auth/realms/HiRealm
+  boot:
+    admin:
+      client:
+        url: ${ADMIN_SERVER_URL}
+        username: ${ADMIN_SERVER_USERNAME}
+        password: ${ADMIN_SERVER_PASSWORD}
+        instance:
+          management-base-url: ${MANAGEMENT_BASE_URL}
+
+###
+server:
+  port: 8182
+  tomcat:
+    accesslog:
+      enabled: true
+
+###
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+    loggers:
+      enabled: true
+  server:
+    port: 8183
+
+###
+#disable openapi
+springdoc:
+  swagger-ui:
+    enabled: false
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  #source: https://www.baeldung.com/spring-boot-admin
+
+  boot:
+    admin:
+      client:
+        url: #http://localhost:8070
+        username: admin
+        password: admin
+        instance:
+          management-base-url: #http://localhost:8183
+
+KEYCLOAK_URL: "http://host.docker.internal:8080"
+
+logging:
+  level:
+    org.springframework: DEBUG
+    org.springframework.security: TRACE
+
+---
+spring:
+  config:
+    activate:
+      on-profile: swagger
+
+springdoc:
+  swagger-ui:
+    enabled: true
+
