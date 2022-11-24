@@ -44,10 +44,10 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-data-jpa</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -81,6 +81,14 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>2.7.1</version>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -143,6 +151,28 @@
                         <excludeProperty>git.build.user.*</excludeProperty>
                     </excludeProperties>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>8.5.7</version>
+                <configuration>
+                    <schemas>
+                        <schema>devcompanion</schema>
+                    </schemas>
+                    <url>jdbc:postgresql://localhost:5432/playground</url>
+                    <user>postgres</user>
+                    <!--  mvn ... -Dflyway.password=s3cret ...-->
+                    <!--<password>s3cret</password> -->
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>42.3.3</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

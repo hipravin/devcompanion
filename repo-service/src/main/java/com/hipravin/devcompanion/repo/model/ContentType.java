@@ -1,6 +1,6 @@
 package com.hipravin.devcompanion.repo.model;
 
-public enum RepoFileType {
+public enum ContentType {
     TEXT,
     BINARY
 }

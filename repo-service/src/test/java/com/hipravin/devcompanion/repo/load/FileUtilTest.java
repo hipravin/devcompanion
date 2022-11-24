@@ -1,5 +1,6 @@
 package com.hipravin.devcompanion.repo.load;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.UncheckedIOException;
@@ -33,10 +34,31 @@ class FileUtilTest {
     void testLoadTextFile() {
         Path sampleFile = FileUtil.subdirectories(testRepoRoot).get(0).resolve("SampleClass.java");
 
-        List<String> sampleLines = FileUtil.loadTextFileContents(sampleFile);
-        assertNotNull(sampleLines);
-        assertEquals(569, sampleLines.size());
+        String sampleContent = FileUtil.loadTextFileContent(sampleFile);
+        assertNotNull(sampleContent);
+        assertFalse(sampleContent.isEmpty());
 
-        sampleLines.forEach(s -> System.out.println(s));
+        System.out.println(sampleContent);
     }
+
+    @Test
+    void testFindRecursively() {
+        Path dir = testRepoRoot.resolve("test-repo-1");
+
+        List<Path> files = FileUtil.findFilesRecursively(dir, FileUtil.COMMON_BACKEND_TEXT_FILES);
+
+        assertEquals(5, files.size());
+    }
+
+    @Test
+    @Disabled
+    void playground() {
+        Path dir = Paths.get("../").toAbsolutePath().normalize();
+
+        FileUtil.findFilesRecursively(dir, FileUtil.COMMON_BACKEND_TEXT_FILES)
+                .stream().limit(10_000)
+                .forEach(p -> System.out.println(p));
+
+    }
+
 }

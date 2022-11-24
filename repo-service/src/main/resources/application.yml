@@ -1,21 +1,34 @@
-
 spring:
   application:
     name: repo-service
 
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: ${KEYCLOAK_URL}/auth/realms/HiRealm
-  boot:
-    admin:
-      client:
-        url: ${ADMIN_SERVER_URL}
-        username: ${ADMIN_SERVER_USERNAME}
-        password: ${ADMIN_SERVER_PASSWORD}
-        instance:
-          management-base-url: ${MANAGEMENT_BASE_URL}
+  jpa:
+    properties:
+      hibernate:
+        default_schema: devcompanion
+        order_inserts: true
+        order_updates: true
+        #        generate_statistics: true
+        jdbc:
+          batch_size: 100
+          time_zone: UTC
+
+    hibernate:
+      ddl-auto: none
+
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          issuer-uri: ${KEYCLOAK_URL}/auth/realms/HiRealm
+#  boot:
+#    admin:
+#      client:
+#        url: ${ADMIN_SERVER_URL}
+#        username: ${ADMIN_SERVER_USERNAME}
+#        password: ${ADMIN_SERVER_PASSWORD}
+#        instance:
+#          management-base-url: ${MANAGEMENT_BASE_URL}
 
 ###
 server:
@@ -51,6 +64,11 @@ spring:
   config:
     activate:
       on-profile: local
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/playground
+    username: postgres
+    password: admin
 
   #source: https://www.baeldung.com/spring-boot-admin
 

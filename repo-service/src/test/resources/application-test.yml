@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    driver-class-name: org.hsqldb.jdbc.JDBCDriver
+    url: jdbc:hsqldb:mem:testdb;DB_CLOSE_DELAY=-1;sql.syntax_pgs=true
+    username: sa
+    password:
+
+  sql:
+    init:
+      mode: always
+
+  jpa:
+    properties:
+      hibernate:
+        default_schema: #override with empty value for embedded
+        generate_statistics: true
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+#    org.hibernate.type.descriptor.sql: TRACE
+
+    org.springframework: INFO
+
+application:
+  repo-path: src/test/resources/test-repo-root

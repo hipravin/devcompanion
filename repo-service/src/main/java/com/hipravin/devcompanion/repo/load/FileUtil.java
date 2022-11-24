@@ -6,18 +6,93 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.charset.Charset;
+import java.nio.charset.MalformedInputException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
+import java.nio.file.*;
+import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class FileUtil {
     private static final Logger log = LoggerFactory.getLogger(FileUtil.class);
 
+    public static FileFilter COMMON_BACKEND_TEXT_FILES = new FileFilter(
+            Set.of(),
+            Set.of(".idea", "node_modules", ".mvn", "target"),
+            Set.of("java", "yml", "md", "conf", "txt", "xml", "properties"),
+            Set.of("Dockerfile"),
+            100 * 1024 * 1024 //100kb
+    );
+
     private FileUtil() {
+    }
+
+    /**
+     * Filter priority: ignoredSubPaths > maxBytesSize > allowedFileNames > ignoredFiles > allowedExtensions
+     */
+    public record FileFilter(
+            Set<String> ignoredFiles,
+            Set<String> ignoredSubPaths,
+            Set<String> allowedExtensions,
+            Set<String> allowedFileNames,
+            long maxSizeBytes) {
+
+        public Predicate<? super Path> asPathPredicate() {
+            return f -> accept(f);
+        }
+
+        private boolean accept(Path file) {
+            String fileName = file.getFileName().toString();
+            String extensionLowerCase = detectFileExtension(fileName).toLowerCase();
+
+            if(containsIgnoredSubPaths(file)) {
+                log.trace("Ignoring file due to contains ignored sub paths: {}", file);
+                return false;
+            }
+
+            boolean acceptedByNameAndType = allowedFileNames.contains(fileName)
+                    || (!ignoredFiles.contains(fileName) && allowedExtensions.contains(extensionLowerCase));
+
+            return acceptedByNameAndType && (fileSizeBytes(file) < maxSizeBytes);
+        }
+
+        private boolean sizeOk(Path file) {
+            return fileSizeBytes(file) < maxSizeBytes;
+        }
+
+        private boolean containsIgnoredSubPaths(Path path) {
+            if(ignoredSubPaths.isEmpty()) {
+                return false;
+            }
+
+            Set<String> pathElements = new HashSet<>();
+            path.forEach(p -> pathElements.add(p.toString()));
+            pathElements.retainAll(ignoredSubPaths);
+
+            return !pathElements.isEmpty();
+        }
+    }
+
+
+
+    static String detectFileExtension(String fileName) {
+        int index = fileName.lastIndexOf('.');
+        if (index > 0) {
+            return fileName.substring(index + 1);
+        } else {
+            return "";
+        }
+    }
+
+    static long fileSizeBytes(Path file) {
+        try {
+            return Files.size(file);
+        } catch (IOException e) {
+            log.error("Failed to determine size of file: '{}'", file, e);
+            return 0;
+        }
     }
 
     /**
@@ -35,12 +110,73 @@ public class FileUtil {
         }
     }
 
-    public static List<String> loadTextFileContents(Path filePath) {
-        try(Stream<String> lines = Files.lines(filePath, StandardCharsets.UTF_8)) {
-            return lines.toList();
+    public static List<Path> findFilesRecursively(Path dir, FileFilter fileFilter) {
+        return findFilesRecursively(dir, fileFilter.asPathPredicate());
+    }
+
+    public static List<Path> findFilesRecursively(Path dir, Predicate<? super Path> filePathPredicate) {
+        try (Stream<Path> dirWalkStream = Files.walk(dir)) {
+            return dirWalkStream
+                    .filter(Files::isRegularFile)
+                    .filter(filePathPredicate)
+                    .toList();
         } catch (IOException e) {
-            log.error("Failed to load text file from path: '{}'", filePath);
+            log.error("Failed to list files in dir '{}'", dir, e);
             throw new UncheckedIOException(e);
+        }
+    }
+
+    public static String loadTextFileContent(Path filePath) {
+        try {
+            return tryLoadWithEncoding(filePath, StandardCharsets.UTF_8)
+                    .or(() -> tryLoadWithEncoding(filePath, StandardCharsets.UTF_16))
+                    .or(() -> tryLoadWithEncoding(filePath, Charset.forName("windows-1251")))
+                    .orElse("");
+        } catch(UncheckedIOException e) {
+            log.error("Failed to load text file from path: '{}'", filePath);
+            return "";
+        }
+    }
+
+    public static List<String> loadTextFileContentLines(Path filePath) {
+        try {
+            return tryLoadLinesWithEncoding(filePath, StandardCharsets.UTF_8)
+                    .or(() -> tryLoadLinesWithEncoding(filePath, StandardCharsets.UTF_16))
+                    .or(() -> tryLoadLinesWithEncoding(filePath, Charset.forName("windows-1251")))
+                    .orElse(Collections.emptyList());
+        } catch(UncheckedIOException e) {
+            log.error("Failed to load text file from path: '{}'", filePath);
+            return Collections.emptyList();
+        }
+    }
+
+    private static Optional<String> tryLoadWithEncoding(Path filePath, Charset charset) {
+        try {
+            log.trace("Trying to load file from path '{}' with encoding '{}'", filePath, charset);
+            return Optional.of(Files.readString(filePath, charset));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        } catch (UncheckedIOException e) {
+            if(e.getCause() instanceof MalformedInputException) {
+                log.error("Failed to load text file from path because of wrong encoding {}: '{}'", filePath, charset.name());
+                return Optional.empty();
+            }
+            throw e;
+        }
+    }
+
+    private static Optional<List<String>> tryLoadLinesWithEncoding(Path filePath, Charset charset) {
+        try(Stream<String> lines = Files.lines(filePath, charset)) {
+            log.trace("Trying to load file from path '{}' with encoding '{}'", filePath, charset);
+            return Optional.of(lines.toList());
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        } catch (UncheckedIOException e) {
+            if(e.getCause() instanceof MalformedInputException) {
+                log.error("Failed to load text file from path because of wrong encoding {}: '{}'", filePath, charset.name());
+                return Optional.empty();
+            }
+            throw e;
         }
     }
 }
