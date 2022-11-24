@@ -33,9 +33,10 @@ public class RepoLoadServiceLocalDirectory implements RepoLoadService {
         String location = repoPath.toAbsolutePath().normalize().toString();
         RepoMetadata metadata = new RepoMetadata(name, location);
 
+        log.debug("Loading files for repo '{}'", repoPath);
         List<RepoTextFile> repoTextFiles = loadRepoFiles(repoPath)
                 .toList();
-
+        log.debug("Completed loading files for repo '{}', loaded {} files", repoPath, repoTextFiles.size());
         return new Repo(metadata, repoTextFiles);
     }
 
@@ -51,10 +52,19 @@ public class RepoLoadServiceLocalDirectory implements RepoLoadService {
         String relativePath = repoRootPath.relativize(filePath).normalize().toString();
         long size = FileUtil.fileSizeBytes(filePath);
 
-        String content = FileUtil.loadTextFileContent(filePath);
         RepoFileMetadata metadata = new RepoFileMetadata(fileName, relativePath, ContentType.TEXT, size);
 
-        return new RepoTextFile(metadata, content);
+        String content = FileUtil.loadTextFileContent(filePath);
+        String sanitizedContent = sanitize(content);
+
+        return new RepoTextFile(metadata, sanitizedContent);
+    }
+
+    private static String sanitize(String value) {
+        String sanitized = value;
+        sanitized = sanitized.replaceAll("\u0000", "");
+
+        return sanitized;
     }
 
 
