@@ -90,7 +90,7 @@ logging:
     org.springframework.security: INFO
 
 application:
-  repo-path: C:/dev/projects/tutorials
+  repo-path: C:/dev/projects
 
 ---
 spring:

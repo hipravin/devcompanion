@@ -10,13 +10,14 @@ import java.nio.charset.Charset;
 import java.nio.charset.MalformedInputException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public class FileUtil {
-    private static final Logger log = LoggerFactory.getLogger(FileUtil.class);
+public class RepoFileUtils {
+    private static final Logger log = LoggerFactory.getLogger(RepoFileUtils.class);
 
     public static FileFilter COMMON_BACKEND_TEXT_FILES = new FileFilter(
             Set.of(),
@@ -26,7 +27,7 @@ public class FileUtil {
             100 * 1024 * 1024 //100kb
     );
 
-    private FileUtil() {
+    private RepoFileUtils() {
     }
 
     /**
@@ -110,6 +111,27 @@ public class FileUtil {
         }
     }
 
+
+    /**
+     * Finds top level directories that match provided {@code directoryPredicate}
+     */
+    public static List<Path> findReposRecursively(Path searchRoot) {
+        List<Path> result = new ArrayList<>();
+
+        Predicate<Path> containsGit = p -> Files.exists(p.resolve(".git"));
+        Predicate<Path> containsGitStub = p -> Files.exists(p.resolve(".gitstub"));
+        Predicate<Path> isRepoRootPredicate = containsGit.or(containsGitStub);
+
+        try {
+            Files.walkFileTree(searchRoot, new SearchFileVisitor(result, isRepoRootPredicate));
+        } catch (IOException e) {
+            log.error("Failed to find repositories in directory: '{}'", searchRoot);
+            throw new UncheckedIOException(e);
+        }
+
+        return result;
+    }
+
     public static List<Path> findFilesRecursively(Path dir, FileFilter fileFilter) {
         return findFilesRecursively(dir, fileFilter.asPathPredicate());
     }
@@ -138,18 +160,6 @@ public class FileUtil {
         }
     }
 
-    public static List<String> loadTextFileContentLines(Path filePath) {
-        try {
-            return tryLoadLinesWithEncoding(filePath, StandardCharsets.UTF_8)
-                    .or(() -> tryLoadLinesWithEncoding(filePath, StandardCharsets.UTF_16))
-                    .or(() -> tryLoadLinesWithEncoding(filePath, Charset.forName("windows-1251")))
-                    .orElse(Collections.emptyList());
-        } catch(UncheckedIOException e) {
-            log.error("Failed to load text file from path: '{}'", filePath);
-            return Collections.emptyList();
-        }
-    }
-
     private static Optional<String> tryLoadWithEncoding(Path filePath, Charset charset) {
         try {
             log.trace("Trying to load file from path '{}' with encoding '{}'", filePath, charset);
@@ -165,18 +175,23 @@ public class FileUtil {
         }
     }
 
-    private static Optional<List<String>> tryLoadLinesWithEncoding(Path filePath, Charset charset) {
-        try(Stream<String> lines = Files.lines(filePath, charset)) {
-            log.trace("Trying to load file from path '{}' with encoding '{}'", filePath, charset);
-            return Optional.of(lines.toList());
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        } catch (UncheckedIOException e) {
-            if(e.getCause() instanceof MalformedInputException) {
-                log.error("Failed to load text file from path because of wrong encoding {}: '{}'", filePath, charset.name());
-                return Optional.empty();
+    public static class SearchFileVisitor extends SimpleFileVisitor<Path> {
+        private final List<Path> foundDirecotires;
+        private final Predicate<? super Path> directoryPredicate;
+
+        public SearchFileVisitor(List<Path> foundDirecotires, Predicate<? super Path> directoryPredicate) {
+            this.foundDirecotires = foundDirecotires;
+            this.directoryPredicate = directoryPredicate;
+        }
+
+        @Override
+        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+            if(directoryPredicate.test(dir)) {
+                foundDirecotires.add(dir);
+                return FileVisitResult.SKIP_SUBTREE;
+            } else {
+                return FileVisitResult.CONTINUE;
             }
-            throw e;
         }
     }
 }

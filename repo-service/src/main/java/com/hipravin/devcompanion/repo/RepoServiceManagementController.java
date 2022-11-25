@@ -32,7 +32,7 @@ public class RepoServiceManagementController {
         Stream<Repo> repos = repoLoadService.loadAll();
 
         CompletableFuture.runAsync(() -> {
-            repos.forEach(r -> repoDao.save(r));
+            repos.forEach(r -> repoDao.saveOrUpdate(r));
             log.info("Reindex completed.");
         }).exceptionally(t -> {
             log.error("Reindex failed: " + t.getMessage(), t);

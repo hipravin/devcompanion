@@ -24,9 +24,11 @@ public class RepoDaoImpl implements RepoDao {
     }
 
     @Override
-    public RepoEntity save(Repo repo) {
+    public RepoEntity saveOrUpdate(Repo repo) {
         RepoEntity re = EntityMappers.from(repo);
         List<RepoTextFileEntity> rtfes = EntityMappers.from(repo, re);
+
+        deleteRepoByRelativePath(re.getRelativePath());
 
         em.persist(re);
 
@@ -37,5 +39,14 @@ public class RepoDaoImpl implements RepoDao {
         }
 
         return re;
+    }
+
+    private void deleteRepoByRelativePath(String relativePath) {
+        int deleted = em.createNamedQuery("RepoEntity.deleteByRelativePath")
+                .setParameter("relativePath", relativePath)
+                .executeUpdate();
+        if (deleted > 0) {
+            log.debug("Old repo state deleted: {}", relativePath);
+        }
     }
 }

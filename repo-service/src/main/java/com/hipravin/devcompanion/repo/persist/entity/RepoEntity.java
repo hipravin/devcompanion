@@ -4,6 +4,10 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "REPO")
+@NamedQueries({
+        @NamedQuery(name = "RepoEntity.deleteByRelativePath",
+                query="delete from RepoEntity r where r.relativePath = :relativePath")
+})
 public class RepoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "repoIdSeq")
@@ -14,6 +18,10 @@ public class RepoEntity {
     @Basic
     @Column(name = "NAME")
     private String name;
+
+    @Basic
+    @Column(name = "RELATIVE_PATH")
+    private String relativePath;
 
     public Long getId() {
         return id;
@@ -29,5 +37,13 @@ public class RepoEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getRelativePath() {
+        return relativePath;
+    }
+
+    public void setRelativePath(String relativePath) {
+        this.relativePath = relativePath;
     }
 }

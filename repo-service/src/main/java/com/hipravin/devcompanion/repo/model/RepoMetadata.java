@@ -2,5 +2,5 @@ package com.hipravin.devcompanion.repo.model;
 
 public record RepoMetadata(
         String name,
-        String location) {
+        String relativePath) {
 }

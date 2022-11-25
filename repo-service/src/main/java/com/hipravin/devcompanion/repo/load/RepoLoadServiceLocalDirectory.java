@@ -8,7 +8,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.hipravin.devcompanion.repo.load.FileUtil.subdirectories;
+import static com.hipravin.devcompanion.repo.load.RepoFileUtils.findReposRecursively;
 
 public class RepoLoadServiceLocalDirectory implements RepoLoadService {
     private static final Logger log = LoggerFactory.getLogger(RepoLoadServiceLocalDirectory.class);
@@ -21,7 +21,7 @@ public class RepoLoadServiceLocalDirectory implements RepoLoadService {
 
     @Override
     public Stream<Repo> loadAll() {
-        List<Path> repoPaths = subdirectories(reposRootPath);
+        List<Path> repoPaths = findReposRecursively(reposRootPath);
         log.debug("Repositories found under '{}': {}", reposRootPath.toAbsolutePath(), repoPaths);
 
         return repoPaths.stream()
@@ -30,8 +30,8 @@ public class RepoLoadServiceLocalDirectory implements RepoLoadService {
 
     Repo loadSingleRepo(Path repoPath) {
         String name = repoPath.getFileName().toString();
-        String location = repoPath.toAbsolutePath().normalize().toString();
-        RepoMetadata metadata = new RepoMetadata(name, location);
+        String relativePath = reposRootPath.relativize(repoPath).normalize().toString();
+        RepoMetadata metadata = new RepoMetadata(name, relativePath);
 
         log.debug("Loading files for repo '{}'", repoPath);
         List<RepoTextFile> repoTextFiles = loadRepoFiles(repoPath)
@@ -41,7 +41,7 @@ public class RepoLoadServiceLocalDirectory implements RepoLoadService {
     }
 
     Stream<RepoTextFile> loadRepoFiles(Path repoPath) {
-        List<Path> filePaths = FileUtil.findFilesRecursively(repoPath, FileUtil.COMMON_BACKEND_TEXT_FILES);
+        List<Path> filePaths = RepoFileUtils.findFilesRecursively(repoPath, RepoFileUtils.COMMON_BACKEND_TEXT_FILES);
 
         return filePaths.stream()
                 .map(f -> loadSingleFile(repoPath, f));
@@ -50,11 +50,11 @@ public class RepoLoadServiceLocalDirectory implements RepoLoadService {
     private RepoTextFile loadSingleFile(Path repoRootPath, Path filePath) {
         String fileName = filePath.getFileName().toString();
         String relativePath = repoRootPath.relativize(filePath).normalize().toString();
-        long size = FileUtil.fileSizeBytes(filePath);
+        long size = RepoFileUtils.fileSizeBytes(filePath);
 
         RepoFileMetadata metadata = new RepoFileMetadata(fileName, relativePath, ContentType.TEXT, size);
 
-        String content = FileUtil.loadTextFileContent(filePath);
+        String content = RepoFileUtils.loadTextFileContent(filePath);
         String sanitizedContent = sanitize(content);
 
         return new RepoTextFile(metadata, sanitizedContent);

@@ -5,7 +5,6 @@ import com.hipravin.devcompanion.repo.model.Repo;
 import com.hipravin.devcompanion.repo.persist.entity.RepoEntity;
 import com.hipravin.devcompanion.repo.persist.entity.RepoTextFileEntity;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.opentest4j.AssertionFailedError;
@@ -21,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles({"test"})
-@TestInstance(TestInstance.Lifecycle.PER_CLASS) //non-statoc @BeforeAll
+@TestInstance(TestInstance.Lifecycle.PER_CLASS) //non-static @BeforeAll
 class RepoRepositoryTest {
     @Autowired
     RepoRepository repoRepository;
@@ -38,11 +37,15 @@ class RepoRepositoryTest {
         Stream<Repo> repos = repoLoadService.loadAll();
 
         List<RepoEntity> repoEntities =
-                repos.map(r -> repoDao.save(r))
+                repos.map(r -> repoDao.saveOrUpdate(r))
                         .toList();
 
         assertNotNull(repos);
         repoEntities.forEach(re -> assertNotNull(re.getId()));
+
+        //check reindex doesn't fail
+        repoLoadService.loadAll()
+                .forEach(r -> repoDao.saveOrUpdate(r));
     }
 
     @Test

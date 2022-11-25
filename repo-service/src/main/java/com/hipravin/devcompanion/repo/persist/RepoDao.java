@@ -5,7 +5,8 @@ import com.hipravin.devcompanion.repo.persist.entity.RepoEntity;
 
 public interface RepoDao {
     /**
-     * Transforms to Entity and saves new RepoEntity with containing RepoTextFileEntities
+     * Transforms to Entity and saves RepoEntity with containing RepoTextFileEntities.
+     * Deletes old data by name if found.
      */
-    RepoEntity save(Repo repo);
+    RepoEntity saveOrUpdate(Repo repo);
 }

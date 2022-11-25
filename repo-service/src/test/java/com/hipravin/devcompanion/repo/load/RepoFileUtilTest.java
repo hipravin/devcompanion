@@ -10,20 +10,20 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FileUtilTest {
+class RepoFileUtilTest {
     static Path testResourcesPath = Paths.get("src/test/resources");
     static Path testRepoRoot = testResourcesPath.resolve("test-repo-root");
 
     @Test
     void testSubdirectoriesBadPath() {
         assertThrows(UncheckedIOException.class, () -> {
-            FileUtil.subdirectories(Paths.get("bad-path"));
+            RepoFileUtils.subdirectories(Paths.get("bad-path"));
         });
     }
 
     @Test
     void testSubdirectories() {
-        List<Path> subs = FileUtil.subdirectories(testRepoRoot);
+        List<Path> subs = RepoFileUtils.subdirectories(testRepoRoot);
 
         assertNotNull(subs);
         assertEquals(3, subs.size());
@@ -32,9 +32,9 @@ class FileUtilTest {
 
     @Test
     void testLoadTextFile() {
-        Path sampleFile = FileUtil.subdirectories(testRepoRoot).get(0).resolve("SampleClass.java");
+        Path sampleFile = RepoFileUtils.subdirectories(testRepoRoot).get(0).resolve("SampleClass.java");
 
-        String sampleContent = FileUtil.loadTextFileContent(sampleFile);
+        String sampleContent = RepoFileUtils.loadTextFileContent(sampleFile);
         assertNotNull(sampleContent);
         assertFalse(sampleContent.isEmpty());
 
@@ -45,7 +45,7 @@ class FileUtilTest {
     void testFindRecursively() {
         Path dir = testRepoRoot.resolve("test-repo-1");
 
-        List<Path> files = FileUtil.findFilesRecursively(dir, FileUtil.COMMON_BACKEND_TEXT_FILES);
+        List<Path> files = RepoFileUtils.findFilesRecursively(dir, RepoFileUtils.COMMON_BACKEND_TEXT_FILES);
 
         assertEquals(5, files.size());
     }
@@ -55,7 +55,7 @@ class FileUtilTest {
     void playground() {
         Path dir = Paths.get("../").toAbsolutePath().normalize();
 
-        FileUtil.findFilesRecursively(dir, FileUtil.COMMON_BACKEND_TEXT_FILES)
+        RepoFileUtils.findFilesRecursively(dir, RepoFileUtils.COMMON_BACKEND_TEXT_FILES)
                 .stream().limit(10_000)
                 .forEach(p -> System.out.println(p));
 

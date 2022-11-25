@@ -31,6 +31,7 @@ public class EntityMappers {
     public static RepoEntity from(Repo r) {
         RepoEntity re = new RepoEntity();
         re.setName(r.metadata().name());
+        re.setRelativePath(r.metadata().relativePath());
 
         return re;
     }
