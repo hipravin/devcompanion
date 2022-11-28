@@ -5,11 +5,16 @@ import com.hipravin.devcompanion.repo.model.Repo;
 import com.hipravin.devcompanion.repo.persist.entity.RepoEntity;
 import com.hipravin.devcompanion.repo.persist.entity.RepoTextFileEntity;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.opentest4j.AssertionFailedError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
@@ -68,5 +73,47 @@ class RepoRepositoryTest {
         files.forEach(f -> {
             assertEquals(f.getRepo().getId(), re.getId());
         });
+    }
+
+    @Test
+    void testSearch() {
+        List<RepoTextFileEntity> rtfes = repoDao.search("java", "ClassLoader");
+
+        assertEquals(2, rtfes.size());
+        rtfes.forEach(f -> {
+            assertTrue(f.getContent().toLowerCase().contains("classloader"));
+        });
+
+    }
+    @Test
+    void testSearchPageable() {
+        Page<RepoTextFileEntity> rtfesPage = repoDao.search(new String[]{"java", "ClassLoader"}, PageRequest.of(1,1));
+
+        List<RepoTextFileEntity> rtfes = rtfesPage.toList();
+
+        assertEquals(2, rtfesPage.getTotalElements());
+        assertEquals(2, rtfesPage.getTotalPages());
+        assertEquals(1, rtfes.size());
+
+        rtfes.forEach(f -> {
+            assertTrue(f.getContent().toLowerCase().contains("classloader"));
+        });
+    }
+
+    @Test
+    @Disabled
+    void playgroundPageable() {
+        Pageable pageable = PageRequest.of(0,2, Sort.by("id"));
+
+        Page<RepoTextFileEntity> rtfPage;
+        do {
+            rtfPage = repoFileRepository.findAll(pageable);
+
+            System.out.println("Pageable: " + pageable);
+            List<RepoTextFileEntity> pageFiles = rtfPage.toList();
+            pageFiles.forEach(f -> System.out.println(f.getRelativePath()));
+
+            pageable = rtfPage.nextPageable();
+        } while(!rtfPage.isLast());
     }
 }

@@ -13,7 +13,8 @@ spring:
     properties:
       hibernate:
         default_schema: #override with empty value for embedded
-        generate_statistics: true
+        generate_statistics: false
+#        generate_statistics: true
 logging:
   level:
     com.hipravin: DEBUG

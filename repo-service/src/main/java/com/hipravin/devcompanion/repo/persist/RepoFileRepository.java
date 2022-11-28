@@ -7,4 +7,8 @@ import java.util.List;
 
 public interface RepoFileRepository extends JpaRepository<RepoTextFileEntity, Long> {
     List<RepoTextFileEntity> findByRepoId(long repoId);//named
+
+
+
+    //PAGE?
 }

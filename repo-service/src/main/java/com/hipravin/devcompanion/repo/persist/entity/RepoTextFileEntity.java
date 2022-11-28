@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Table(name = "REPO_FILE")
 @NamedQueries({
         @NamedQuery(name = "RepoTextFileEntity.findByRepoId",
-                query="select rf from RepoTextFileEntity rf where rf.repo.id = :repoId")
+                query="select rf from RepoTextFileEntity rf where rf.repo.id = :repoId"),
 })
 public class RepoTextFileEntity {
     @Id
