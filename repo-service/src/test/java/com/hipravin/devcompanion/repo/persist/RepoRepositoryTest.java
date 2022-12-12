@@ -95,6 +95,8 @@ class RepoRepositoryTest {
         assertEquals(2, rtfesPage.getTotalPages());
         assertEquals(1, rtfes.size());
 
+        assertNotNull(rtfesPage.iterator().next().getRepo().getName());
+
         rtfes.forEach(f -> {
             assertTrue(f.getContent().toLowerCase().contains("classloader"));
         });

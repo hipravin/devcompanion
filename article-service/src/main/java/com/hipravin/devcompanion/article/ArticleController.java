@@ -28,8 +28,8 @@ public class ArticleController {
 
     @GetMapping("/search")
     public ResponseEntity<?> findBySearchString(
-            @RequestParam(value = "q", required = true) String query,
-            @RequestParam(value = "lmt", required = false) Integer limit) {
+            @RequestParam(name = "q", required = true) String query,
+            @RequestParam(name = "lmt", required = false) Integer limit) {
 
         List<ArticleDto> articlesFound = articleSearchService.search(query, ensureCorrectLimit(limit));
 

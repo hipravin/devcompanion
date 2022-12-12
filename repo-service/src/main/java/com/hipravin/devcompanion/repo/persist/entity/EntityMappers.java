@@ -6,7 +6,7 @@ import com.hipravin.devcompanion.repo.model.RepoTextFile;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityMappers {
+public final class EntityMappers {
     private EntityMappers() {
     }
 

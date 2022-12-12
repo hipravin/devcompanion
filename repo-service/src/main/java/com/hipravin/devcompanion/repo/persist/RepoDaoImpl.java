@@ -18,6 +18,7 @@ import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -32,9 +33,11 @@ public class RepoDaoImpl implements RepoDao {
     private static final String ORDER_BY_ID = " order by id ";
 
     private final EntityManager em;
+    private final RepoRepository repoRepository;
 
-    public RepoDaoImpl(EntityManager em) {
+    public RepoDaoImpl(EntityManager em, RepoRepository repoRepository) {
         this.em = em;
+        this.repoRepository = repoRepository;
     }
 
     @Override
@@ -55,14 +58,13 @@ public class RepoDaoImpl implements RepoDao {
         return re;
     }
 
-
     private static String[] ensureCorrect(String... searchTerms) {
         Objects.requireNonNull(searchTerms);
-        if(searchTerms.length == 0) {
+        if (searchTerms.length == 0) {
             throw new IllegalArgumentException("searchTerms should be not empty");
         }
-        if(searchTerms.length > MAX_SEARCH_TERMS) {
-            if(log.isDebugEnabled()) {
+        if (searchTerms.length > MAX_SEARCH_TERMS) {
+            if (log.isDebugEnabled()) {
                 log.debug("Query too long, max count: {}, provided: {}, value: {}",
                         MAX_SEARCH_TERMS, searchTerms.length, Arrays.toString(searchTerms));
             }
@@ -72,7 +74,7 @@ public class RepoDaoImpl implements RepoDao {
         return searchTerms;
     }
 
-//        @Query("select e from EmployeeEntity e where e.firstName like %:contains% or e.lastName like %:contains%")
+    //        @Query("select e from EmployeeEntity e where e.firstName like %:contains% or e.lastName like %:contains%")
     @Override
     public List<RepoTextFileEntity> search(String... searchTerms) {
         return search(searchTerms, PageRequest.ofSize(Integer.MAX_VALUE))
@@ -96,7 +98,7 @@ public class RepoDaoImpl implements RepoDao {
             query.setParameter(termI(i), "%" + searchTerms[i] + "%");
         }
 
-        query.setFirstResult((int)pageable.getOffset());
+        query.setFirstResult((int) pageable.getOffset());
         query.setMaxResults(pageable.getPageSize());
 
         Query countQuery = em.createNativeQuery(countQueryString);
@@ -105,8 +107,24 @@ public class RepoDaoImpl implements RepoDao {
         }
 
         long total = ((Number) countQuery.getSingleResult()).longValue();
+        List<RepoTextFileEntity> repoFilesPage = query.getResultList();
 
-        return new PageImpl<RepoTextFileEntity>(query.getResultList(), pageable, total);
+        fetchRepos(repoFilesPage);
+        return new PageImpl<>(repoFilesPage, pageable, total);
+    }
+
+    private void fetchRepos(List<RepoTextFileEntity> textFileEntities) {
+        Set<Long> repoIds = textFileEntities.stream()
+                .map(rf -> rf.getRepo().getId())
+                .collect(Collectors.toSet());
+        repoRepository.findAllById(repoIds);//load into session in batch
+        //replace proxies with actual objects gathered from l1 cache without querying database
+        textFileEntities.forEach(tfe -> tfe.getRepo().getName());
+    }
+
+    private void fetchReposNaive(List<RepoTextFileEntity> textFileEntities) {
+        //so-called N+1 query problem: will run one query for each distinct repo
+        textFileEntities.forEach(tfe -> tfe.getRepo().getName());
     }
 
     private static String termI(int i) {
