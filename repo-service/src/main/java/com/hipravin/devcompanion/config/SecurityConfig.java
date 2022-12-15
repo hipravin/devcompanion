@@ -8,6 +8,9 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -22,7 +25,9 @@ public class SecurityConfig {
         http.antMatcher("/api/**")
                 .csrf().disable()
                 .httpBasic(withDefaults())
-                .authorizeRequests().anyRequest().authenticated();
+                .authorizeRequests().antMatchers("/api/v1/manage/**").hasAuthority("MANAGE")
+                .and()
+                .authorizeRequests().anyRequest().hasAuthority("USER");
         return http.build();
     }
 
@@ -34,12 +39,13 @@ public class SecurityConfig {
                 .authorizeRequests().anyRequest().permitAll();
         return http.build();
     }
+
     @Bean
     @Order(SecurityProperties.BASIC_AUTH_ORDER - 80)
     public SecurityFilterChain actuatorFilterChain(HttpSecurity http) throws Exception {
         http.antMatcher("/actuator/**")
                 .csrf().disable()
-                .authorizeRequests().anyRequest().permitAll();
+                .authorizeRequests().anyRequest().hasAuthority("ACTUATOR");
         return http.build();
     }
 
@@ -58,5 +64,14 @@ public class SecurityConfig {
         http.antMatcher("/**")
                 .authorizeRequests().anyRequest().denyAll();
         return http.build();
+    }
+
+    //TODO: No passowords in code, don't you know???
+    @Bean
+    public InMemoryUserDetailsManager hardcodedUserDetailsManager() {
+        return new InMemoryUserDetailsManager(
+                User.withUsername("admin").password("{noop}aadmin").authorities("ADMIN", "MANAGE", "USER", "ACTUATOR").build(),
+                User.withUsername("actuator").password("{noop}aactuator").authorities("ACTUATOR").build(),
+                User.withUsername("user").password("{noop}uuser").authorities("USER").build());
     }
 }

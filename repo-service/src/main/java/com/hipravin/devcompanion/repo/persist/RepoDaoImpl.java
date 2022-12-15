@@ -28,8 +28,19 @@ public class RepoDaoImpl implements RepoDao {
     private static final Logger log = LoggerFactory.getLogger(RepoDaoImpl.class);
 
     private static int MAX_SEARCH_TERMS = 10;
-    private static final String FROM_REPO_FILE = "select * from repo_file where ";
-    private static final String COUNT_FROM_REPO_FILE = "select count(*) as total from repo_file where ";
+    //alternatively to {h-schema} placeholder one can try to create a trigger on login (not tested)
+//    CREATE OR REPLACE TRIGGER db_logon AFTER logon ON DATABASE
+//    WHEN
+//            (
+//                    USER = 'APP_ACCESS'
+//            )
+//    BEGIN
+//    EXECUTE immediate 'ALTER SESSION SET CURRENT_SCHEMA = APP_OWNER';
+//    END;
+
+
+    private static final String FROM_REPO_FILE = "select * from {h-schema}repo_file where ";
+    private static final String COUNT_FROM_REPO_FILE = "select count(*) as total from {h-schema}repo_file where ";
     private static final String ORDER_BY_ID = " order by id ";
 
     private final EntityManager em;

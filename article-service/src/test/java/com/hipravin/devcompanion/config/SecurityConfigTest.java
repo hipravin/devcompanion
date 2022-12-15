@@ -26,7 +26,6 @@ class SecurityConfigTest {
     TestRestTemplate restTemplate;
 
     @Test
-    @Disabled//turned off swagger security
     void test401WithoutAuthentication() {
         ResponseEntity<String> response = swaggerUiNoAuth();
 

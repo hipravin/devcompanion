@@ -2,7 +2,7 @@ package com.hipravin.devcompanion.repo.dto;
 
 import java.util.List;
 
-public class FileSearchResponseDto {
+public class FileSnippetsDto {
     private RepoFileDescriptionDto file;
     private List<CodeSnippetDto> snippets;
 

@@ -12,6 +12,8 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>domain/domain-repo</module>
+
         <module>admin</module>
         <module>gateway</module>
         <module>article-service</module>

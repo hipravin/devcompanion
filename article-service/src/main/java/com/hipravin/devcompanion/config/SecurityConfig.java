@@ -8,8 +8,10 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 @Configuration
 public class SecurityConfig {
@@ -30,11 +32,15 @@ public class SecurityConfig {
     @Bean
     @Order(SecurityProperties.BASIC_AUTH_ORDER - 90)
     public SecurityFilterChain swaggerFilterChain(HttpSecurity http) throws Exception {
+
         http.requestMatchers().antMatchers("/swagger-ui/**", "/v3/api-docs/**")
                 .and()
-                .authorizeRequests().anyRequest().permitAll();
+                .httpBasic(Customizer.withDefaults())
+                .userDetailsService(hardcodedUserDetailsManager())
+                .authorizeRequests().anyRequest().authenticated();
         return http.build();
     }
+
     @Bean
     @Order(SecurityProperties.BASIC_AUTH_ORDER - 80)
     public SecurityFilterChain actuatorFilterChain(HttpSecurity http) throws Exception {
@@ -58,5 +64,10 @@ public class SecurityConfig {
         http.antMatcher("/**")
                 .authorizeRequests().anyRequest().denyAll();
         return http.build();
+    }
+
+    InMemoryUserDetailsManager hardcodedUserDetailsManager() {
+        return new InMemoryUserDetailsManager(
+                        new UserDetails[]{User.withUsername("admin").password("{noop}aadmin").roles().build()});
     }
 }

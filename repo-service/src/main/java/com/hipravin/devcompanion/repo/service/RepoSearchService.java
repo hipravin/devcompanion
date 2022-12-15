@@ -1,8 +1,11 @@
 package com.hipravin.devcompanion.repo.service;
 
 import com.hipravin.devcompanion.repo.dto.CodeSnippetDto;
-import com.hipravin.devcompanion.repo.dto.FileSearchResponseDto;
+import com.hipravin.devcompanion.repo.dto.FileSnippetsDto;
+import com.hipravin.devcompanion.repo.dto.RepoDescriptionDto;
+import com.hipravin.devcompanion.repo.dto.RepoFileDescriptionDto;
 import com.hipravin.devcompanion.repo.persist.RepoDao;
+import com.hipravin.devcompanion.repo.persist.entity.RepoEntity;
 import com.hipravin.devcompanion.repo.persist.entity.RepoTextFileEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,23 +27,45 @@ public class RepoSearchService {
         this.repoDao = repoDao;
     }
 
-    public Page<FileSearchResponseDto> findFilesOrderById(String query, Pageable pageable) {
+    public Page<FileSnippetsDto> findFilesOrderById(String query, Pageable pageable) {
+        String[] searchTerms = parseQuery(query);
 
-        Page<RepoTextFileEntity> repoFiles = repoDao.search(parseQuery(query), pageable);
-
-        return null;
-
+        Page<RepoTextFileEntity> repoFiles = repoDao.search(searchTerms, pageable);
+        return repoFiles.map(rf -> convertToDto(rf, searchTerms));
     }
 
     String[] parseQuery(String query) {
         return query.split("\s+");
     }
 
-    FileSearchResponseDto mapToDto(RepoTextFileEntity rtfe) {
-        FileSearchResponseDto result = new FileSearchResponseDto();
+    FileSnippetsDto convertToDto(RepoTextFileEntity rtfe, String[] searchTerms) {
+        FileSnippetsDto result = new FileSnippetsDto();
 
+        List<CodeSnippetDto> snippets = snippetsFromFileContent(rtfe.getContent(), searchTerms);
+        result.setSnippets(snippets);
+        result.setFile(mapToDto(rtfe));
 
         return result;
+    }
+
+    RepoFileDescriptionDto mapToDto(RepoTextFileEntity rtfe) {
+        RepoFileDescriptionDto rfdDto = new RepoFileDescriptionDto();
+
+        rfdDto.setId(rtfe.getId());
+        rfdDto.setFileName(rtfe.getName());
+        rfdDto.setRelativePath(rtfe.getRelativePath());
+        rfdDto.setRepo(mapToDto(rtfe.getRepo()));
+
+        return rfdDto;
+    }
+
+    RepoDescriptionDto mapToDto(RepoEntity re) {
+        RepoDescriptionDto rdDto = new RepoDescriptionDto();
+        rdDto.setId(re.getId());
+        rdDto.setName(re.getName());
+        rdDto.setRelativePath(re.getRelativePath());
+
+        return rdDto;
     }
 
     record Block(int from, int to) {
@@ -122,7 +147,7 @@ public class RepoSearchService {
         String snippetContent = subMap
                 .entrySet().stream()
                 .map(e -> e.getValue())
-                .collect(Collectors.joining("\r\n"));
+                .collect(Collectors.joining("\n"));
 
         snippet.setContent(snippetContent);
         snippet.setLineFrom(subMap.firstKey());
