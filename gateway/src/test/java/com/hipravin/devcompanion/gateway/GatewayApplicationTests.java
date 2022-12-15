@@ -7,7 +7,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("local")
-@Disabled //not sure it's feasible to mock all oath2 stuff in test in order to load a contest
+@Disabled //not sure it's feasible to mock all oath2 stuff in test in order to load a context
 class GatewayApplicationTests {
 
     @Test

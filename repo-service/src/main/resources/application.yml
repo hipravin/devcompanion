@@ -1,0 +1,111 @@
+spring:
+  application:
+    name: repo-service
+
+  datasource:
+    url: ${REPO_DB_URL}
+    username: ${REPO_DB_USER}
+    password: ${REPO_DB_PASSWORD}
+
+  jpa:
+    properties:
+      hibernate:
+        default_schema: devcompanion
+        order_inserts: true
+        order_updates: true
+        #        generate_statistics: true
+        jdbc:
+          batch_size: 100
+          time_zone: UTC
+
+    hibernate:
+      ddl-auto: none
+
+
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          issuer-uri: ${KEYCLOAK_URL}/auth/realms/HiRealm
+  boot:
+    admin:
+      client:
+        url: ${ADMIN_SERVER_URL}
+        username: ${ADMIN_SERVER_USERNAME}
+        password: ${ADMIN_SERVER_PASSWORD}
+        instance:
+          management-base-url: ${MANAGEMENT_BASE_URL}
+
+###
+server:
+  port: 8182
+  tomcat:
+    accesslog:
+      enabled: true
+
+###
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+    loggers:
+      enabled: true
+  server:
+    port: 8183
+###
+application:
+  repo-path: /stub
+
+###
+#disable openapi
+springdoc:
+  swagger-ui:
+    enabled: false
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/playground
+    username: postgres
+    password: admin
+
+  boot:
+    admin:
+      client:
+        url: #http://localhost:8070
+        username: admin
+        password: admin
+        instance:
+          management-base-url: #http://localhost:8183
+
+KEYCLOAK_URL: "http://host.docker.internal:8080"
+
+logging:
+  level:
+    com.hipravin: DEBUG
+    org.springframework: INFO
+    org.springframework.security: INFO
+
+application:
+  repo-path: C:/dev/projects
+
+---
+spring:
+  config:
+    activate:
+      on-profile: swagger
+
+springdoc:
+  swagger-ui:
+    enabled: true
+

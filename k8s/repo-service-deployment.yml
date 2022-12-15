@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: repo-service
+  name: repo-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: repo-service
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: repo-service
+    spec:
+      containers:
+      - image: hipravin/devcompanion-repo-service:latest
+        imagePullPolicy: IfNotPresent
+        name: devcompanion-repo-service
+#        resources: {}
+        resources:
+          limits:
+            memory: 512Mi
+          requests:
+            memory: 512Mi
+        env:
+          - name: JAVA_TOOL_OPTIONS
+            value: "-Xmx256m"
+          - name: REPO_DB_URL
+            value: "jdbc:postgresql://host.docker.internal:5432/playground"
+          - name: REPO_DB_USER
+            value: "postgres"
+          - name: REPO_DB_PASSWORD
+            value: "admin"
+          - name: KEYCLOAK_URL
+            value: "http://host.docker.internal:8080"
+          - name: ADMIN_SERVER_URL
+            value: "http://admin:8070"
+          - name: POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: MANAGEMENT_BASE_URL
+            value: "http://$(POD_IP):8183"
+          - name: ADMIN_SERVER_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: boot-admin-secret
+                key: username
+          - name: ADMIN_SERVER_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: boot-admin-secret
+                key: password
+
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8183
+#          failureThreshold: ...
+#          periodSeconds: ...
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8183
+#          failureThreshold: ...
+#          periodSeconds: ...
+
+status: {}

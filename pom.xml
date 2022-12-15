@@ -12,18 +12,11 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>domain/domain-repo</module>
+
         <module>admin</module>
         <module>gateway</module>
         <module>article-service</module>
+        <module>repo-service</module>
     </modules>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
-
 </project>

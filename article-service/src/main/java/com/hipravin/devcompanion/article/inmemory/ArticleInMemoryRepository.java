@@ -14,7 +14,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-public class ArticleInMemoryRepository implements ArticleRepository<Article, Long>, ArticleSearchService {
+public class ArticleInMemoryRepository implements ArticleRepository<Article, Long> {
     private static final Logger log = LoggerFactory.getLogger(ArticleInMemoryRepository.class);
 
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock(false);
@@ -55,12 +55,10 @@ public class ArticleInMemoryRepository implements ArticleRepository<Article, Lon
                 getWithReadLock(() -> articlesById.get(articleId)));
     }
 
-    @Override
     public List<Article> findByTitleMatches(String searchString, int limit) {
         return getWithReadLock(() -> byTitleMatches(searchString, limit));
     }
 
-    @Override
     public List<Article> findByAnyMatches(String searchString, int limit) {
         return getWithReadLock(() -> byAnyMatches(searchString, limit));
     }

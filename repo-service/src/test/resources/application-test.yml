@@ -1,0 +1,38 @@
+spring:
+  datasource:
+    driver-class-name: org.hsqldb.jdbc.JDBCDriver
+    url: jdbc:hsqldb:mem:testdb;sql.syntax_pgs=true
+    username: sa
+    password:
+
+  sql:
+    init:
+      mode: always
+
+  jpa:
+    properties:
+      hibernate:
+        default_schema: #override with empty value for embedded
+        generate_statistics: false
+#        generate_statistics: true
+logging:
+  level:
+    com.hipravin: DEBUG
+    org.hibernate.SQL: DEBUG
+#    org.hibernate.type.descriptor.sql: TRACE
+
+    org.springframework: INFO
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: basic
+
+application:
+  repo-path: src/test/resources/test-repo-root
+
+#repo-service.url: "http://localhost:8182/"
+repo-service.url: "http://localhost:${local.server.port}/"
