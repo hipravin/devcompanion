@@ -42,7 +42,7 @@
         <dependency>
             <groupId>com.hipravin.devcompanion</groupId>
             <artifactId>domain-repo</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

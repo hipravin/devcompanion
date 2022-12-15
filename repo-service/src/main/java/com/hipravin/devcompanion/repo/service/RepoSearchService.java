@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class RepoSearchService {
     private final RepoDao repoDao;
 
-    private int additionalLinesInSnippet = 3;
+    private int additionalLinesInSnippet = 4;
     private int blockMergeLineCount = additionalLinesInSnippet * 2;
     private int maxSnippetsFromFile = 10;
 

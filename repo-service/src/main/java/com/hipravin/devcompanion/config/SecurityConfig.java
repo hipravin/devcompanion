@@ -45,7 +45,8 @@ public class SecurityConfig {
     public SecurityFilterChain actuatorFilterChain(HttpSecurity http) throws Exception {
         http.antMatcher("/actuator/**")
                 .csrf().disable()
-                .authorizeRequests().anyRequest().hasAuthority("ACTUATOR");
+//                .authorizeRequests().anyRequest().hasAuthority("ACTUATOR");
+                .authorizeRequests().anyRequest().permitAll();
         return http.build();
     }
 

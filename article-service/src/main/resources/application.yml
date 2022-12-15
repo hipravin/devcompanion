@@ -29,6 +29,17 @@ application:
   articles-default-response-limit: 20
   acticles-yaml-path: ${ARTICLES_REPO_PATH}
 
+repo-service:
+  url: ${REPO_SERVICE_URL}
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: basic
+
 ###
 management:
   endpoints:
@@ -71,6 +82,7 @@ spring:
 
 ARTICLES_REPO_PATH: "C:/dev/projects/devcompanion/article-repo"
 KEYCLOAK_URL: "http://host.docker.internal:8080"
+REPO_SERVICE_URL: "http://localhost:8182/"
 
 logging:
   level:

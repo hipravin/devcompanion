@@ -6,6 +6,7 @@ import com.hipravin.devcompanion.article.search.ArticleSearchService;
 import com.hipravin.devcompanion.config.ApplicationProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,8 @@ public class ArticleController {
     private final ApplicationProperties applicationProperties;
     private final ArticleSearchService articleSearchService;
 
-    public ArticleController(ApplicationProperties applicationProperties, ArticleSearchService articleSearchService) {
+    public ArticleController(ApplicationProperties applicationProperties,
+                             @Qualifier("aggregateArticleSearchService") ArticleSearchService articleSearchService) {
         this.applicationProperties = applicationProperties;
         this.articleSearchService = articleSearchService;
     }
@@ -36,6 +38,7 @@ public class ArticleController {
         return ResponseEntity.ok(articlesFound);
     }
 
+    //synthetic endpoint just to test POST method which should be csrf-secure
     @PostMapping("/search-post")
     public ResponseEntity<?> findBySearchStringPost(
             @RequestBody SearchRequestDto searchRequestDto) {

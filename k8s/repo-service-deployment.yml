@@ -3,45 +3,41 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    app: article-service
-  name: article-service
+    app: repo-service
+  name: repo-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: article-service
+      app: repo-service
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: article-service
+        app: repo-service
     spec:
       containers:
-      - image: hipravin/devcompanion-article-service:latest
+      - image: hipravin/devcompanion-repo-service:latest
         imagePullPolicy: IfNotPresent
-        name: devcompanion-article-service
+        name: devcompanion-repo-service
 #        resources: {}
         resources:
           limits:
             memory: 512Mi
-#            cpu: 4
           requests:
             memory: 512Mi
-#            cpu: 1
-        volumeMounts:
-          - name: article-repo
-            mountPath: /usr/local/article-repo
         env:
-          - name: ARTICLES_REPO_PATH
-            value: "/usr/local/article-repo"
           - name: JAVA_TOOL_OPTIONS
             value: "-Xmx256m"
+          - name: REPO_DB_URL
+            value: "jdbc:postgresql://host.docker.internal:5432/playground"
+          - name: REPO_DB_USER
+            value: "postgres"
+          - name: REPO_DB_PASSWORD
+            value: "admin"
           - name: KEYCLOAK_URL
-#            value: "http://keycloak.hipravin.ru:8080"
             value: "http://host.docker.internal:8080"
-          - name: REPO_SERVICE_URL
-            value: "http://repo-service:8182"
           - name: ADMIN_SERVER_URL
             value: "http://admin:8070"
           - name: POD_IP
@@ -49,7 +45,7 @@ spec:
               fieldRef:
                 fieldPath: status.podIP
           - name: MANAGEMENT_BASE_URL
-            value: "http://$(POD_IP):8083"
+            value: "http://$(POD_IP):8183"
           - name: ADMIN_SERVER_USERNAME
             valueFrom:
               secretKeyRef:
@@ -61,29 +57,17 @@ spec:
                 name: boot-admin-secret
                 key: password
 
-#          - name: MONGO_DATABASE   #FYI, switch to secretKeyRef
-#            valueFrom:
-#              configMapKeyRef:
-#                name: mongodb
-#                key: database-name
-
-
-
         livenessProbe:
           httpGet:
             path: /actuator/health/liveness
-            port: 8083
+            port: 8183
 #          failureThreshold: ...
 #          periodSeconds: ...
         readinessProbe:
           httpGet:
             path: /actuator/health/readiness
-            port: 8083
+            port: 8183
 #          failureThreshold: ...
 #          periodSeconds: ...
-      volumes:
-        - name: article-repo
-          persistentVolumeClaim:
-            claimName: article-repo-pv-claim
 
 status: {}

@@ -2,6 +2,11 @@ spring:
   application:
     name: repo-service
 
+  datasource:
+    url: ${REPO_DB_URL}
+    username: ${REPO_DB_USER}
+    password: ${REPO_DB_PASSWORD}
+
   jpa:
     properties:
       hibernate:
@@ -16,19 +21,20 @@ spring:
     hibernate:
       ddl-auto: none
 
+
 #  security:
 #    oauth2:
 #      resourceserver:
 #        jwt:
 #          issuer-uri: ${KEYCLOAK_URL}/auth/realms/HiRealm
-#  boot:
-#    admin:
-#      client:
-#        url: ${ADMIN_SERVER_URL}
-#        username: ${ADMIN_SERVER_USERNAME}
-#        password: ${ADMIN_SERVER_PASSWORD}
-#        instance:
-#          management-base-url: ${MANAGEMENT_BASE_URL}
+  boot:
+    admin:
+      client:
+        url: ${ADMIN_SERVER_URL}
+        username: ${ADMIN_SERVER_USERNAME}
+        password: ${ADMIN_SERVER_PASSWORD}
+        instance:
+          management-base-url: ${MANAGEMENT_BASE_URL}
 
 ###
 server:
@@ -52,6 +58,9 @@ management:
       enabled: true
   server:
     port: 8183
+###
+application:
+  repo-path: /stub
 
 ###
 #disable openapi
@@ -69,8 +78,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/playground
     username: postgres
     password: admin
-
-  #source: https://www.baeldung.com/spring-boot-admin
 
   boot:
     admin:
