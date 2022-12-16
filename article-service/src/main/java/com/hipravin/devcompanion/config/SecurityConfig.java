@@ -32,7 +32,6 @@ public class SecurityConfig {
     @Bean
     @Order(SecurityProperties.BASIC_AUTH_ORDER - 90)
     public SecurityFilterChain swaggerFilterChain(HttpSecurity http) throws Exception {
-
         http.requestMatchers().antMatchers("/swagger-ui/**", "/v3/api-docs/**")
                 .and()
                 .httpBasic(Customizer.withDefaults())
@@ -46,7 +45,10 @@ public class SecurityConfig {
     public SecurityFilterChain actuatorFilterChain(HttpSecurity http) throws Exception {
         http.antMatcher("/actuator/**")
                 .csrf().disable()
-                .authorizeRequests().anyRequest().permitAll();
+                .httpBasic(Customizer.withDefaults())
+                .userDetailsService(hardcodedUserDetailsManager())
+                .authorizeRequests().antMatchers("/actuator/health/**").permitAll()
+                .anyRequest().hasAuthority("MANAGE");
         return http.build();
     }
 
@@ -68,6 +70,6 @@ public class SecurityConfig {
 
     InMemoryUserDetailsManager hardcodedUserDetailsManager() {
         return new InMemoryUserDetailsManager(
-                        new UserDetails[]{User.withUsername("admin").password("{noop}aadmin").roles().build()});
+                        new UserDetails[]{User.withUsername("admin").password("{noop}aadmin").authorities("MANAGE").build()});
     }
 }

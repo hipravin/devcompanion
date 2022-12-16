@@ -13,7 +13,7 @@ public final class Converters {
     public static Article fromRepoFileSnippets(FileSnippetsDto fileSnippets) {
 
         String title = "Repository: %s".formatted(fileSnippets.getFile().getRepo().getRelativePath());
-        String description = "File: %s".formatted(fileSnippets.getFile().getRepo().getRelativePath());
+        String description = "File: %s".formatted(fileSnippets.getFile().getRelativePath());
         List<CodeBlock> blocks = fileSnippets.getSnippets().stream()
                 .map(s -> fromSnippet(s))
                 .toList();

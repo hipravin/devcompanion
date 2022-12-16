@@ -15,3 +15,11 @@ spring:
             user:
               name: ${spring.security.user.name}
               password: ${spring.security.user.password}
+
+      instance-auth:
+        enabled: true
+        service-map:
+          article-service.user-name: admin
+          article-service.user-password: aadmin
+          repo-service.user-name: admin
+          repo-service.user-password: aadmin

@@ -45,8 +45,9 @@ public class SecurityConfig {
     public SecurityFilterChain actuatorFilterChain(HttpSecurity http) throws Exception {
         http.antMatcher("/actuator/**")
                 .csrf().disable()
-//                .authorizeRequests().anyRequest().hasAuthority("ACTUATOR");
-                .authorizeRequests().anyRequest().permitAll();
+                .httpBasic(Customizer.withDefaults())
+                .authorizeRequests().antMatchers("/actuator/health/**").permitAll()
+                .anyRequest().hasAuthority("MANAGE");
         return http.build();
     }
 
@@ -57,7 +58,6 @@ public class SecurityConfig {
                 .authorizeRequests().anyRequest().permitAll();
         return http.build();
     }
-
 
     @Bean
     @Order(SecurityProperties.BASIC_AUTH_ORDER - 60)
@@ -71,8 +71,7 @@ public class SecurityConfig {
     @Bean
     public InMemoryUserDetailsManager hardcodedUserDetailsManager() {
         return new InMemoryUserDetailsManager(
-                User.withUsername("admin").password("{noop}aadmin").authorities("ADMIN", "MANAGE", "USER", "ACTUATOR").build(),
-                User.withUsername("actuator").password("{noop}aactuator").authorities("ACTUATOR").build(),
+                User.withUsername("admin").password("{noop}aadmin").authorities("MANAGE", "USER").build(),
                 User.withUsername("user").password("{noop}uuser").authorities("USER").build());
     }
 }
