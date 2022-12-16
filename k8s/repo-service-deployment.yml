@@ -33,9 +33,15 @@ spec:
           - name: REPO_DB_URL
             value: "jdbc:postgresql://host.docker.internal:5432/playground"
           - name: REPO_DB_USER
-            value: "postgres"
+            valueFrom:
+              secretKeyRef:
+                name: repo-db-secret
+                key: username
           - name: REPO_DB_PASSWORD
-            value: "admin"
+            valueFrom:
+              secretKeyRef:
+                name: repo-db-secret
+                key: password
           - name: KEYCLOAK_URL
             value: "http://host.docker.internal:8080"
           - name: ADMIN_SERVER_URL
@@ -57,17 +63,21 @@ spec:
                 name: boot-admin-secret
                 key: password
 
+        startupProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8183
+          failureThreshold: 30
+          periodSeconds: 10
+          initialDelaySeconds: 30
+
         livenessProbe:
           httpGet:
             path: /actuator/health/liveness
             port: 8183
-#          failureThreshold: ...
-#          periodSeconds: ...
         readinessProbe:
           httpGet:
             path: /actuator/health/readiness
             port: 8183
-#          failureThreshold: ...
-#          periodSeconds: ...
 
 status: {}

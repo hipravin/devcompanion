@@ -67,20 +67,32 @@ spec:
 #                name: mongodb
 #                key: database-name
 
+#       https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 
+        startupProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8083
+          failureThreshold: 30
+          periodSeconds: 10
+          initialDelaySeconds: 30
+#          #default 3
+#          failureThreshold: 5
+#          #default 10
+#          periodSeconds: 15
+#          #default 0
+#          initialDelaySeconds: 30
+#          #default 1
+#          timeoutSeconds: 5
 
         livenessProbe:
           httpGet:
             path: /actuator/health/liveness
             port: 8083
-#          failureThreshold: ...
-#          periodSeconds: ...
         readinessProbe:
           httpGet:
             path: /actuator/health/readiness
             port: 8083
-#          failureThreshold: ...
-#          periodSeconds: ...
       volumes:
         - name: article-repo
           persistentVolumeClaim:

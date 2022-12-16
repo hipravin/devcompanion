@@ -32,4 +32,7 @@ codeBlocks:
   - title: Copy file from pod to local
     code: |-
       kubectl cp default/article-service-5dc687d598-m2ssc:flight.jfr ./flight.jfr
+  - title: Create secret
+    code: |-
+      kubectl create secret generic db-secret --from-literal=username=user --from-literal=password=p455w0rd
       
