@@ -1,14 +1,11 @@
-FROM openjdk:17-alpine
-#FROM eclipse-temurin:17-jdk-jammy
-
+FROM openjdk:17-alpine as builder
 ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} application.jar
+RUN java -Djarmode=layertools -jar application.jar extract
 
-#LABEL project.name=${project.artifactId} \
-#      project.version=${project.version}
-
-LABEL custom.label="article-service-docker-image-custom-label"
-
-COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java", "-jar","/app.jar"]
-
-#ENTRYPOINT exec java -Xmx1512m -Xms1g [...] -cp app:app/lib/* com.schibsted.yada.Yada
+FROM openjdk:17-alpine
+COPY --from=builder dependencies/ ./
+COPY --from=builder spring-boot-loader/ ./
+COPY --from=builder snapshot-dependencies/ ./
+COPY --from=builder application/ ./
+ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]

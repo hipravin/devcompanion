@@ -11,7 +11,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile(InitRunner.INIT_RUNNERS_PROFILE)
+@Profile(InitRunner.INIT_RUNNERS_NOT_DISABLED)
 @Order(InitRunner.ORDER_FILL_INMEMORY)
 public class FillInMemoryRepoRunner implements ApplicationRunner {
     private static final Logger log = LoggerFactory.getLogger(FillInMemoryRepoRunner.class);

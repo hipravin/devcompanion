@@ -1,3 +1,9 @@
+server:
+  port: 8082
+  tomcat:
+    accesslog:
+      enabled: true
+
 spring:
   application:
     name: article-service
@@ -16,12 +22,6 @@ spring:
         instance:
           management-base-url: ${MANAGEMENT_BASE_URL}
 
-###
-server:
-  port: 8082
-  tomcat:
-    accesslog:
-      enabled: true
 
 ###
 application:

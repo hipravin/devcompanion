@@ -25,10 +25,10 @@ spec:
         resources:
           limits:
             memory: 512Mi
-#            cpu: 4
+#            cpu: #never set cpu limits!
           requests:
             memory: 512Mi
-#            cpu: 1
+            cpu: "1000m"
         volumeMounts:
           - name: article-repo
             mountPath: /usr/local/article-repo
