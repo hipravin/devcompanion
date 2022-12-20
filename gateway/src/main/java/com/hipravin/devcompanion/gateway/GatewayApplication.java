@@ -1,6 +1,6 @@
 package com.hipravin.devcompanion.gateway;
 
-import com.hipravin.devcompanion.gateway.filter.GatewayDiagnosticFilter;
+import com.hipravin.devcompanion.gateway.filter.GatewayDiagnosticFilterFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,7 +21,7 @@ public class GatewayApplication {
     private TokenRelayGatewayFilterFactory tokenRelayfilterFactory;
 
     @Autowired
-    private GatewayDiagnosticFilter gatewayDiagnosticFilter;
+    private GatewayDiagnosticFilterFactory gatewayDiagnosticFilter;
 
     @Autowired
     private AppRouteProperties routeProperties;

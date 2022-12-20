@@ -13,6 +13,8 @@ services:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: password
+    restart: unless-stopped
+
   keycloak:
     image: quay.io/keycloak/keycloak:legacy
     environment:

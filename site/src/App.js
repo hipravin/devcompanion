@@ -8,6 +8,7 @@ import {searchArticlesApiMethod} from "./lib/api/articles";
 import {userInfoApiMethod} from "./lib/api/users";
 import {sesionInfoApiMethod, sessionInfoApiMethod} from "./lib/api/session";
 import ArticleList from "./components/ArticleList/ArticleList";
+import Relogin from "./components/Relogin/Relogin";
 
 
 class App extends React.Component {
@@ -15,7 +16,8 @@ class App extends React.Component {
         super(props);
         this.state = {
             articles: undefined,
-            user: undefined
+            user: undefined,
+            reloginVisible: undefined
         };
     }
 
@@ -34,9 +36,8 @@ class App extends React.Component {
             .then(res => this.setState({articles: res, user: user}))
             .catch(err => {
                 console.error(err);
-                notify(err);
+                notify("Service temporarily unavailable, please try refreshing a page.");
             });
-
     }
 
     requestUserInfo() {
@@ -51,7 +52,14 @@ class App extends React.Component {
     logSessionInfo() {
         sessionInfoApiMethod()
             .then(res => console.log('session info: ' + res))
-            .catch(err => console.error('failed session info: ' + err));
+            .catch(err => {
+                console.error('failed session info: ' + err);
+                this.setState({
+                    articles: undefined,
+                    user: undefined,
+                    reloginVisible: true
+                });
+            });
     }
 
     logUserInfo() {
@@ -87,9 +95,12 @@ class App extends React.Component {
 
         const userInfo = this.state.user ? this.state.user : {user_name: ""};
 
+        const showRelogin = this.state.reloginVisible === true;
+
         return (
+
             <div className="App">
-                <Notifier/>
+                <Relogin visible={showRelogin}/>
                 <TopNavBar resultArticlesCount={articlesCount} userInfo={userInfo} onSearch={this.handleSearch}/>
                 {resultView}
             </div>
