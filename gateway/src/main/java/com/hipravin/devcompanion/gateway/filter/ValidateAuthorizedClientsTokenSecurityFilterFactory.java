@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
+import org.springframework.web.server.WebSession;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
@@ -39,33 +40,44 @@ public class ValidateAuthorizedClientsTokenSecurityFilterFactory {
                 .flatMap(principal -> serverOAuth2AuthorizedClientRepository
                         .loadAuthorizedClient(principal.getAuthorizedClientRegistrationId(), principal, exchange));
 
-        return auth2AuthorizedClientMono.doOnSuccess(client -> {
-            if (client != null && client.getAccessToken() != null && client.getRefreshToken() != null) {
-                log.debug("Authorized Client access token: expires {}, {}",
-                        client.getAccessToken().getExpiresAt(), client.getAccessToken().getTokenValue());
-                log.debug("Authorized Client refresh token: expires {}, {}",
-                        client.getRefreshToken().getExpiresAt(), client.getRefreshToken().getTokenValue());
+        return auth2AuthorizedClientMono.zipWith(exchange.getSession()).flatMap(tuple2 -> {
+            OAuth2AuthorizedClient client = tuple2.getT1();
+            WebSession session = tuple2.getT2();
 
-                if (tokenExpired(client.getAccessToken())) {
-                    //TODO: using .block() because of lack of reactive experience.
-                    // also use refresh token instead of access
-                    // at the moment keycloak refresh jwt token has proper 'exp' key, but it's ignored and refreshToken.expiresAt() is null
-                    //so far randomly trying to make session expiration work
-                    exchange.getSession().map(ws -> {
-                        log.info("OAuth token expired, invalidating session: " + ws.getId());
-                        return ws.invalidate();
-                    }).block();
-                    exchange.getResponse().setStatusCode(HttpStatus.PERMANENT_REDIRECT);
-                    exchange.getResponse().getHeaders().setLocation(URI.create("/"));
-                }
+            if(tokenExpired(client)) {
+                log.info("OAuth token expired, invalidating session: " + session.getId());
+                exchange.getResponse().setStatusCode(HttpStatus.PERMANENT_REDIRECT);
+                exchange.getResponse().getHeaders().setLocation(URI.create("/"));
+
+                return session.invalidate();
             } else {
-                log.debug("Authorized Client or tokens is null");
+                return Mono.empty();
             }
         }).then(chain.filter(exchange));
     }
 
     public WebFilter apply() {
         return (exchange, chain) -> filter(exchange, chain);
+    }
+
+    boolean tokenExpired(OAuth2AuthorizedClient client) {
+        if(client == null) {
+            log.debug("Authorized Client is null");
+            return false;
+        }
+
+        if (client.getAccessToken() != null) {
+            log.debug("Authorized Client access token: expires {}, {}",
+                    client.getAccessToken().getExpiresAt(), client.getAccessToken().getTokenValue());
+        }
+
+        if (client.getRefreshToken() != null) {
+            log.debug("Authorized Client refresh token: expires {}, {}",
+                    client.getRefreshToken().getExpiresAt(), client.getRefreshToken().getTokenValue());
+        }
+
+        return (client.getAccessToken() != null)
+                && tokenExpired(client.getAccessToken());
     }
 
     boolean tokenExpired(OAuth2AccessToken token) {
