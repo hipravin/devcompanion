@@ -24,13 +24,10 @@ public class ValidateAuthorizedClientsTokenSecurityFilterFactory {
     private static final Logger log = LoggerFactory.getLogger(ValidateAuthorizedClientsTokenSecurityFilterFactory.class);
 
     private final ServerOAuth2AuthorizedClientRepository serverOAuth2AuthorizedClientRepository;
-    private final ObjectProvider<ReactiveOAuth2AuthorizedClientManager> clientManagerProvider;
 
     public ValidateAuthorizedClientsTokenSecurityFilterFactory(
-            ServerOAuth2AuthorizedClientRepository serverOAuth2AuthorizedClientRepository,
-            ObjectProvider<ReactiveOAuth2AuthorizedClientManager> clientManagerProvider) {
+        ServerOAuth2AuthorizedClientRepository serverOAuth2AuthorizedClientRepository) {
         this.serverOAuth2AuthorizedClientRepository = serverOAuth2AuthorizedClientRepository;
-        this.clientManagerProvider = clientManagerProvider;
     }
 
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
