@@ -4,14 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
-import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GatewayDiagnosticFilterFactory extends AbstractGatewayFilterFactory<Object> {
-    private static final Logger log = LoggerFactory.getLogger(GatewayDiagnosticFilterFactory.class);
+public class GatewayLoggingDiagnosticFilterFactory extends AbstractGatewayFilterFactory<Object> {
+    private static final Logger log = LoggerFactory.getLogger(GatewayLoggingDiagnosticFilterFactory.class);
 
-    public GatewayDiagnosticFilterFactory() {
+    public GatewayLoggingDiagnosticFilterFactory() {
         super(Object.class);
     }
 

@@ -49,7 +49,7 @@ public class RepoLoadServiceLocalDirectory implements RepoLoadService {
 
     private RepoTextFile loadSingleFile(Path repoRootPath, Path filePath) {
         String fileName = filePath.getFileName().toString();
-        String relativePath = repoRootPath.relativize(filePath).normalize().toString();
+        String relativePath = withForwardSlash(repoRootPath.relativize(filePath).normalize().toString());
         long size = RepoFileUtils.fileSizeBytes(filePath);
 
         RepoFileMetadata metadata = new RepoFileMetadata(fileName, relativePath, ContentType.TEXT, size);
@@ -67,5 +67,7 @@ public class RepoLoadServiceLocalDirectory implements RepoLoadService {
         return sanitized;
     }
 
-
+    private static String withForwardSlash(String relativePath) {
+        return relativePath.replaceAll("\\\\", "/");
+    }
 }

@@ -17,9 +17,15 @@ class Article extends React.Component {
             }
         );
 
+        const links = article.links.map(l => {
+            return <a href={l.url}>{l.title}</a>;
+            }
+        );
+
         return (
             <div className="Article">
                 <div className="ArticleTitle">{article.title}</div>
+                <div className="ArticleLinks">{links}</div>
                 <div className="ArticleDescription">{article.description}</div>
 
                 <div className="ArticleCodeBlocks">

@@ -15,10 +15,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -45,10 +42,17 @@ public class RepoDaoImpl implements RepoDao {
 
     private final EntityManager em;
     private final RepoRepository repoRepository;
+    private final RepoFileRepository repoFileRepository;
 
-    public RepoDaoImpl(EntityManager em, RepoRepository repoRepository) {
+    public RepoDaoImpl(EntityManager em, RepoRepository repoRepository, RepoFileRepository repoFileRepository) {
         this.em = em;
         this.repoRepository = repoRepository;
+        this.repoFileRepository = repoFileRepository;
+    }
+
+    @Override
+    public Optional<RepoTextFileEntity> findFileById(long id) {
+        return repoFileRepository.findById(id);
     }
 
     @Override

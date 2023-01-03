@@ -55,6 +55,7 @@ spring:
 app:
   routes:
     article-service-uri: ${ARTICLE_SERVICE_URI}
+    repo-service-uri: ${REPO_SERVICE_URI}
     frontend-uri: ${FRONTEND_URI}
 
 ###

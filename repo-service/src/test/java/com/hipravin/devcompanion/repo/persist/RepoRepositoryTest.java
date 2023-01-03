@@ -5,6 +5,7 @@ import com.hipravin.devcompanion.repo.dto.CodeSnippetDto;
 import com.hipravin.devcompanion.repo.dto.FileSnippetsDto;
 import com.hipravin.devcompanion.repo.load.RepoLoadService;
 import com.hipravin.devcompanion.repo.model.Repo;
+import com.hipravin.devcompanion.repo.model.RepoTextFile;
 import com.hipravin.devcompanion.repo.persist.entity.RepoEntity;
 import com.hipravin.devcompanion.repo.persist.entity.RepoTextFileEntity;
 import org.junit.jupiter.api.BeforeAll;
@@ -54,6 +55,32 @@ class RepoRepositoryTest {
         //check reindex doesn't fail
         repoLoadService.loadAll()
                 .forEach(r -> repoDao.saveOrUpdate(r));
+    }
+
+    @Test
+    void testFindFileByIdNotFound() {
+        assertTrue(repoFileRepository.findById(-1L).isEmpty());
+    }
+
+    @Test
+    void testFindFileById() {
+        //find specific file with search to determine some valid id
+        List<RepoTextFileEntity> files = repoFileRepository.findByRepoId(
+                repoRepository.findByName("test-repo-0").orElseThrow().getId());
+
+        assertNotNull(files);
+        assertEquals(1, files.size());
+
+        long fileId = files.get(0).getId();
+
+        //actual test, find by id
+        RepoTextFileEntity rtfe = repoFileRepository.findById(fileId)
+                .orElseThrow(() -> new AssertionFailedError("not found: " + fileId));
+
+        assertNotNull(rtfe);
+        assertEquals(fileId, rtfe.getId());
+
+        assertTrue(rtfe.getContent().contains("public class Object"));
     }
 
     @Test

@@ -9,6 +9,7 @@ spring:
           management-base-url: #http://localhost:8002
 
 ARTICLE_SERVICE_URI: "http://localhost:8082"
+REPO_SERVICE_URI: "http://localhost:8182"
 FRONTEND_URI: "http://localhost:3000"
 KEYCLOAK_URL: "http://host.docker.internal:8080"
 
@@ -21,7 +22,7 @@ POD_IP: "127.0.0.1"
 logging:
   level:
     com.hipravin: DEBUG
-    org.springframework: INFO
-    org.springframework.security: INFO
-#    org.springframework: DEBUG
-#    org.springframework.security: TRACE
+#    org.springframework: INFO
+#    org.springframework.security: INFO
+    org.springframework: DEBUG
+    org.springframework.security: TRACE

@@ -12,6 +12,13 @@
     margin: 5px 18px 5px 18px;
 }
 
+.ArticleLinks {
+    border-left: 3px solid #105b63;
+    padding-left: 10px;
+
+    margin: 5px 18px 5px 18px;
+}
+
 .ArticleTitle {
     font-weight: bolder;
     font-size: 1.2em;

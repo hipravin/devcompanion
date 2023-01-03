@@ -1,9 +1,6 @@
 package com.hipravin.devcompanion.repo.service;
 
-import com.hipravin.devcompanion.repo.dto.CodeSnippetDto;
-import com.hipravin.devcompanion.repo.dto.FileSnippetsDto;
-import com.hipravin.devcompanion.repo.dto.RepoDescriptionDto;
-import com.hipravin.devcompanion.repo.dto.RepoFileDescriptionDto;
+import com.hipravin.devcompanion.repo.dto.*;
 import com.hipravin.devcompanion.repo.persist.RepoDao;
 import com.hipravin.devcompanion.repo.persist.entity.RepoEntity;
 import com.hipravin.devcompanion.repo.persist.entity.RepoTextFileEntity;
@@ -34,6 +31,22 @@ public class RepoSearchService {
         return repoFiles.map(rf -> convertToDto(rf, searchTerms));
     }
 
+    public Optional<RepoTextFileDto> findFileById(long id) {
+        return repoDao.findFileById(id)
+                .map(fe -> mapToDto(fe));
+    }
+
+    RepoTextFileDto mapToDto(RepoTextFileEntity rtfe) {
+        RepoTextFileDto rtfDto = new RepoTextFileDto();
+
+        RepoFileDescriptionDto descriptionDto = mapToDescriptionDto(rtfe);
+
+        rtfDto.setFileDescription(descriptionDto);
+        rtfDto.setContent(rtfe.getContent());
+
+        return rtfDto;
+    }
+
     String[] parseQuery(String query) {
         return query.split("\s+");
     }
@@ -43,12 +56,12 @@ public class RepoSearchService {
 
         List<CodeSnippetDto> snippets = snippetsFromFileContent(rtfe.getContent(), searchTerms);
         result.setSnippets(snippets);
-        result.setFile(mapToDto(rtfe));
+        result.setFile(mapToDescriptionDto(rtfe));
 
         return result;
     }
 
-    RepoFileDescriptionDto mapToDto(RepoTextFileEntity rtfe) {
+    RepoFileDescriptionDto mapToDescriptionDto(RepoTextFileEntity rtfe) {
         RepoFileDescriptionDto rfdDto = new RepoFileDescriptionDto();
 
         rfdDto.setId(rtfe.getId());

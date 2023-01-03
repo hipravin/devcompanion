@@ -2,9 +2,12 @@ package com.hipravin.devcompanion.client.repo;
 
 import com.hipravin.devcompanion.article.inmemory.model.Article;
 import com.hipravin.devcompanion.article.inmemory.model.CodeBlock;
+import com.hipravin.devcompanion.article.inmemory.model.Link;
 import com.hipravin.devcompanion.repo.dto.CodeSnippetDto;
 import com.hipravin.devcompanion.repo.dto.FileSnippetsDto;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public final class Converters {
@@ -18,13 +21,20 @@ public final class Converters {
                 .map(s -> fromSnippet(s))
                 .toList();
 
-        return new Article(fileSnippets.getFile().getId(), title, description, blocks);
+        List<Link> links = new ArrayList<>();
+        links.add(new Link(fileSnippets.getFile().getFileName(), rawFileUrl(fileSnippets.getFile().getId())));
+
+        return new Article(fileSnippets.getFile().getId(), title, description, links, blocks);
     }
 
     static CodeBlock fromSnippet(CodeSnippetDto snippetDto) {
         String title = "Lines %d - %d".formatted(snippetDto.getLineFrom(), snippetDto.getLineTo());
 
         return new CodeBlock(title, snippetDto.getContent());
+    }
+
+    static String rawFileUrl(long id) {
+        return "/api/v1/repos/files/%d/raw".formatted(id);
     }
 
 }

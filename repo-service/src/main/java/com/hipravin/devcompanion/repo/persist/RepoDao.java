@@ -7,8 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RepoDao {
+    Optional<RepoTextFileEntity> findFileById(long id);
+
     /**
      * Transforms to Entity and saves RepoEntity with containing RepoTextFileEntities.
      * Deletes old data by name if found.

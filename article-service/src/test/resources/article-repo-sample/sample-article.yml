@@ -1,6 +1,11 @@
 id: 1000001
 title: Java Spring load file from classpath as string lines
 description: Using @Value annotation and Resources class
+links:
+  - title: link1 title 1000001
+    url: https://link1.1000001
+  - title: link2 title 1000001
+    url: https://link2.1000001
 codeBlocks:
   - title: Autowire resource
     code: |-

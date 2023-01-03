@@ -1,6 +1,7 @@
 package com.hipravin.devcompanion.gateway;
 
-import com.hipravin.devcompanion.gateway.filter.GatewayDiagnosticFilterFactory;
+import com.hipravin.devcompanion.gateway.filter.BasicAuthGatewayFilterFactory;
+import com.hipravin.devcompanion.gateway.filter.GatewayLoggingDiagnosticFilterFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,7 +22,10 @@ public class GatewayApplication {
     private TokenRelayGatewayFilterFactory tokenRelayfilterFactory;
 
     @Autowired
-    private GatewayDiagnosticFilterFactory gatewayDiagnosticFilter;
+    private GatewayLoggingDiagnosticFilterFactory gatewayDiagnosticFilter;
+
+    @Autowired
+    private BasicAuthGatewayFilterFactory repoServiceBasicAuthFilterFactory;
 
     @Autowired
     private AppRouteProperties routeProperties;
@@ -33,6 +37,10 @@ public class GatewayApplication {
                         .filters(f -> f.filters(tokenRelayfilterFactory.apply(), gatewayDiagnosticFilter.apply())
                                 .removeRequestHeader("Cookie")) // Prevents cookie being sent downstream
                         .uri(routeProperties.getArticleServiceUri()))
+                .route("repo-service", r -> r.path("/api/v1/repos/**")
+                        .filters(f -> f.filters(repoServiceBasicAuthFilterFactory.apply())
+                                .removeRequestHeader("Cookie")) // Prevents cookie being sent downstream
+                        .uri(routeProperties.getRepoServiceUri()))
                 .route("frontend", r -> r.path("/**")
                         .uri(routeProperties.getFrontendUri()))
                 .build();

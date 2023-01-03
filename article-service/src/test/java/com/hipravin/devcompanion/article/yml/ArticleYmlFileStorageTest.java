@@ -59,4 +59,19 @@ class ArticleYmlFileStorageTest {
         assertEquals(Set.of("sample-article.yml", "sample-article-2.yml", "sample-article-3.yml"),
                 Set.copyOf(articleFiles));
     }
+
+    @Test
+    void testLinksLoaded() {
+        Path sampleArticlePath = ArticleYmlFileStorage.findArticleFilesRecursively(articleSampleRepo)
+                .stream()
+                .filter(p -> p.getFileName().toString().contains("sample-article.yml"))
+                .findFirst().orElseThrow();
+
+        ArticleDto sampleArticle = ArticleYmlFileStorage.loadFromPath(sampleArticlePath);
+        assertNotNull(sampleArticle);
+
+        assertEquals(1000001, sampleArticle.getId());
+        assertEquals(2, sampleArticle.getLinks().size());
+        assertEquals("https://link2.1000001", sampleArticle.getLinks().get(1).getUrl());
+    }
 }

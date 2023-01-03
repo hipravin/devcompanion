@@ -32,8 +32,7 @@ class RepoLoadServiceLocalDirectoryTest {
                 .filter(f -> "ArrayList.java".equals(f.metadata().fileName()))
                 .findAny().orElseThrow(() -> new AssertionFailedError("file not found"));
 
-        String expectedPath = Paths.get("subdir", "ArrayList.java").toString();
-        assertEquals(expectedPath, arrayListFile.metadata().relativePath());
+        assertEquals("subdir/ArrayList.java", arrayListFile.metadata().relativePath());
     }
 
     @Test
