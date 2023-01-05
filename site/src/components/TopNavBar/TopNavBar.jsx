@@ -1,6 +1,7 @@
 import React from 'react';
 import './TopNavBar.css';
-import {Button, TextField} from "@material-ui/core";
+import {Button, IconButton, TextField} from "@material-ui/core";
+import SearchIcon from '@mui/icons-material/Search';
 import logo from '../../img/icons8-java-black.svg'
 
 class TopNavBar extends React.Component {
@@ -29,18 +30,26 @@ class TopNavBar extends React.Component {
     }
 
     render() {
+
         return (
             <div className="TopNavBar">
                 <img src={logo} alt="Logo" />
-                <TextField id="topNavSearchInput"
-                           autoFocus
-                           onChange={event => this.setSearchString(event.target.value)}
-                           onKeyDown={this.keyPress}
-                           size="small"
-                           variant="outlined"/>
+                <div className="SearchTextField">
+                    <TextField id="topNavSearchInput"
+                               autoFocus
+                               onChange={event => this.setSearchString(event.target.value)}
+                               onKeyDown={this.keyPress}
+                               size="small"
+                               fullWidth
+                               variant="outlined"/>
+                </div>
 
-                <Button variant="outlined" size="large" onClick={this.handleSearch}>Find</Button>
-                <span className="ResultCount">Shown: {this.props.resultArticlesCount||0} articles</span>
+                <IconButton aria-label="search" size="medium" onClick={this.handleSearch}>
+                    <SearchIcon fontSize="inherit" />
+                </IconButton>
+
+                {/*<Button variant="outlined" size="large" onClick={this.handleSearch}>Find</Button>*/}
+                {/*<span className="ResultCount">Shown: {this.props.resultArticlesCount||0} articles</span>*/}
                 <span className="UserInfo">Logged in as {this.props.userInfo.user_name}</span>
             </div>
         );

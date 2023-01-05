@@ -36,7 +36,7 @@ class Article extends React.Component {
         );
     }
 }
-
+//TODO: research this maybe
 Article.propTypes = {};
 
 Article.defaultProps = {};

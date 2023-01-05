@@ -6,9 +6,9 @@ import Notifier from "./components/Notifier";
 import TopNavBar from "./components/TopNavBar/TopNavBar";
 import {searchArticlesApiMethod} from "./lib/api/articles";
 import {userInfoApiMethod} from "./lib/api/users";
-import {sesionInfoApiMethod, sessionInfoApiMethod} from "./lib/api/session";
-import ArticleList from "./components/ArticleList/ArticleList";
+import {sessionInfoApiMethod} from "./lib/api/session";
 import Relogin from "./components/Relogin/Relogin";
+import Article from "./components/Article/Article";
 
 
 class App extends React.Component {
@@ -17,7 +17,7 @@ class App extends React.Component {
         this.state = {
             articles: undefined,
             user: undefined,
-            reloginVisible: undefined
+            showRelogin: undefined
         };
     }
 
@@ -30,10 +30,8 @@ class App extends React.Component {
     }
 
     performSearch(searchString) {
-        const user = this.state.user;
-
         searchArticlesApiMethod(searchString)
-            .then(res => this.setState({articles: res, user: user}))
+            .then(res => this.setState({articles: res}))
             .catch(err => {
                 console.error(err);
                 notify("Service temporarily unavailable, please try refreshing a page.");
@@ -41,12 +39,9 @@ class App extends React.Component {
     }
 
     requestUserInfo() {
-        const articles = this.state.articles;
-
         userInfoApiMethod()
-            .then(res => this.setState({articles: articles, user: res}))
+            .then(res => this.setState({user: res}))
             .catch(err => console.error(err));
-
     }
 
     logSessionInfo() {
@@ -54,10 +49,10 @@ class App extends React.Component {
             .then(res => console.log('session info: ' + res))
             .catch(err => {
                 console.error('failed session info: ' + err);
-                this.setState({
-                    articles: undefined,
-                    user: undefined,
-                    reloginVisible: true
+                this.setState({//old state is merged with new one, need to explicitely clear additional keys if intended
+                    // articles: undefined,
+                    // user: undefined,
+                    showRelogin: true
                 });
             });
     }
@@ -87,29 +82,53 @@ class App extends React.Component {
     render() {
         const articles = this.state.articles;
 
-        const resultView = (articles === undefined)
-            ? this.beforeSearchArticlesLlist()
-            : <ArticleList articles={articles}/>;
+        const articlesComponent = this.articlesComponent();
 
         const articlesCount = articles ? articles.length : 0;
 
         const userInfo = this.state.user ? this.state.user : {user_name: ""};
 
-        const showRelogin = this.state.reloginVisible === true;
+        const showRelogin = this.state.showRelogin === true;
 
         return (
-
             <div className="App">
-                <Relogin visible={showRelogin}/>
+                {showRelogin && <Relogin/>}
                 <TopNavBar resultArticlesCount={articlesCount} userInfo={userInfo} onSearch={this.handleSearch}/>
-                {resultView}
+                {articlesComponent}
             </div>
         );
     }
 
-    beforeSearchArticlesLlist() {
+    articlesComponent() {
+        if (this.state.articles === undefined) {
+            return this.beforeSearchArticlesList();
+        } else if (this.state.articles.length === 0) {
+            return this.emptyResult();
+        } else {
+            return this.articleNotEmptyList();
+        }
+    }
+
+    beforeSearchArticlesList() {
         return (
-            <div className="BeforeSearch">Have a good copy-paste!</div>
+            <div className="BeforeSearch">E.g. "kubectl get pod"</div>
+        );
+    }
+
+    articleNotEmptyList() {
+        const articles = this.state.articles.map(article => {
+                return <Article key={article.id} article={article}/>;
+            }
+        );
+
+        return (
+            <div className="ArticleList">{articles}</div>
+        );
+    }
+
+    emptyResult() {
+        return (
+            <div className="EmptyResult">No results</div>
         );
     }
 }

@@ -30,7 +30,7 @@ public class RepoLoadServiceLocalDirectory implements RepoLoadService {
 
     Repo loadSingleRepo(Path repoPath) {
         String name = repoPath.getFileName().toString();
-        String relativePath = reposRootPath.relativize(repoPath).normalize().toString();
+        String relativePath = withForwardSlash(reposRootPath.relativize(repoPath).normalize().toString());
         RepoMetadata metadata = new RepoMetadata(name, relativePath);
 
         log.debug("Loading files for repo '{}'", repoPath);

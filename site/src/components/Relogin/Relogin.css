@@ -1,4 +1,4 @@
-.ontop-visible {
+.ontop-relogin {
     position: absolute; /* Stay in place */
 
     z-index: 1; /* Sit on top */
@@ -10,9 +10,6 @@
     overflow: auto; /* Enable scroll if needed */
     background-color: rgb(255,255,255); /* Fallback color */
     background-color: rgba(255,255,255,0.8); /* Black w/ opacity */
-}
-.ontop-hidden {
-    display: none; /* Hidden by default */
 }
 
 .ontop-holder {

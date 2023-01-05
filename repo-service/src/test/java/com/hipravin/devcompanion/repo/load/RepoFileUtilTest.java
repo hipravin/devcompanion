@@ -7,6 +7,8 @@ import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,12 +29,15 @@ class RepoFileUtilTest {
 
         assertNotNull(subs);
         assertEquals(3, subs.size());
-        assertEquals("test-repo-0", subs.get(0).getFileName().toString());
+        assertEquals(Set.of("test-repo-0","test-repo-1","test-repo-2"),
+                subs.stream().map(p -> p.getFileName().toString()).collect(Collectors.toSet()));
     }
 
     @Test
     void testLoadTextFile() {
-        Path sampleFile = RepoFileUtils.subdirectories(testRepoRoot).get(0).resolve("SampleClass.java");
+        Path sampleFile = RepoFileUtils.subdirectories(testRepoRoot).stream()
+                .filter(p -> p.getFileName().toString().contains("test-repo-0"))
+                .findAny().orElseThrow().resolve("SampleClass.java");
 
         String sampleContent = RepoFileUtils.loadTextFileContent(sampleFile);
         assertNotNull(sampleContent);

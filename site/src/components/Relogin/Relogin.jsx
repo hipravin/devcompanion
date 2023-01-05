@@ -10,13 +10,8 @@ class Relogin extends React.Component {
     }
 
     render() {
-
-        const visible = this.props.visible;
-
-        const ontopClass = visible ? "ontop-visible" : "ontop-hidden";
-
         return (
-            <div className={ontopClass}>
+            <div className="ontop-relogin">
                 <div className="ontop-holder">
                     <div className="ontop-content">
                         <p>

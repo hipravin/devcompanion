@@ -15,6 +15,7 @@
     font-size: 1em;
     line-height: 1.5em;
     font-family: monospace;
-    white-space: pre;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
     background-color: aliceblue;
 }
