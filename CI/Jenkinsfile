@@ -1,0 +1,56 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Git Checkout') {
+            steps {
+                git branch: 'main', credentialsId: 'hipravin-ssh', url: 'git@github.com:hipravin/devcompanion.git'
+            }
+        }
+        stage('Build') {
+            parallel {
+                stage('Build-frontend') {
+                   steps {
+                        sh "cd site && npm install && npm run build --production"
+                        sh "cd site && tar -zcvf build.tar.gz build"
+                   }
+
+                    post {
+                        success {
+                            archiveArtifacts 'site/*.tar.gz'
+                        }
+                    }
+                }
+                stage('Build-backend') {
+                    steps {
+                        sh "mvn clean package"
+                
+                    }
+
+                    post {
+                       success {
+                           junit '**/target/surefire-reports/TEST-*.xml'
+                           archiveArtifacts '**/target/*.jar'
+                       }
+                   }
+                }
+            }
+        }
+        stage('Docker-build') {
+            steps {
+                script {
+                    def version = sh script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true
+                    sh "echo $version"
+                    sh "sudo docker build -t hipravin/devcompanion-repo-service:$version repo-service"
+                    sh "sudo docker build -t hipravin/devcompanion-article-service:$version article-service"
+                    sh "sudo docker build -t hipravin/devcompanion-gateway:$version gateway"
+                    sh "sudo docker build -t hipravin/devcompanion-ui:$version site"
+                    sh "sudo docker build -t hipravin/devcompanion-admin:$version admin"
+                }
+            }
+            
+        }
+
+    }
+}
+

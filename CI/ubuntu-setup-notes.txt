@@ -1,0 +1,18 @@
+This file consist of steps required to setup CI on a fresh ubuntu installation.
+
+1. Install basic
+
+sudo apt-get update
+sudo apt-get install openjdk-17-jdk
+sudo apt-get install git
+
+2. setup ssh github
+
+follow instructions https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+
+3.
+git clone git@github.com:hipravin/devcompanion.git
+
+
+
+
