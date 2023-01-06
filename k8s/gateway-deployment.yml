@@ -44,6 +44,8 @@ spec:
             value: "http://host.docker.internal:8080"
           - name: ARTICLE_SERVICE_URI
             value: "http://article-service:8082"
+          - name: REPO_SERVICE_URI
+            value: "http://repo-service:8182"
           - name: FRONTEND_URI
             value: "http://devcompanion-ui:3000"
           - name: ADMIN_SERVER_URL

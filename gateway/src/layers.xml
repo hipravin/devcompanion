@@ -9,15 +9,15 @@
         <into layer="application" />
     </application>
     <dependencies>
-        <into layer="snapshot-dependencies">
-            <include>*:*:*SNAPSHOT</include>
-        </into>
+<!--        <into layer="snapshot-dependencies">-->
+<!--            <include>*:*:*SNAPSHOT</include>-->
+<!--        </into>-->
         <into layer="dependencies" />
     </dependencies>
     <layerOrder>
         <layer>dependencies</layer>
         <layer>spring-boot-loader</layer>
-        <layer>snapshot-dependencies</layer>
+<!--        <layer>snapshot-dependencies</layer>-->
         <layer>application</layer>
     </layerOrder>
 </layers>
