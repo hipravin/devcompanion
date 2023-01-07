@@ -1,0 +1,17 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Git Checkout') {
+            steps {
+                git branch: 'main', credentialsId: 'hipravin-ssh', url: 'git@github.com:hipravin/devcompanion.git'
+            }
+        }
+        stage('Build-Coverage-Sonar') {
+            steps {
+                sh "mvn -P coverage clean package"
+                sh "mvn -P sonar sonar:sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.login=<token>"
+            }
+        }
+    }
+}

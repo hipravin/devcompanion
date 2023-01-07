@@ -34,23 +34,4 @@ class RepoLoadServiceLocalDirectoryTest {
 
         assertEquals("subdir/ArrayList.java", arrayListFile.metadata().relativePath());
     }
-
-    @Test
-    @Disabled
-    void playground() {
-        long start = System.nanoTime();
-
-        Path projects = Paths.get("C:/dev/projects");
-        RepoLoadService loadService = new RepoLoadServiceLocalDirectory(projects);
-
-        List<Repo> repos = loadService.loadAll()
-                .peek(r -> System.out.println("Loaded: " + r.metadata()))
-                .peek(r -> System.out.println("\tFiles : " + r.contents().size()))
-                .toList();
-
-        System.out.println(repos.size());
-
-        long durationMillis = (System.nanoTime() - start) / 1_000_000;
-        System.out.printf("Finished in: %d ms%n", durationMillis);
-    }
 }

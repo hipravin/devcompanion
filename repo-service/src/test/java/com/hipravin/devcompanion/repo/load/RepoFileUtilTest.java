@@ -55,15 +55,4 @@ class RepoFileUtilTest {
         assertEquals(5, files.size());
     }
 
-    @Test
-    @Disabled
-    void playground() {
-        Path dir = Paths.get("../").toAbsolutePath().normalize();
-
-        RepoFileUtils.findFilesRecursively(dir, RepoFileUtils.COMMON_BACKEND_TEXT_FILES)
-                .stream().limit(10_000)
-                .forEach(p -> System.out.println(p));
-
-    }
-
 }

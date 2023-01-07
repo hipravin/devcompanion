@@ -31,6 +31,9 @@ application:
 
 repo-service:
   url: ${REPO_SERVICE_URL}
+  user:
+    name: user
+    password: uuser
 
 feign:
   client:

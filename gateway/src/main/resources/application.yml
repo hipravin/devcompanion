@@ -28,20 +28,6 @@ spring:
         provider:
           keycloak:
             issuer-uri: ${KEYCLOAK_URL}/auth/realms/HiRealm
-#  cloud:
-#    gateway:
-#      routes:
-#        - id: article-service
-#          uri: ${ARTICLE_SERVICE_URI}
-#          predicates:
-#            - Path=/api/v1/articles/**,/api/v1/users/**
-#          filters:
-##            - TokenRelay=
-#            - TokenRelay
-#        - id: frontend
-#          uri: ${FRONTEND_URI}
-#          predicates:
-#            - Path=/**
 
   boot:
     admin:
