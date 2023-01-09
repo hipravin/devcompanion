@@ -19,7 +19,7 @@ spec:
         app: gateway
     spec:
       containers:
-      - image: hipravin/devcompanion-gateway:latest
+      - image: hipravin/devcompanion-gateway:0.0.1-SNAPSHOT
         imagePullPolicy: IfNotPresent
         name: devcompanion-gateway
 

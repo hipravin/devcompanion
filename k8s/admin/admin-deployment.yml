@@ -18,7 +18,7 @@ spec:
         app: admin
     spec:
       containers:
-      - image: hipravin/devcompanion-admin:latest
+      - image: hipravin/devcompanion-admin:0.0.1-SNAPSHOT
         imagePullPolicy: IfNotPresent
         name: devcompanion-admin
         resources: {}

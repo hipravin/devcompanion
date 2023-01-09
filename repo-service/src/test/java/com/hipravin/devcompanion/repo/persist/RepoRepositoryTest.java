@@ -1,11 +1,7 @@
 package com.hipravin.devcompanion.repo.persist;
 
-import com.hipravin.devcompanion.repo.client.RepoSearchClient;
-import com.hipravin.devcompanion.repo.dto.CodeSnippetDto;
-import com.hipravin.devcompanion.repo.dto.FileSnippetsDto;
 import com.hipravin.devcompanion.repo.load.RepoLoadService;
 import com.hipravin.devcompanion.repo.model.Repo;
-import com.hipravin.devcompanion.repo.model.RepoTextFile;
 import com.hipravin.devcompanion.repo.persist.entity.RepoEntity;
 import com.hipravin.devcompanion.repo.persist.entity.RepoTextFileEntity;
 import org.junit.jupiter.api.BeforeAll;
@@ -131,15 +127,4 @@ class RepoRepositoryTest {
             assertTrue(f.getContent().toLowerCase().contains("classloader"));
         });
     }
-
-//    @Test
-//    void testSearchClient() {
-//        Page<FileSnippetsDto> found = repoSearchClient.search("ClassLoader");
-//        assertNotNull(found);
-//        assertEquals(2, found.getNumberOfElements());
-//        List<CodeSnippetDto> snippets = found.iterator().next().getSnippets();
-//        CodeSnippetDto sampleSnippet = snippets.get(0);
-//
-//        assertTrue(sampleSnippet.getContent().contains("ClassLoader"));
-//    }
 }

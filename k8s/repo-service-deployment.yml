@@ -18,7 +18,7 @@ spec:
         app: repo-service
     spec:
       containers:
-      - image: hipravin/devcompanion-repo-service:latest
+      - image: hipravin/devcompanion-repo-service:0.0.1-SNAPSHOT
         imagePullPolicy: IfNotPresent
         name: devcompanion-repo-service
 #        resources: {}

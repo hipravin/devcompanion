@@ -1,0 +1,20 @@
+spring:
+  boot:
+    admin:
+      client:
+        enabled: false
+
+REDIS_HOST: "testhost"
+SESSION_STORE_PROVIDER: "none"
+
+POD_IP: "7.7.7.7"
+
+management:
+  server:
+    port: #unset
+
+logging:
+  level:
+    com.hipravin: DEBUG
+    org.springframework: DEBUG
+    org.springframework.security: INFO

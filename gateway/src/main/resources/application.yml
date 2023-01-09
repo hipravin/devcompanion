@@ -42,6 +42,7 @@ app:
   routes:
     article-service-uri: ${ARTICLE_SERVICE_URI}
     repo-service-uri: ${REPO_SERVICE_URI}
+    repo-service-auth-encoded: "dXNlcjp1dXNlcg=="
     frontend-uri: ${FRONTEND_URI}
 
 ###
@@ -51,6 +52,8 @@ management:
       exposure:
         include: "*"
   endpoint:
+    gateway:
+      enabled: true
     health:
       show-details: always
       probes:

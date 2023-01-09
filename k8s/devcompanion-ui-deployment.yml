@@ -18,7 +18,7 @@ spec:
         app: devcompanion-ui
     spec:
       containers:
-      - image: hipravin/devcompanion-ui:latest
+      - image: hipravin/devcompanion-ui:0.0.1-SNAPSHOT
         imagePullPolicy: IfNotPresent
         name: devcompanion-ui
         resources: {}

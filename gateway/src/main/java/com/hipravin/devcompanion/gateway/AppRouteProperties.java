@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class AppRouteProperties {
     private String articleServiceUri;
     private String repoServiceUri;
+    private String repoServiceAuthEncoded;
     private String frontendUri;
 
     public String getArticleServiceUri() {
@@ -22,6 +23,14 @@ public class AppRouteProperties {
 
     public void setRepoServiceUri(String repoServiceUri) {
         this.repoServiceUri = repoServiceUri;
+    }
+
+    public String getRepoServiceAuthEncoded() {
+        return repoServiceAuthEncoded;
+    }
+
+    public void setRepoServiceAuthEncoded(String repoServiceAuthEncoded) {
+        this.repoServiceAuthEncoded = repoServiceAuthEncoded;
     }
 
     public String getFrontendUri() {

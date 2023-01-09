@@ -6,10 +6,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -67,11 +66,18 @@ public class SecurityConfig {
         return http.build();
     }
 
-    //TODO: No passowords in code, don't you know???
     @Bean
-    public InMemoryUserDetailsManager hardcodedUserDetailsManager() {
+        public InMemoryUserDetailsManager fixedUserDetailsManager() {
+        //to generate new hash use: new BCryptPasswordEncoder().encode("password")
         return new InMemoryUserDetailsManager(
-                User.withUsername("admin").password("{noop}aadmin").authorities("MANAGE", "USER").build(),
-                User.withUsername("user").password("{noop}uuser").authorities("USER").build());
+                User.withUsername("admin").password("$2a$10$e.FByjmyWgR3r97UL4GG/O53NrYpnZ5rlpXFHmi5dDqrEa/CKmzyS")
+                        .authorities("MANAGE", "USER").build(),
+                User.withUsername("user").password("$2a$10$AKGQ3a0NoVdEUlRaiAY29OonRmPlpKHfJBXRucv8OiS6DIyj2q9wy")
+                        .authorities("USER").build());
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

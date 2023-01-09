@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
@@ -28,5 +29,19 @@ class RepoServiceApplicationTests {
     void contextLoads() {
         assertNotNull(context);
         log.debug("Application context class: " + context.getClass());
+    }
+
+    @Test
+    void bcrypt() {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        String encoded = bCryptPasswordEncoder.encode("uuser");
+
+        System.out.println("Encoded:");
+        System.out.println(encoded);
+        boolean matches = bCryptPasswordEncoder.matches("uuser", encoded);
+        System.out.println("Matches: " + matches);
+
+        System.out.println(bCryptPasswordEncoder.encode("uuser"));
+        System.out.println(bCryptPasswordEncoder.encode("aadmin"));
     }
 }

@@ -5,6 +5,11 @@ spring:
     username: sa
     password:
 
+  boot:
+    admin:
+      client:
+        enabled: false
+
   sql:
     init:
       mode: always
