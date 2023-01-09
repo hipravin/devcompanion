@@ -61,12 +61,6 @@ class GatewayApplicationTest {
     }
 
     @Test
-    void testEncode() {
-        String encoded = HttpHeaders.encodeBasicAuth("user", "uuser", null);
-        System.out.println(encoded);
-    }
-
-    @Test
     void testRoutesResponds() {
          webClient.get().uri("/api/v1/articles/search?q=kubectl").exchange().expectStatus().isOk();
          webClient.get().uri("/api/v1/repos/search?q=kubectl").exchange().expectStatus().isOk();

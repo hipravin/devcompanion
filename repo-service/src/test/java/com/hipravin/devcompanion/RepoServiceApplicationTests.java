@@ -30,18 +30,4 @@ class RepoServiceApplicationTests {
         assertNotNull(context);
         log.debug("Application context class: " + context.getClass());
     }
-
-    @Test
-    void bcrypt() {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        String encoded = bCryptPasswordEncoder.encode("uuser");
-
-        System.out.println("Encoded:");
-        System.out.println(encoded);
-        boolean matches = bCryptPasswordEncoder.matches("uuser", encoded);
-        System.out.println("Matches: " + matches);
-
-        System.out.println(bCryptPasswordEncoder.encode("uuser"));
-        System.out.println(bCryptPasswordEncoder.encode("aadmin"));
-    }
 }
