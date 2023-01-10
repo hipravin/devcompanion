@@ -1,8 +1,6 @@
-import logo from './logo.svg';
 import './App.css';
 import React from "react";
 import notify from "./lib/notify";
-import Notifier from "./components/Notifier";
 import TopNavBar from "./components/TopNavBar/TopNavBar";
 import {searchArticlesApiMethod} from "./lib/api/articles";
 import {userInfoApiMethod} from "./lib/api/users";
@@ -94,7 +92,10 @@ class App extends React.Component {
             <div className="App">
                 {showRelogin && <Relogin/>}
                 <TopNavBar resultArticlesCount={articlesCount} userInfo={userInfo} onSearch={this.handleSearch}/>
-                {articlesComponent}
+                <main className="MainContent">
+                    {articlesComponent}
+                </main>
+                <footer className="Footer">@Copyleft Alex K. 1890-9990 A.D.</footer>
             </div>
         );
     }

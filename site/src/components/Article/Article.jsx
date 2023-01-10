@@ -31,7 +31,7 @@ class Article extends React.Component {
                 <div className="ArticleCodeBlocks">
                     {codeBlockComponents}
                 </div>
-                <hr style={{marginTop: '15px' }}/>
+                <hr/>
             </div>
         );
     }

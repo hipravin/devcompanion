@@ -1,5 +1,8 @@
 .App {
+  display: flex;
+  flex-direction: column;
 
+  min-height: 100%;
 }
 
 .App-header {
@@ -30,4 +33,15 @@
 
   font-weight: bolder;
   font-size: 1.2em;
+}
+
+.MainContent {
+  flex: 1 0 auto;
+}
+
+.Footer {
+  padding: 0.5rem;
+  font-size: 0.8rem;
+  text-align: center;
+  background: #f9f9f9;
 }

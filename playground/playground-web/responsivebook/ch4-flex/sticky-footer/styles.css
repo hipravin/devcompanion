@@ -3,16 +3,22 @@ body {
     margin: 0;
     padding: 0;
 }
-html {
+html,body, #root {
     height: 100%;
 }
 body {
     font-family: 'Oswald', sans-serif;
     color: #ebebeb;
+
+}
+
+.App {
     display: flex;
     flex-direction: column;
+
     min-height: 100%;
 }
+
 .MainContent {
     flex: 1 0 auto;
     color: #333;

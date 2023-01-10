@@ -32,7 +32,7 @@ class TopNavBar extends React.Component {
     render() {
 
         return (
-            <div className="TopNavBar">
+            <header className="TopNavBar">
                 <img src={logo} alt="Logo" />
                 <div className="SearchTextField">
                     <TextField id="topNavSearchInput"
@@ -51,7 +51,7 @@ class TopNavBar extends React.Component {
                 {/*<Button variant="outlined" size="large" onClick={this.handleSearch}>Find</Button>*/}
                 {/*<span className="ResultCount">Shown: {this.props.resultArticlesCount||0} articles</span>*/}
                 <span className="UserInfo">Logged in as {this.props.userInfo.user_name}</span>
-            </div>
+            </header>
         );
     }
 }
