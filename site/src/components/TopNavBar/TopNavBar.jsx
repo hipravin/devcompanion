@@ -9,7 +9,7 @@ class TopNavBar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            searchString: ""
+            searchString: this.props.queryString
         }
     }
 
@@ -38,7 +38,7 @@ class TopNavBar extends React.Component {
                 </a>
                 <div className="SearchTextField">
                     <TextField id="topNavSearchInput"
-                               defaultValue={this.props.queryString}
+                               defaultValue={this.state.searchString}
                                autoFocus
                                onChange={event => this.setSearchString(event.target.value)}
                                onKeyDown={this.keyPress}
@@ -51,8 +51,7 @@ class TopNavBar extends React.Component {
                     <SearchIcon fontSize="inherit"/>
                 </IconButton>
 
-                {/*<Button variant="outlined" size="large" onClick={this.handleSearch}>Find</Button>*/}
-                {/*<span className="ResultCount">Shown: {this.props.resultArticlesCount||0} articles</span>*/}
+                {this.props.resultArticlesCount > 0 && <span className="ResultCount">Shown: {this.props.resultArticlesCount||0} articles</span>}
                 <span className="UserInfo">
                     <PersonRounded fontSize="large"/>
                     <span className="UserName">{this.props.userInfo.user_name}</span>

@@ -56,7 +56,7 @@ sudo su - jenkins
 git clone <repo>
  
  8. configure build pipeline (details are out of scope)
- 9. set CI=false in environment valiables in jenkins because overwise nom build treats warnings as errors
+ 9. set CI=false in environment variables in jenkins because otherwise node build treats warnings as errors
  10. add jenkins to sudoers with NOPASSWD rule
  sudo visudo
  jenkins ALL=(ALL) NOPASSWD:ALL

@@ -29,17 +29,6 @@ public class RepoServiceController {
         this.repoSearchService = repoSearchService;
     }
 
-    @GetMapping(path = "/search-sample", params = {"q"})
-    public ResponseEntity<?> searchSample(@RequestParam("q") String query) {
-        String responseBody = "results of search for query: '%s'".formatted(query);
-
-        if(ThreadLocalRandom.current().nextInt(10) < 2) {
-            throw new RuntimeException("Something went wrong randomly");
-        }
-
-        return ResponseEntity.ok(responseBody);
-    }
-
     @GetMapping(path = "/search", params = {"q"})
     public ResponseEntity<?> searchRepoFiles(@RequestParam("q") String query) {
         Page<FileSnippetsDto> repoFiles = repoSearchService.findFilesOrderById(query, DEFAULT_FIRST_PAGE_PAGEABLE);
