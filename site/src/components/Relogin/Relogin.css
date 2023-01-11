@@ -1,5 +1,5 @@
 .ontop-relogin {
-    position: absolute; /* Stay in place */
+    position: fixed;
 
     z-index: 1; /* Sit on top */
     padding-top: 10%; /* Location of the box */

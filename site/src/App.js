@@ -7,6 +7,8 @@ import {userInfoApiMethod} from "./lib/api/users";
 import {sessionInfoApiMethod} from "./lib/api/session";
 import Relogin from "./components/Relogin/Relogin";
 import Article from "./components/Article/Article";
+import {queryToTerms} from "./lib/highlight";
+import Notifier from "./components/Notifier";
 
 
 class App extends React.Component {
@@ -15,12 +17,15 @@ class App extends React.Component {
         this.state = {
             articles: undefined,
             user: undefined,
-            showRelogin: undefined
+            showRelogin: undefined,
+            searchString: undefined
         };
     }
 
     componentDidMount() {
-        // this.performSearch("");
+        if(this.props.queryString) {
+            this.performSearch(this.props.queryString);
+        }
         this.requestUserInfo();
 
         this.scheduleUserInfoBounce(60000);
@@ -28,11 +33,18 @@ class App extends React.Component {
     }
 
     performSearch(searchString) {
+        window.history.replaceState(null, null, "?q=" + searchString)
+        if(searchString.trim() === "") {
+            this.setState({searchString: undefined});
+            return;
+        }
+        this.setState({searchString: searchString});
+
         searchArticlesApiMethod(searchString)
             .then(res => this.setState({articles: res}))
             .catch(err => {
                 console.error(err);
-                notify("Service temporarily unavailable, please try refreshing a page.");
+                notify("Service temporarily unavailable, please refresh a page or try again later.");
             });
     }
 
@@ -91,18 +103,20 @@ class App extends React.Component {
         return (
             <div className="App">
                 {showRelogin && <Relogin/>}
-                <TopNavBar resultArticlesCount={articlesCount} userInfo={userInfo} onSearch={this.handleSearch}/>
+                <TopNavBar queryString={this.props.queryString} resultArticlesCount={articlesCount} userInfo={userInfo} onSearch={this.handleSearch}/>
                 <main className="MainContent">
                     {articlesComponent}
                 </main>
                 <footer className="Footer">@Copyleft Alex K. 1890-9990 A.D.</footer>
+                {/*<CssBaseline />*/}
+                <Notifier/>
             </div>
         );
     }
 
     articlesComponent() {
-        if (this.state.articles === undefined) {
-            return this.beforeSearchArticlesList();
+        if (this.state.searchString === undefined || this.state.articles === undefined) {
+            return this.suggestionsComponent();
         } else if (this.state.articles.length === 0) {
             return this.emptyResult();
         } else {
@@ -110,15 +124,29 @@ class App extends React.Component {
         }
     }
 
-    beforeSearchArticlesList() {
+    suggestionsComponent() {
+        const sugesstions = [
+            "postgres sequence",
+            "linux find name"
+        ];
+
+        const liItems = sugesstions.map( s => {
+            return <li key={s}><a href={"/?q=" + s}>{s}</a></li>
+        });
+
         return (
-            <div className="BeforeSearch">E.g. "kubectl get pod"</div>
+            <div className="Suggestions">
+                <div className="SuggestionsWelcome">Are you looking for...</div>
+                {liItems}
+            </div>
         );
     }
 
     articleNotEmptyList() {
+        const terms = queryToTerms(this.state.searchString);
+
         const articles = this.state.articles.map(article => {
-                return <Article key={article.id} article={article}/>;
+                return <Article key={article.id} terms={terms} article={article}/>;
             }
         );
 
@@ -132,6 +160,7 @@ class App extends React.Component {
             <div className="EmptyResult">No results</div>
         );
     }
+
 }
 
 export default App;

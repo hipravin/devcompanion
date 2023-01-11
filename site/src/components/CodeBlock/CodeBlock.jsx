@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './CodeBlock.css';
-
+import Highlighter from "react-highlight-words";
 
 class CodeBlock extends React.Component {
     constructor(props) {
@@ -14,14 +14,25 @@ class CodeBlock extends React.Component {
     render() {
 
         const codeBlock = this.props.codeBlock;
+        const terms = this.props.terms;
 
         return (
             <div className="CodeBlock">
                 <div className="CodeBlockTitle">
-                    {codeBlock.title}
+                    <Highlighter
+                        highlightClassName="TermHighlighted"
+                        searchWords={terms}
+                        autoEscape={true}
+                        textToHighlight={codeBlock.title}
+                    />
                 </div>
                 <div className="CodeBlockCode">
-                    {codeBlock.code}
+                    <Highlighter
+                        highlightClassName="TermHighlighted"
+                        searchWords={terms}
+                        autoEscape={true}
+                        textToHighlight={codeBlock.code}
+                    />
                 </div>
             </div>
         );

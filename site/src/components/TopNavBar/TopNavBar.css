@@ -22,6 +22,14 @@
 }
 
 .UserInfo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     margin-left: auto;
-    margin-right: 5em;
+    margin-right: 80px;
+}
+
+.UserInfo .UserName {
+    margin-left: 4px;
+    font-size: 1.4rem;
 }

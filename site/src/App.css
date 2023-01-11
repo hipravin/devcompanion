@@ -1,47 +1,62 @@
 .App {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 
-  min-height: 100%;
+    min-height: 100%;
 }
 
 .App-header {
-  /*border: 1px solid black;*/
-  /*background-color: #282c34;*/
-  min-height: 100vh;
-  /*display: flex;*/
-  /*flex-direction: column;*/
-  /*align-items: center;*/
-  /*justify-content: center;*/
-  font-size: calc(10px + 2vmin);
-  /*color: white;*/
+    min-height: 100vh;
+    font-size: calc(10px + 2vmin);
 }
 
-.BeforeSearch {
-  margin: 10px 50px;
+.Suggestions {
+    margin-top: 10px;
+    margin-left: 6%;
 
-  font-weight: bolder;
-  font-size: 1.2em;
+    font-size: 1.1em;
+
+    list-style: none;
+}
+
+.SuggestionsWelcome {
+    font-size: 1.1em;
+    font-weight: bolder;
+    margin: 5px;
+}
+
+.Suggestions li {
+    margin-left: 20px;
+    margin-bottom: 0.5rem;
 }
 
 .ArticleList {
-  margin-left: 1.2em;
+    margin-left: 1.2em;
 }
 
 .EmptyResult {
-  margin: 10px 50px;
+    margin: 10px 50px;
 
-  font-weight: bolder;
-  font-size: 1.2em;
+    font-weight: bolder;
+    font-size: 1.2em;
 }
 
 .MainContent {
-  flex: 1 0 auto;
+    flex: 1 0 auto;
 }
 
 .Footer {
-  padding: 0.5rem;
-  font-size: 0.8rem;
-  text-align: center;
-  background: #f9f9f9;
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    text-align: center;
+    background: #f9f9f9;
+}
+
+.TermHighlighted {
+    background: aliceblue;
+}
+
+.MuiSnackbar-root {
+    margin-top: 50px;
+    margin-right: 50px;
 }

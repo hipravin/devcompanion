@@ -21,7 +21,7 @@ public class ArticleInMemoryRepository implements ArticleRepository<Article, Lon
     private final Lock readLock = readWriteLock.readLock();
     private final Lock writeLock = readWriteLock.writeLock();
 
-    private volatile Map<Long, Article> articlesById = new HashMap<>();
+    private Map<Long, Article> articlesById = new HashMap<>();
 
     public synchronized void fillFromStorage(ArticleStorage articleStorage) {
         log.info("Start loading in-memory from storage, size before: {}", articlesById.size());

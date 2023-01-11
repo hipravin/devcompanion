@@ -19,3 +19,8 @@
     overflow-wrap: anywhere;
     background-color: aliceblue;
 }
+
+.CodeBlockCode .TermHighlighted {
+    background: #ffffdf;
+}
+

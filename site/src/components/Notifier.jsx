@@ -1,5 +1,5 @@
 import React from 'react';
-import Snackbar from '@material-ui/core/Snackbar';
+import Snackbar from '@mui/material/Snackbar';
 
 let openSnackbarFn;
 
@@ -39,7 +39,7 @@ class Notifier extends React.Component {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={this.state.open}
         message={message}
-        autoHideDuration={5000}
+        autoHideDuration={10000}
         onClose={this.handleSnackbarRequestClose}
         ContentProps={{
           'aria-describedby': 'snackbar-message-id',
