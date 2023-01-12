@@ -16,6 +16,9 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
 
 @RestController
 @RequestMapping("/api/v1/session")
@@ -48,13 +51,17 @@ public class SessionStateController {
     }
 
     private void logOidcAttributes(WebSession webSession) {
-        if(webSession != null) {
-            Object principal = ((SecurityContextImpl) webSession.getAttribute("SPRING_SECURITY_CONTEXT")).getAuthentication().getPrincipal();
-            if(principal instanceof DefaultOidcUser oidcPrincipal) {
-//                log.info("OIDC: {}", oidcPrincipal);
-                OidcIdToken idToken = oidcPrincipal.getIdToken();
-                log.info("OIDC token, exp: {} {}", idToken.getExpiresAt(), idToken.getTokenValue());
-            }
-        }
+        ofNullable(webSession)
+                .flatMap(ws -> ofNullable(ws.getAttribute("SPRING_SECURITY_CONTEXT")))
+                .filter(sc -> sc instanceof SecurityContextImpl).map(sc -> (SecurityContextImpl) sc)
+                .flatMap(sc -> ofNullable(sc.getAuthentication()))
+                .flatMap(auth -> ofNullable(auth.getPrincipal()))
+                .filter(p -> p instanceof DefaultOidcUser).map(p -> (DefaultOidcUser) p)
+                .flatMap(p -> ofNullable(p.getIdToken()))
+                .ifPresent(idToken -> {
+                    if (log.isDebugEnabled()) {
+                        log.debug("OIDC token from session attribute, exp: {} {}", idToken.getExpiresAt(), idToken.getTokenValue());
+                    }
+                });
     }
 }

@@ -1,6 +1,5 @@
 package com.hipravin.devcompanion.article.search;
 
-import com.hipravin.devcompanion.article.dto.ArticleDto;
 import com.hipravin.devcompanion.article.inmemory.ArticleInMemoryRepository;
 import com.hipravin.devcompanion.article.inmemory.model.Article;
 import org.springframework.beans.factory.annotation.Qualifier;

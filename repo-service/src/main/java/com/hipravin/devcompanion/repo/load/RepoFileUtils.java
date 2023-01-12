@@ -24,7 +24,7 @@ public class RepoFileUtils {
             Set.of(".idea", "node_modules", ".mvn", "target"),
             Set.of("java", "yml", "md", "conf", "txt", "xml", "properties"),
             Set.of("Dockerfile"),
-            100 * 1024 * 1024 //100kb
+            100 * 1024 * 1024L //100kb
     );
 
     private RepoFileUtils() {

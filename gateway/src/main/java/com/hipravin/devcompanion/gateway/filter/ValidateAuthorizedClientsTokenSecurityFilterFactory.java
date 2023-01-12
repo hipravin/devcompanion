@@ -63,22 +63,29 @@ public class ValidateAuthorizedClientsTokenSecurityFilterFactory {
             return false;
         }
 
-        if (client.getAccessToken() != null) {
-            log.debug("Authorized Client access token: expires {}, {}",
-                    client.getAccessToken().getExpiresAt(), client.getAccessToken().getTokenValue());
+        var accessToken = client.getAccessToken();
+        if (accessToken != null) {
+            if(log.isDebugEnabled()) {
+                log.debug("Authorized Client access token: expires {}, {}",
+                        accessToken.getExpiresAt(), accessToken.getTokenValue());
+            }
         }
 
-        if (client.getRefreshToken() != null) {
-            log.debug("Authorized Client refresh token: expires {}, {}",
-                    client.getRefreshToken().getExpiresAt(), client.getRefreshToken().getTokenValue());
+        var refreshToken = client.getRefreshToken();
+        if (refreshToken != null) {
+            if(log.isDebugEnabled()) {
+                log.debug("Authorized Client refresh token: expires {}, {}",
+                        refreshToken.getExpiresAt(), refreshToken.getTokenValue());
+            }
         }
 
-        return (client.getAccessToken() != null)
-                && tokenExpired(client.getAccessToken());
+        return (accessToken != null)
+                && tokenExpired(accessToken);
     }
 
     boolean tokenExpired(OAuth2AccessToken token) {
-        return (token != null) && (token.getExpiresAt() != null)
-                && token.getExpiresAt().isBefore(Instant.now());
+        var expiresAt = token.getExpiresAt();
+        return (expiresAt != null)
+                && expiresAt.isBefore(Instant.now());
     }
 }

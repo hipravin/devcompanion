@@ -18,8 +18,10 @@ class RepoFileUtilTest {
 
     @Test
     void testSubdirectoriesBadPath() {
+        Path notExistingDirectory = Paths.get("bad-path");
+
         assertThrows(UncheckedIOException.class, () -> {
-            RepoFileUtils.subdirectories(Paths.get("bad-path"));
+            RepoFileUtils.subdirectories(notExistingDirectory);
         });
     }
 
