@@ -50,7 +50,19 @@ pipeline {
             }
             
         }
+        stage('Docker-push') {
+            steps {
+                script {
+                    def version = sh script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true
 
+                    sh "sudo docker push hipravin/devcompanion-repo-service:$version repo-service"
+                    sh "sudo docker push hipravin/devcompanion-article-service:$version article-service"
+                    sh "sudo docker push hipravin/devcompanion-gateway:$version gateway"
+                    sh "sudo docker push hipravin/devcompanion-ui:$version site"
+                    sh "sudo docker push hipravin/devcompanion-admin:$version admin"
+                }
+            }
+        }
     }
 }
 
