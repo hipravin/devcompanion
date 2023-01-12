@@ -40,7 +40,7 @@ public class RepoFileUtils {
             Set<String> allowedFileNames,
             long maxSizeBytes) {
 
-        public Predicate<? super Path> asPathPredicate() {
+        public Predicate<Path> asPathPredicate() {
             return f -> accept(f);
         }
 
