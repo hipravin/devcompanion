@@ -29,7 +29,7 @@ public class ArticleController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> findBySearchString(
+    public ResponseEntity<List<ArticleDto>> findBySearchString(
             @RequestParam(name = "q", required = true) String query,
             @RequestParam(name = "lmt", required = false) Integer limit) {
 
@@ -40,7 +40,7 @@ public class ArticleController {
 
     //synthetic endpoint just to test POST method which should be csrf-secure
     @PostMapping("/search-post")
-    public ResponseEntity<?> findBySearchStringPost(
+    public ResponseEntity<List<ArticleDto>> findBySearchStringPost(
             @RequestBody SearchRequestDto searchRequestDto) {
 
         Objects.requireNonNull(searchRequestDto);

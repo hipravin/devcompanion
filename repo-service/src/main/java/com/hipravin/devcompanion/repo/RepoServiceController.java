@@ -30,13 +30,13 @@ public class RepoServiceController {
     }
 
     @GetMapping(path = "/search", params = {"q"})
-    public ResponseEntity<?> searchRepoFiles(@RequestParam("q") String query) {
+    public ResponseEntity<Page<FileSnippetsDto>> searchRepoFiles(@RequestParam("q") String query) {
         Page<FileSnippetsDto> repoFiles = repoSearchService.findFilesOrderById(query, DEFAULT_FIRST_PAGE_PAGEABLE);
         return ResponseEntity.ok(repoFiles);
     }
 
     @GetMapping(path = "/files/{id}")
-    public ResponseEntity<?> findFileById(@PathVariable("id") long id) {
+    public ResponseEntity<Object> findFileById(@PathVariable("id") long id) {
         Optional<RepoTextFileDto> fileDtoOptional = repoSearchService.findFileById(id);
 
         if(fileDtoOptional.isPresent()) {
@@ -48,7 +48,7 @@ public class RepoServiceController {
     }
 
     @GetMapping(path = "/files/{id}/raw", produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<?> fileRawContentById(@PathVariable("id") long id) {
+    public ResponseEntity<Object> fileRawContentById(@PathVariable("id") long id) {
         Optional<RepoTextFileDto> fileDtoOptional = repoSearchService.findFileById(id);
 
         if(fileDtoOptional.isPresent()) {

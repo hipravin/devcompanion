@@ -23,7 +23,7 @@ public class SessionStateController {
     private static final Logger log = LoggerFactory.getLogger(SessionStateController.class);
 
     @GetMapping("/current")
-    public ResponseEntity<?> currentSessionInfo(WebSession webSession) {
+    public ResponseEntity<Object> currentSessionInfo(WebSession webSession) {
         logOidcAttributes(webSession);
 
         return (webSession != null)

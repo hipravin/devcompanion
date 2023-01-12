@@ -21,7 +21,7 @@ public class RepoServiceManagementController {
     }
 
     @PostMapping("/reindex/all")
-    ResponseEntity<?> reindexAll() {
+    ResponseEntity<Object> reindexAll() {
         try {
             indexService.index();
             //TODO: better return some key-value json

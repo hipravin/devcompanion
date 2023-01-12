@@ -20,13 +20,13 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/users/")
 public class UserController {
     @GetMapping("/me")
-    public ResponseEntity<?> me(Authentication authentication) {
+    public ResponseEntity<UserDto> me(Authentication authentication) {
         UserDto userDto = new UserDto(authentication.getName());
         return ResponseEntity.ok(userDto);
     }
 
     @PostMapping("/me/info")
-    public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal Jwt principal) {
+    public ResponseEntity<Map<String, String>> getUserInfo(@AuthenticationPrincipal Jwt principal) {
         Map<String, String> claims = new HashMap<>();
         claims.put("user_name", principal.getClaimAsString("preferred_username"));
 //        map.put("organization", principal.getClaimAsString("organization"));
@@ -34,7 +34,7 @@ public class UserController {
     }
 
     @PostMapping("/me/authorities")
-    public ResponseEntity<?> getPrincipalInfo(JwtAuthenticationToken principal) {
+    public ResponseEntity<Map<String,Object>> getPrincipalInfo(JwtAuthenticationToken principal) {
 
         Collection<String> authorities = principal.getAuthorities()
                 .stream()

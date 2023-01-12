@@ -62,12 +62,12 @@ public class RepoLoadServiceLocalDirectory implements RepoLoadService {
 
     private static String sanitize(String value) {
         String sanitized = value;
-        sanitized = sanitized.replaceAll("\u0000", "");
+        sanitized = sanitized.replace("\u0000", "");
 
         return sanitized;
     }
 
     private static String withForwardSlash(String relativePath) {
-        return relativePath.replaceAll("\\\\", "/");
+        return relativePath.replace("\\", "/");
     }
 }

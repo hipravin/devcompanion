@@ -18,15 +18,18 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
     //check out HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY for multiple completely independent security configurations
 
+    private static final String MANAGE_AUTHORITY_NAME = "MANAGE";
+    private static final String USER_AUTHORITY_NAME = "USER";
+
     @Bean(name = "apiSecurityFilterChain")
     @Order(SecurityProperties.BASIC_AUTH_ORDER - 100)
     public SecurityFilterChain articlesApifilterChain(HttpSecurity http) throws Exception {
         http.antMatcher("/api/**")
                 .csrf().disable()
                 .httpBasic(withDefaults())
-                .authorizeRequests().antMatchers("/api/v1/manage/**").hasAuthority("MANAGE")
+                .authorizeRequests().antMatchers("/api/v1/manage/**").hasAuthority(MANAGE_AUTHORITY_NAME)
                 .and()
-                .authorizeRequests().anyRequest().hasAuthority("USER");
+                .authorizeRequests().anyRequest().hasAuthority(USER_AUTHORITY_NAME);
         return http.build();
     }
 
@@ -46,7 +49,7 @@ public class SecurityConfig {
                 .csrf().disable()
                 .httpBasic(Customizer.withDefaults())
                 .authorizeRequests().antMatchers("/actuator/health/**").permitAll()
-                .anyRequest().hasAuthority("MANAGE");
+                .anyRequest().hasAuthority(MANAGE_AUTHORITY_NAME);
         return http.build();
     }
 
@@ -71,9 +74,9 @@ public class SecurityConfig {
         //to generate new hash use: new BCryptPasswordEncoder().encode("password")
         return new InMemoryUserDetailsManager(
                 User.withUsername("admin").password("$2a$10$e.FByjmyWgR3r97UL4GG/O53NrYpnZ5rlpXFHmi5dDqrEa/CKmzyS")
-                        .authorities("MANAGE", "USER").build(),
+                        .authorities(MANAGE_AUTHORITY_NAME, USER_AUTHORITY_NAME).build(),
                 User.withUsername("user").password("$2a$10$AKGQ3a0NoVdEUlRaiAY29OonRmPlpKHfJBXRucv8OiS6DIyj2q9wy")
-                        .authorities("USER").build());
+                        .authorities(USER_AUTHORITY_NAME).build());
     }
 
     @Bean

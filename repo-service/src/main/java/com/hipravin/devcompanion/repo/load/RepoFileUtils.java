@@ -59,10 +59,6 @@ public class RepoFileUtils {
             return acceptedByNameAndType && (fileSizeBytes(file) < maxSizeBytes);
         }
 
-        private boolean sizeOk(Path file) {
-            return fileSizeBytes(file) < maxSizeBytes;
-        }
-
         private boolean containsIgnoredSubPaths(Path path) {
             if(ignoredSubPaths.isEmpty()) {
                 return false;
