@@ -126,8 +126,17 @@ class App extends React.Component {
 
     suggestionsComponent() {
         const sugesstions = [
+            "java factory method pattern",
+            "spring load file classpath",
+            "jackson javascript date",
+            "maven ban duplicated dependencies",
+            "maven versions set",
             "postgres sequence",
-            "linux find name"
+            "linux find name",
+            "apt get search install",
+            "docker spring layer",
+            "hibernate log show sql",
+            "postgre repeatable read"
         ];
 
         const liItems = sugesstions.map( s => {

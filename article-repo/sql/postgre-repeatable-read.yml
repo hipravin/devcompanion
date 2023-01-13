@@ -11,7 +11,7 @@ codeBlocks:
   - title: Show actual transaction isolation level
     code: |-
       SHOW TRANSACTION ISOLATION LEVEL;
-  - title: Error throwm on collision (lost update simulation)
+  - title: Error thrown on collision (lost update simulation)
     code: |-
       [40001] ERROR: could not serialize access due to concurrent update
       

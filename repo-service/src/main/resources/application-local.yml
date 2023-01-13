@@ -21,8 +21,8 @@ spring:
 logging:
   level:
     com.hipravin: DEBUG
-    org.springframework: INFO
-    org.springframework.security: INFO
+    org.springframework: DEBUG
+    org.springframework.security: TRACE
 
 application:
   repo-path: C:/dev/projects

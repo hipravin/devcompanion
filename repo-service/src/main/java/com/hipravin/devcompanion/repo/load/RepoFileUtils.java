@@ -21,7 +21,7 @@ public class RepoFileUtils {
 
     public static FileFilter COMMON_BACKEND_TEXT_FILES = new FileFilter(
             Set.of(),
-            Set.of(".idea", "node_modules", ".mvn", "target"),
+            Set.of(".idea", "node_modules", ".mvn", "target", "article-repo"),
             Set.of("java", "yml", "md", "conf", "txt", "xml", "properties"),
             Set.of("Dockerfile"),
             100 * 1024 * 1024L //100kb
@@ -41,7 +41,7 @@ public class RepoFileUtils {
             long maxSizeBytes) {
 
         public Predicate<Path> asPathPredicate() {
-            return f -> accept(f);
+            return this::accept;
         }
 
         private boolean accept(Path file) {
@@ -181,7 +181,7 @@ public class RepoFileUtils {
         }
 
         @Override
-        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
             if(directoryPredicate.test(dir)) {
                 foundDirecotires.add(dir);
                 return FileVisitResult.SKIP_SUBTREE;

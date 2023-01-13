@@ -23,3 +23,5 @@ spring:
           article-service.user-password: aadmin
           repo-service.user-name: admin
           repo-service.user-password: aadmin
+          gateway.user-name: admin
+          gateway.user-password: aadmin

@@ -9,13 +9,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 
 @Configuration
 public class SecurityConfig {
-    //check out HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY for multiple completely independent security configurations
+    private static final String SC_REQUEST_ATTR_KEY_ACTUATOR = RequestAttributeSecurityContextRepository.class.getName()
+            .concat(".SPRING_SECURITY_CONTEXT").concat("ACTUATOR");
+
+    private static final String MANAGE_AUTHORITY_NAME = "MANAGE";
 
     @Bean(name = "apiSecurityFilterChain")
     @Order(SecurityProperties.BASIC_AUTH_ORDER - 100)
@@ -34,21 +37,24 @@ public class SecurityConfig {
     public SecurityFilterChain swaggerFilterChain(HttpSecurity http) throws Exception {
         http.requestMatchers().antMatchers("/swagger-ui/**", "/v3/api-docs/**")
                 .and()
-                .httpBasic(Customizer.withDefaults())
-                .userDetailsService(hardcodedUserDetailsManager())
-                .authorizeRequests().anyRequest().authenticated();
+                .csrf(csrf -> csrf.disable())
+                .authorizeRequests().anyRequest().permitAll();
         return http.build();
     }
 
     @Bean
     @Order(SecurityProperties.BASIC_AUTH_ORDER - 80)
     public SecurityFilterChain actuatorFilterChain(HttpSecurity http) throws Exception {
+        var requestAttrRepository = new RequestAttributeSecurityContextRepository(SC_REQUEST_ATTR_KEY_ACTUATOR);
+
         http.antMatcher("/actuator/**")
+                .securityContext(config -> config.securityContextRepository(requestAttrRepository))
                 .csrf().disable()
+                .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(Customizer.withDefaults())
-                .userDetailsService(hardcodedUserDetailsManager())
+                .userDetailsService(actuatorUsersUserDetailsManager())
                 .authorizeRequests().antMatchers("/actuator/health/**").permitAll()
-                .anyRequest().hasAuthority("MANAGE");
+                .anyRequest().hasAuthority(MANAGE_AUTHORITY_NAME);
         return http.build();
     }
 
@@ -68,8 +74,9 @@ public class SecurityConfig {
         return http.build();
     }
 
-    InMemoryUserDetailsManager hardcodedUserDetailsManager() {
+    InMemoryUserDetailsManager actuatorUsersUserDetailsManager() {
         return new InMemoryUserDetailsManager(
-                        new UserDetails[]{User.withUsername("admin").password("{noop}aadmin").authorities("MANAGE").build()});
+                User.withUsername("admin").password("{bcrypt}$2a$10$e.FByjmyWgR3r97UL4GG/O53NrYpnZ5rlpXFHmi5dDqrEa/CKmzyS")
+                        .authorities(MANAGE_AUTHORITY_NAME).build());
     }
 }
