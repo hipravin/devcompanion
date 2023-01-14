@@ -2,6 +2,10 @@ spring:
   application:
     name: repo-service
 
+  flyway:
+    enabled: true
+    default-schema: "devcompanion"
+
   datasource:
     url: ${REPO_DB_URL}
     username: ${REPO_DB_USER}
@@ -10,7 +14,7 @@ spring:
   jpa:
     properties:
       hibernate:
-        default_schema: devcompanion
+        default_schema: "devcompanion"
         order_inserts: true
         order_updates: true
         #        generate_statistics: true
