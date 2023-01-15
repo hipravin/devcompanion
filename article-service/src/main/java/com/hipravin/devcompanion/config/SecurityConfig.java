@@ -22,7 +22,7 @@ public class SecurityConfig {
 
     @Bean(name = "apiSecurityFilterChain")
     @Order(SecurityProperties.BASIC_AUTH_ORDER - 100)
-    public SecurityFilterChain articlesApifilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
         http.antMatcher("/api/**")
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -34,8 +34,8 @@ public class SecurityConfig {
 
     @Bean
     @Order(SecurityProperties.BASIC_AUTH_ORDER - 90)
-    public SecurityFilterChain swaggerFilterChain(HttpSecurity http) throws Exception {
-        http.requestMatchers().antMatchers("/swagger-ui/**", "/v3/api-docs/**")
+    public SecurityFilterChain apiDocsFilterChain(HttpSecurity http) throws Exception {
+        http.requestMatchers().antMatchers("/api-docs/**")
                 .and()
                 .csrf(csrf -> csrf.disable())
                 .authorizeRequests().anyRequest().permitAll();

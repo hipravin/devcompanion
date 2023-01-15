@@ -14,10 +14,4 @@ public class ArticleServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(ArticleServiceApplication.class, args);
     }
-
-//    //log all events for research purposes
-//    @EventListener
-//    public void handleContextStart(ApplicationEvent event) {
-//        System.out.println("Event: " + event.getClass() + " " + event.toString());
-//    }
 }

@@ -36,8 +36,8 @@ public class SecurityConfig {
 
     @Bean
     @Order(SecurityProperties.BASIC_AUTH_ORDER - 90)
-    public SecurityFilterChain swaggerFilterChain(HttpSecurity http) throws Exception {
-        http.requestMatchers().antMatchers("/swagger-ui/**", "/v3/api-docs/**")
+    public SecurityFilterChain apiDocsFilterChain(HttpSecurity http) throws Exception {
+        http.requestMatchers().antMatchers("/api-docs/**")
                 .and()
                 .authorizeRequests().anyRequest().permitAll();
         return http.build();

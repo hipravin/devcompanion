@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestCustomizers;
 import org.springframework.security.oauth2.client.web.server.DefaultServerOAuth2AuthorizationRequestResolver;
+import org.springframework.security.oauth2.client.web.server.ServerOAuth2AuthorizedClientRepository;
+import org.springframework.security.oauth2.client.web.server.WebSessionServerOAuth2AuthorizedClientRepository;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.context.WebSessionServerSecurityContextRepository;
 import org.springframework.security.web.server.csrf.CookieServerCsrfTokenRepository;
@@ -24,6 +26,17 @@ import org.springframework.security.web.server.util.matcher.PathPatternParserSer
 public class SecurityConfig {
     private static final String MANAGE_AUTHORITY_NAME = "MANAGE";
     private static final String ACTUATOR_SECURITY_CONTEXT_WS_ATTR_NAME = "SPRING_SECURITY_CONTEXT_ACTUATOR";
+
+
+    @Bean
+    @Order(SecurityProperties.BASIC_AUTH_ORDER - 110)
+    SecurityWebFilterChain apiDocsIgnoreSecurityFilterChain(ServerHttpSecurity http) {
+        http
+                .securityMatcher(new PathPatternParserServerWebExchangeMatcher("/api-docs/**"))
+                .authorizeExchange(authorize -> authorize.anyExchange().permitAll())
+                .csrf(csrf -> csrf.disable());
+        return http.build();
+    }
 
     @Bean
     @Order(SecurityProperties.BASIC_AUTH_ORDER - 100)
@@ -75,16 +88,12 @@ public class SecurityConfig {
         return http.build();
     }
 
-//    @Bean
-//    public MapReactiveUserDetailsService userDetailsService() {
-//        UserDetails user = User.withDefaultPasswordEncoder()
-//                .username("admin")
-//                .password("aadmin")
-//                .authorities(MANAGE_AUTHORITY_NAME)
-//                .build();
-//        return new MapReactiveUserDetailsService(user);
-//    }
 
+    //https://github.com/spring-projects/spring-security/issues/7889
+    @Bean
+    public ServerOAuth2AuthorizedClientRepository authorizedClientRepository() {
+        return new WebSessionServerOAuth2AuthorizedClientRepository();
+    }
 
     public MapReactiveUserDetailsService actuatorUsersUserDetailsService() {
         UserDetails actuatorAdmin = User.builder()
