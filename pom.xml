@@ -13,6 +13,7 @@
 
     <modules>
         <module>domain/domain-repo</module>
+        <module>domain/api-common</module>
 
         <module>admin</module>
         <module>gateway</module>

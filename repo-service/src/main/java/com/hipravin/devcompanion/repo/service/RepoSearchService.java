@@ -1,5 +1,6 @@
 package com.hipravin.devcompanion.repo.service;
 
+import com.hipravin.devcompanion.api.PageRequest;
 import com.hipravin.devcompanion.repo.dto.*;
 import com.hipravin.devcompanion.repo.persist.RepoDao;
 import com.hipravin.devcompanion.repo.persist.entity.RepoEntity;
@@ -18,14 +19,16 @@ public class RepoSearchService {
 
     private int additionalLinesInSnippet = 4;
     private int blockMergeLineCount = additionalLinesInSnippet * 2;
-    private int maxSnippetsFromFile = 10;
+    private int maxSnippetsFromFile = 5;
 
     public RepoSearchService(RepoDao repoDao) {
         this.repoDao = repoDao;
     }
 
-    public Page<FileSnippetsDto> findFilesOrderById(String query, Pageable pageable) {
+    public Page<FileSnippetsDto> findFilesOrderById(String query, PageRequest pageRequest) {
         String[] searchTerms = parseQuery(query);
+
+        Pageable pageable = org.springframework.data.domain.PageRequest.of(pageRequest.getPage(), pageRequest.getPageSize());
 
         Page<RepoTextFileEntity> repoFiles = repoDao.search(searchTerms, pageable);
         return repoFiles.map(rf -> convertToDto(rf, searchTerms));
@@ -117,39 +120,6 @@ public class RepoSearchService {
                 .toList();
     }
 
-    List<CodeSnippetDto> snippetsFromFileContentSimplistic(String content, String[] terms) {
-        List<CodeSnippetDto> result = new ArrayList<>();
-        NavigableMap<Integer, String> linesNumbered = splitLines(content);
-
-        int lastSnippetLineTo = -1; //to avoid snippet overlap
-        for (Iterator<Map.Entry<Integer, String>> linesMapIterator = linesNumbered.entrySet().iterator();
-             linesMapIterator.hasNext(); ) {
-
-            Map.Entry<Integer, String> entry = linesMapIterator.next();
-
-            int lineNumber = entry.getKey();
-            String lineLc = entry.getValue().toLowerCase();
-
-            boolean matched = Arrays.stream(terms)
-                    .anyMatch(t -> lineLc.contains(t.toLowerCase()));
-
-            if (matched) {
-                CodeSnippetDto snippet = createSnippet(linesNumbered, lineNumber, lineNumber);
-                result.add(snippet);
-            }
-
-            if (result.size() >= maxSnippetsFromFile) {
-                break;
-            }
-
-            while (entry.getKey() <= lastSnippetLineTo && linesMapIterator.hasNext()) {
-                entry = linesMapIterator.next();
-            }
-        }
-
-        return result;
-    }
-
     CodeSnippetDto createSnippet(NavigableMap<Integer, String> linesNumbered, int lineFrom, int lineTo) {
         CodeSnippetDto snippet = new CodeSnippetDto();
 
@@ -181,6 +151,4 @@ public class RepoSearchService {
 
         return result;
     }
-
-
 }

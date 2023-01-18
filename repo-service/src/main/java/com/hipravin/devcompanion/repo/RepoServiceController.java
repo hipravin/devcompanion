@@ -1,27 +1,28 @@
 package com.hipravin.devcompanion.repo;
 
+import com.hipravin.devcompanion.api.PageRequest;
+import com.hipravin.devcompanion.api.PagedResponse;
 import com.hipravin.devcompanion.repo.dto.FileSnippetsDto;
 import com.hipravin.devcompanion.repo.dto.RepoTextFileDto;
 import com.hipravin.devcompanion.repo.service.RepoSearchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import java.util.Optional;
-import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
+@Validated
 @RequestMapping("/api/v1/repos/")
 public class RepoServiceController {
     private static final Logger log = LoggerFactory.getLogger(RepoServiceController.class);
-
-    private static final int DEFAULT_PAGE_SIZE = 20;
-    private static final Pageable DEFAULT_FIRST_PAGE_PAGEABLE = Pageable.ofSize(DEFAULT_PAGE_SIZE);
 
     private final RepoSearchService repoSearchService;
 
@@ -30,9 +31,17 @@ public class RepoServiceController {
     }
 
     @GetMapping(path = "/search", params = {"q"})
-    public ResponseEntity<Page<FileSnippetsDto>> searchRepoFiles(@RequestParam("q") String query) {
-        Page<FileSnippetsDto> repoFiles = repoSearchService.findFilesOrderById(query, DEFAULT_FIRST_PAGE_PAGEABLE);
-        return ResponseEntity.ok(repoFiles);
+    public ResponseEntity<PagedResponse<FileSnippetsDto>> searchRepoFiles(
+            @RequestParam("q") @NotBlank String query,
+            @RequestParam(value = "page", required = false, defaultValue = "0") @Min(0) int page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "5") @Min(1) int pageSize) {
+
+        Page<FileSnippetsDto> repoFilesPage = repoSearchService.findFilesOrderById(query, new PageRequest(page, pageSize));
+
+        PagedResponse<FileSnippetsDto> response = new PagedResponse<>(repoFilesPage.getContent(), repoFilesPage.getNumber(),
+                repoFilesPage.getSize(), repoFilesPage.getTotalElements(), repoFilesPage.getTotalPages());
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping(path = "/files/{id}")
@@ -42,8 +51,7 @@ public class RepoServiceController {
         if(fileDtoOptional.isPresent()) {
             return ResponseEntity.ok(fileDtoOptional.get());
         } else {
-            log.debug("File not found by id: {}", id);
-            return ResponseEntity.notFound().build();
+            return repoFileNotFound(id);
         }
     }
 
@@ -54,8 +62,12 @@ public class RepoServiceController {
         if(fileDtoOptional.isPresent()) {
             return ResponseEntity.ok(fileDtoOptional.get().getContent());
         } else {
-            log.debug("File not found by id: {}", id);
-            return ResponseEntity.notFound().build();
+            return repoFileNotFound(id);
         }
+    }
+
+    ResponseEntity<Object> repoFileNotFound(long id) {
+        log.debug("File not found by id: {}", id);
+        return new ResponseEntity<>("Repo file not found with id: " + id, HttpStatus.NOT_FOUND);
     }
 }

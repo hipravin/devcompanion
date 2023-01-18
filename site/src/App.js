@@ -16,6 +16,7 @@ class App extends React.Component {
         super(props);
         this.state = {
             articles: undefined,
+            articlesPage: undefined,
             user: undefined,
             showRelogin: undefined,
             searchString: undefined
@@ -41,7 +42,7 @@ class App extends React.Component {
         this.setState({searchString: searchString});
 
         searchArticlesApiMethod(searchString)
-            .then(res => this.setState({articles: res}))
+            .then(res => this.setState({articles: res.content, articlesPage: res}))
             .catch(err => {
                 console.error(err);
                 notify("Service temporarily unavailable, please refresh a page or try again later.");

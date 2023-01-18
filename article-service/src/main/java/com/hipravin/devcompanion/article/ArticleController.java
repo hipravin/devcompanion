@@ -1,5 +1,7 @@
 package com.hipravin.devcompanion.article;
 
+import com.hipravin.devcompanion.api.PageRequest;
+import com.hipravin.devcompanion.api.PagedResponse;
 import com.hipravin.devcompanion.article.dto.ArticleDto;
 import com.hipravin.devcompanion.article.dto.SearchRequestDto;
 import com.hipravin.devcompanion.article.search.ArticleSearchService;
@@ -8,13 +10,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 @RestController
+@Validated
 @RequestMapping("/api/v1/articles")
 public class ArticleController {
     private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
@@ -28,12 +34,24 @@ public class ArticleController {
         this.articleSearchService = articleSearchService;
     }
 
-    @GetMapping("/search")
+    @GetMapping("/search-old")
     public ResponseEntity<List<ArticleDto>> findBySearchString(
             @RequestParam(name = "q", required = true) String query,
             @RequestParam(name = "lmt", required = false) Integer limit) {
 
         List<ArticleDto> articlesFound = articleSearchService.search(query, ensureCorrectLimit(limit));
+
+        return ResponseEntity.ok(articlesFound);
+    }
+
+    @GetMapping(value = "/search", params = {"q"})
+    public ResponseEntity<PagedResponse<ArticleDto>> findBySearchString(
+            @RequestParam("q") @NotBlank String query,
+            @RequestParam(value = "page", required = false, defaultValue = "0") @Min(0) int page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "5") @Min(1) int pageSize) {
+
+
+        PagedResponse<ArticleDto> articlesFound = articleSearchService.search(query, new PageRequest(page, pageSize));
 
         return ResponseEntity.ok(articlesFound);
     }

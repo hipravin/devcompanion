@@ -1,5 +1,7 @@
 package com.hipravin.devcompanion.article.inmemory;
 
+import com.hipravin.devcompanion.api.PageRequest;
+import com.hipravin.devcompanion.api.PagedResponse;
 import com.hipravin.devcompanion.article.inmemory.model.Article;
 import com.hipravin.devcompanion.article.yml.ArticleYmlFileStorage;
 import org.junit.jupiter.api.BeforeAll;
@@ -57,38 +59,26 @@ class ArticleInMemoryRepositoryTest {
     }
 
     @Test
-    void testFindByTermsEmpty() {
-        String terms = "notfound";
+    void testFindPaged() {
+        PagedResponse<Article> p21 = articleInMemoryRepository.findByAnyMatches("o", new PageRequest(1,2));
 
-        List<Article> result = articleInMemoryRepository.findByTitleMatches(terms, lmt);
+        PagedResponse<Article> p11 = articleInMemoryRepository.findByAnyMatches("o", new PageRequest(0,1));
+        PagedResponse<Article> p12 = articleInMemoryRepository.findByAnyMatches("o", new PageRequest(1,1));
+        PagedResponse<Article> p13 = articleInMemoryRepository.findByAnyMatches("o", new PageRequest(2,1));
+        PagedResponse<Article> p14 = articleInMemoryRepository.findByAnyMatches("o", new PageRequest(3,1));
 
-        assertEquals(0, result.size());
-    }
 
-    @Test
-    void testFindByTermsTooMuch() {
-        String terms = "";
-        List<Article> result = articleInMemoryRepository.findByTitleMatches(terms, lmt);
+        assertEquals(3, p11.getTotalElements());
+        assertEquals(3, p12.getTotalElements());
+        assertEquals(3, p13.getTotalElements());
+        assertEquals(3, p14.getTotalElements());
+        assertEquals(3, p21.getTotalElements());
 
-        assertEquals(lmt, result.size());
-    }
-
-    @Test
-    void testFindByTerms01() {
-        String terms = "spring javA classpath";
-
-        List<Article> result = articleInMemoryRepository.findByTitleMatches(terms, lmt);
-
-        assertEquals(1, result.size());
-        assertEquals(1000001, result.get(0).id());
-    }
-
-    @Test
-    void testFindByTerms02() {
-        String terms = "jav";
-
-        List<Article> result = articleInMemoryRepository.findByTitleMatches(terms, lmt);
-        assertEquals(2, result.size());
+        assertEquals(1000001, p11.getContent().get(0).id());
+        assertEquals(1000002, p12.getContent().get(0).id());
+        assertEquals(1000003, p13.getContent().get(0).id());
+        assertTrue(p14.getContent().isEmpty());
+        assertEquals(1000003, p21.getContent().get(0).id());
     }
 
     @Test

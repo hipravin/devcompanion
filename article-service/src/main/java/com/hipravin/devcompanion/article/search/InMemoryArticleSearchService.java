@@ -1,5 +1,7 @@
 package com.hipravin.devcompanion.article.search;
 
+import com.hipravin.devcompanion.api.PageRequest;
+import com.hipravin.devcompanion.api.PagedResponse;
 import com.hipravin.devcompanion.article.inmemory.ArticleInMemoryRepository;
 import com.hipravin.devcompanion.article.inmemory.model.Article;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,8 +19,8 @@ public class InMemoryArticleSearchService implements ArticleSearchService {
     }
 
     @Override
-    public List<Article> findByTitleMatches(String searchString, int limit) {
-        return articleInMemoryRepository.findByTitleMatches(searchString, limit);
+    public PagedResponse<Article> findByAnyMatches(String searchString, PageRequest pageRequest) {
+        return articleInMemoryRepository.findByAnyMatches(searchString, pageRequest);
     }
 
     @Override

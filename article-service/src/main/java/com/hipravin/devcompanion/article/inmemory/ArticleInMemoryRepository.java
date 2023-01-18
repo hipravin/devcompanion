@@ -1,9 +1,11 @@
 package com.hipravin.devcompanion.article.inmemory;
 
+import com.hipravin.devcompanion.api.PageRequest;
+import com.hipravin.devcompanion.api.PageUtil;
+import com.hipravin.devcompanion.api.PagedResponse;
 import com.hipravin.devcompanion.article.ArticleRepository;
 import com.hipravin.devcompanion.article.ArticleStorage;
 import com.hipravin.devcompanion.article.inmemory.model.Article;
-import com.hipravin.devcompanion.article.search.ArticleSearchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +23,8 @@ public class ArticleInMemoryRepository implements ArticleRepository<Article, Lon
     private final Lock readLock = readWriteLock.readLock();
     private final Lock writeLock = readWriteLock.writeLock();
 
-    private Map<Long, Article> articlesById = new HashMap<>();
+    private static final Supplier<Map<Long, Article>> newArticlesMapSupplier = TreeMap::new;
+    private Map<Long, Article> articlesById = newArticlesMapSupplier.get();
 
     public synchronized void fillFromStorage(ArticleStorage articleStorage) {
         log.info("Start loading in-memory from storage, size before: {}", articlesById.size());
@@ -29,7 +32,7 @@ public class ArticleInMemoryRepository implements ArticleRepository<Article, Lon
         Stream<Article> articlesFromStorage = articleStorage.loadAll()
                 .map(Article::fromDto);
 
-        final Map<Long, Article> articleByIdUpdated = new HashMap<>();
+        final Map<Long, Article> articleByIdUpdated = newArticlesMapSupplier.get();
 
         articlesFromStorage
                 .sequential() //storage may return parallel stream, but HashMap is not thread-safe
@@ -55,27 +58,39 @@ public class ArticleInMemoryRepository implements ArticleRepository<Article, Lon
                 getWithReadLock(() -> articlesById.get(articleId)));
     }
 
-    public List<Article> findByTitleMatches(String searchString, int limit) {
-        return getWithReadLock(() -> byTitleMatches(searchString, limit));
+    public PagedResponse<Article> findByAnyMatches(String searchString, PageRequest pageRequest) {
+        return getWithReadLock(() -> byAnyMatchesPaged(searchString, pageRequest));
     }
 
     public List<Article> findByAnyMatches(String searchString, int limit) {
         return getWithReadLock(() -> byAnyMatches(searchString, limit));
     }
 
-    private List<Article> byTitleMatches(String titleSearchString, int limit) {
-        List<String> termsLowerCase = Arrays.asList(
-                titleSearchString.toLowerCase().split("\\s+"));
+    private PagedResponse<Article> byAnyMatchesPaged(String searchString, PageRequest pageRequest) {
+        List<String> termsLowerCase = Arrays.asList(searchString.toLowerCase().split("\\s+"));
 
-        return articlesById.values()
+        Supplier<Stream<Article>> matchedArticlesStreamSupplier = () -> articlesById.values()
                 .stream()
-                .filter(article -> containsAllTerms(article.title().toLowerCase(), termsLowerCase))
-                .limit(limit)
-                .toList();
+                .filter(article -> containsAllTerms(article.textBlocks(), termsLowerCase));
+
+        long totalElements = matchedArticlesStreamSupplier.get().count();
+
+        List<Article> pageContent = Collections.emptyList();
+        int elementsToSkip = pageRequest.getPage() * pageRequest.getPageSize();
+        if(elementsToSkip < totalElements) {
+            pageContent = matchedArticlesStreamSupplier.get()
+                    .skip(elementsToSkip)
+                    .limit(pageRequest.getPageSize())
+                    .toList();
+        }
+
+        int totalPages = PageUtil.totalPages(totalElements, pageRequest.getPageSize());
+        return new PagedResponse<>(pageContent, pageRequest.getPage(), pageRequest.getPageSize(), totalElements, totalPages);
     }
-    private List<Article> byAnyMatches(String titleSearchString, int limit) {
+
+    private List<Article> byAnyMatches(String searchString, int limit) {
         List<String> termsLowerCase = Arrays.asList(
-                titleSearchString.toLowerCase().split("\\s+"));
+                searchString.toLowerCase().split("\\s+"));
 
         return articlesById.values()
                 .stream()
