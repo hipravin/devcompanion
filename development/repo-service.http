@@ -1,0 +1,29 @@
+###
+POST http://localhost:8182/api/v1/manage/reindex/all
+Authorization: Basic admin aadmin
+
+###
+GET http://localhost:8082/api/v1/articles/search?q=java
+
+###
+GET http://localhost:8182/api/v1/repos/search-sample?q=some
+Authorization: Basic user uuser
+
+###
+GET http://localhost:8182/api/v1/repos/search?q=BigDecimal
+Authorization: Basic user uuser
+
+###
+GET http://localhost:8000/api/v1/repos/search?q=BigDecimal
+
+###
+GET http://localhost:8182/api/v1/repos/files/13665
+Authorization: Basic user uuser
+
+###
+GET http://localhost:8182/api/v1/repos/files/13665/raw
+Authorization: Basic user uuser
+
+
+
+
