@@ -1,15 +1,16 @@
 import './App.css';
+import packageJson from '../package.json'; //TODO: don't expose whole package.json to users! So far it's up to webpack config.
 import React from "react";
 import notify from "./lib/notify";
 import TopNavBar from "./components/TopNavBar/TopNavBar";
-import {searchArticlesApiMethod} from "./lib/api/articles";
+import {searchArticlesApiMethod, searchArticlesPageApiMethod} from "./lib/api/articles";
 import {userInfoApiMethod} from "./lib/api/users";
 import {sessionInfoApiMethod} from "./lib/api/session";
 import Relogin from "./components/Relogin/Relogin";
 import Article from "./components/Article/Article";
 import {queryToTerms} from "./lib/highlight";
 import Notifier from "./components/Notifier";
-
+import {ThreeDots} from "react-loader-spinner";
 
 class App extends React.Component {
     constructor(props) {
@@ -19,13 +20,15 @@ class App extends React.Component {
             articlesPage: undefined,
             user: undefined,
             showRelogin: undefined,
-            searchString: undefined
+            searchPage: undefined,
+            searchString: undefined,
+            showDotsLoader: false
         };
     }
 
     componentDidMount() {
-        if(this.props.queryString) {
-            this.performSearch(this.props.queryString);
+        if (this.props.queryString) {
+            this.performSearch(this.props.queryString, this.props.page);
         }
         this.requestUserInfo();
 
@@ -33,19 +36,23 @@ class App extends React.Component {
         this.scheduleSessionBounce(20000);
     }
 
-    performSearch(searchString) {
-        window.history.replaceState(null, null, "?q=" + searchString)
-        if(searchString.trim() === "") {
+    performSearch(searchString, page) {
+        if (searchString.trim() === "") {
             this.setState({searchString: undefined});
             return;
         }
-        this.setState({searchString: searchString});
+        this.setState({searchString: searchString, searchPage: page, showDotsLoader: true});
 
-        searchArticlesApiMethod(searchString)
+        const searchRequest = page ? searchArticlesPageApiMethod(searchString, page) : searchArticlesApiMethod(searchString);
+
+        searchRequest
             .then(res => this.setState({articles: res.content, articlesPage: res}))
             .catch(err => {
                 console.error(err);
                 notify("Service temporarily unavailable, please refresh a page or try again later.");
+            })
+            .finally(res => {
+                this.setState({showDotsLoader: false});
             });
     }
 
@@ -87,38 +94,77 @@ class App extends React.Component {
     }
 
     handleSearch = (searchString) => {
-        this.performSearch(searchString);
+        this.setState({searchPage: undefined});
+        window.history.replaceState(null, null, "?q=" + encodeURIComponent(searchString));
+        this.performSearch(searchString, undefined);
     }
 
     render() {
         const articles = this.state.articles;
 
         const articlesComponent = this.articlesComponent();
-
+        const showPages = this.state.articlesPage && (this.state.articlesPage.totalPages > 1);
+        const pagesComponent = showPages ? this.pagesComponent() : undefined;
         const articlesCount = articles ? articles.length : 0;
-
         const userInfo = this.state.user ? this.state.user : {user_name: ""};
-
         const showRelogin = this.state.showRelogin === true;
+        const appVersion = packageJson.version;
 
         return (
             <div className="App">
                 {showRelogin && <Relogin/>}
-                <TopNavBar queryString={this.props.queryString} resultArticlesCount={articlesCount} userInfo={userInfo} onSearch={this.handleSearch}/>
+                <TopNavBar queryString={this.props.queryString} resultArticlesCount={articlesCount} userInfo={userInfo}
+                           onSearch={this.handleSearch}/>
                 <main className="MainContent">
                     {articlesComponent}
+                    {showPages && pagesComponent}
+                    <div className="ThreeDotSpinner">
+                        <ThreeDots
+                            height="70"
+                            width="70"
+                            radius="9"
+                            color="grey"
+                            ariaLabel="three-dots-loading"
+                            wrapperStyle={{}}
+                            wrapperClassName=""
+                            visible={this.state.showDotsLoader}/>
+                    </div>
                 </main>
-                <footer className="Footer">@Copyleft Alex K. 1890-9990 A.D.</footer>
+                <footer className="Footer">v{appVersion} @Copyleft Alex K. 1890-9990 A.D.</footer>
                 {/*<CssBaseline />*/}
                 <Notifier/>
             </div>
         );
     }
 
+    pagesComponent() {
+        const totalPages = this.state.articlesPage.totalPages;
+        const thisPageNumber = this.state.articlesPage.pageNumber;
+
+        const pages = [];
+
+        for(let i = 0; i < totalPages && i < 50; i++) {
+            pages.push({page: i, isCurrentPage: i === thisPageNumber});
+        }
+
+        const linksItems = pages.map(p => {
+            const href = "/?q=" + encodeURIComponent(this.state.searchString) + "&page=" + encodeURIComponent(p.page);
+            return <a key={p.page} href={href} className={p.isCurrentPage ? "ThisPage" : "NotThisPage"}>{p.page}</a>
+        });
+
+        return (
+            <div className="Pages">
+                {linksItems}
+            </div>
+        );
+    }
+
     articlesComponent() {
-        if (this.state.searchString === undefined || this.state.articles === undefined) {
+        if(this.state.showDotsLoader && this.state.articles === undefined) {
+            return this.blankIntermediate();
+        } else if (this.state.articles === undefined) {
             return this.suggestionsComponent();
-        } else if (this.state.articles.length === 0) {
+        } else if (this.state.articles && this.state.articles.length === 0) {
             return this.emptyResult();
         } else {
             return this.articleNotEmptyList();
@@ -126,7 +172,7 @@ class App extends React.Component {
     }
 
     suggestionsComponent() {
-        const sugesstions = [
+        const suggestions = [
             "java factory method pattern",
             "spring load file classpath",
             "jackson javascript date",
@@ -140,7 +186,7 @@ class App extends React.Component {
             "postgre repeatable read"
         ];
 
-        const liItems = sugesstions.map( s => {
+        const liItems = suggestions.map(s => {
             return <li key={s}><a href={"/?q=" + s}>{s}</a></li>
         });
 
@@ -171,6 +217,11 @@ class App extends React.Component {
         );
     }
 
+    blankIntermediate() {
+        return (
+            <div className="EmptyResult"></div>
+        );
+    }
 }
 
 export default App;

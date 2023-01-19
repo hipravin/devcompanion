@@ -34,6 +34,4 @@ public final class PageUtil {
         return new PagedResponse<>(contentMapped, original.getPageNumber(), original.getPageSize(),
                 original.getTotalElements(), original.getTotalPages());
     }
-
-
 }

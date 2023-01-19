@@ -60,3 +60,27 @@
     margin-top: 50px;
     margin-right: 50px;
 }
+
+.Pages {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.Pages a {
+    margin: 10px;
+    text-decoration: none;
+}
+
+.Pages .ThisPage {
+    padding: 3px;
+    outline: 1px dashed black;
+}
+
+.ThreeDotSpinner {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+}

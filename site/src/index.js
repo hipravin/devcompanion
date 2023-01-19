@@ -8,7 +8,7 @@ const params = new URLSearchParams(window.location.search);
 
 ReactDOM.render(
   <React.StrictMode>
-    <App queryString = {params.get("q")}/>
+    <App queryString = {params.get("q")} page={params.get("page")}/>
   </React.StrictMode>,
   document.getElementById('root')
 );
