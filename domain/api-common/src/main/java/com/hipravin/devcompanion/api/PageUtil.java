@@ -12,7 +12,6 @@ public final class PageUtil {
         return new PagedResponse<>(Collections.emptyList(), 0, pageSize, 0, 1);
     }
 
-
     public static int totalPages(long totalElements, int pageSize) {
         if(totalElements < 0) {
             throw new IllegalArgumentException("totalElements must be positive");

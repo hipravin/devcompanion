@@ -51,7 +51,6 @@ class TopNavBar extends React.Component {
                     <SearchIcon fontSize="inherit"/>
                 </IconButton>
 
-                {this.props.resultArticlesCount > 0 && <span className="ResultCount">Shown: {this.props.resultArticlesCount||0} articles</span>}
                 <span className="UserInfo">
                     <PersonRounded fontSize="large"/>
                     <span className="UserName">{this.props.userInfo.user_name}</span>

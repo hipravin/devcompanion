@@ -67,9 +67,7 @@ class App extends React.Component {
             .then(res => console.log('session info: ' + res))
             .catch(err => {
                 console.error('failed session info: ' + err);
-                this.setState({//old state is merged with new one, need to explicitely clear additional keys if intended
-                    // articles: undefined,
-                    // user: undefined,
+                this.setState({
                     showRelogin: true
                 });
             });
@@ -105,7 +103,6 @@ class App extends React.Component {
         const articlesComponent = this.articlesComponent();
         const showPages = this.state.articlesPage && (this.state.articlesPage.totalPages > 1);
         const pagesComponent = showPages ? this.pagesComponent() : undefined;
-        const articlesCount = articles ? articles.length : 0;
         const userInfo = this.state.user ? this.state.user : {user_name: ""};
         const showRelogin = this.state.showRelogin === true;
         const appVersion = packageJson.version;
@@ -113,7 +110,7 @@ class App extends React.Component {
         return (
             <div className="App">
                 {showRelogin && <Relogin/>}
-                <TopNavBar queryString={this.props.queryString} resultArticlesCount={articlesCount} userInfo={userInfo}
+                <TopNavBar queryString={this.props.queryString} userInfo={userInfo}
                            onSearch={this.handleSearch}/>
                 <main className="MainContent">
                     {articlesComponent}
@@ -161,11 +158,11 @@ class App extends React.Component {
 
     articlesComponent() {
         if(this.state.showDotsLoader && this.state.articles === undefined) {
-            return this.blankIntermediate();
+            return (<div className="EmptyResult"></div>);
         } else if (this.state.articles === undefined) {
             return this.suggestionsComponent();
         } else if (this.state.articles && this.state.articles.length === 0) {
-            return this.emptyResult();
+            return (<div className="EmptyResult">No results</div>);
         } else {
             return this.articleNotEmptyList();
         }
@@ -208,18 +205,6 @@ class App extends React.Component {
 
         return (
             <div className="ArticleList">{articles}</div>
-        );
-    }
-
-    emptyResult() {
-        return (
-            <div className="EmptyResult">No results</div>
-        );
-    }
-
-    blankIntermediate() {
-        return (
-            <div className="EmptyResult"></div>
         );
     }
 }
