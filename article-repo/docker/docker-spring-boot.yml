@@ -1,5 +1,5 @@
 id: 8000001
-title: Dockerfile spring boot with profile and non-root user jdk 17
+title: Dockerfile basic spring boot with profile and non-root user jdk 17
 description: Simple without unpack
 codeBlocks:
   - title: Dockerfile contents

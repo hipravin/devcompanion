@@ -1,0 +1,75 @@
+id: 8000003
+title: Dockerfile java spring boot layered
+description: |-
+  Layered dockerfile saves build/push time because of caching most of unchanged contents. Source https://www.baeldung.com/docker-layers-spring-boot.
+  But avoid empty layers and rather remove them from layers.xml and Dockerfile until needed.
+codeBlocks:
+  - title: Dockerfile contents
+    code: |-
+      FROM openjdk:17-alpine as builder
+      ARG JAR_FILE=target/*.jar
+      COPY ${JAR_FILE} application.jar
+      RUN java -Djarmode=layertools -jar application.jar extract
+      
+      FROM openjdk:17-alpine
+      COPY --from=builder dependencies/ ./
+      COPY --from=builder spring-boot-loader/ ./
+      COPY --from=builder internal-dependencies/ ./
+      COPY --from=builder snapshot-dependencies/ ./
+      COPY --from=builder application/ ./
+      ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
+  - title: pom.xml
+    code: |-
+      <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <configuration>
+              <layers>
+                  <enabled>true</enabled>
+                  <configuration>${project.basedir}/src/layers.xml</configuration>
+              </layers>
+          </configuration>
+          <executions>
+              <execution>
+                  <id>layers</id>
+                  <goals>
+                      <goal>repackage</goal>
+                  </goals>
+              </execution>
+          </executions>
+      </plugin>
+  - title: layers.xml
+    code: |-      
+      <layers xmlns="http://www.springframework.org/schema/boot/layers"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://www.springframework.org/schema/boot/layers
+                           https://www.springframework.org/schema/boot/layers/layers-2.3.xsd">
+          <application>
+              <into layer="spring-boot-loader">
+                  <include>org/springframework/boot/loader/**</include>
+              </into>
+              <into layer="application" />
+          </application>
+          <dependencies>
+              <into layer="snapshot-dependencies">
+                  <include>*:*:*SNAPSHOT</include>
+              </into>
+              <into layer="internal-dependencies">
+                  <include>com.mycompany.myproject:*:*</include>
+              </into>
+              <into layer="dependencies" />
+          </dependencies>
+          <layerOrder>
+              <layer>dependencies</layer>
+              <layer>spring-boot-loader</layer>
+              <layer>internal-dependencies</layer>
+              <layer>snapshot-dependencies</layer>
+              <layer>application</layer>
+          </layerOrder>
+      </layers>
+  - title: Build and push commands
+    code: |-
+      docker build -t myproject/myservice:1.0.0-SNAPSHOT .
+      docker push myproject/myservice:1.0.0-SNAPSHOT .
+
+      
