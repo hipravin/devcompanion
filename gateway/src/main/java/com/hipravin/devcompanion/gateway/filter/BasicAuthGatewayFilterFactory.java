@@ -12,8 +12,6 @@ import java.nio.charset.StandardCharsets;
 
 @Component
 public class BasicAuthGatewayFilterFactory extends AbstractGatewayFilterFactory<BasicAuthGatewayFilterFactory.BasicAuthConfig> {
-    private static final Logger log = LoggerFactory.getLogger(BasicAuthGatewayFilterFactory.class);
-
     public BasicAuthGatewayFilterFactory() {
         super(BasicAuthConfig.class);
     }

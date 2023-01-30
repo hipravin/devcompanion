@@ -1,5 +1,6 @@
 package com.hipravin.devcompanion.gateway;
 
+import com.hipravin.devcompanion.gateway.filter.AuthCapturingFilterFactory;
 import com.hipravin.devcompanion.gateway.filter.ValidateAuthorizedClientsTokenSecurityFilterFactory;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
@@ -74,13 +75,15 @@ public class SecurityConfig {
     @Bean
     @Order(SecurityProperties.BASIC_AUTH_ORDER - 80)
     SecurityWebFilterChain bffFilterChain(ServerHttpSecurity http, ReactiveClientRegistrationRepository repository,
-                                          ValidateAuthorizedClientsTokenSecurityFilterFactory validateFilterFactory) {
+                                          ValidateAuthorizedClientsTokenSecurityFilterFactory validateFilterFactory,
+                                          AuthCapturingFilterFactory authCapturingFilterFactory) {
         DefaultServerOAuth2AuthorizationRequestResolver pkceResolver = new DefaultServerOAuth2AuthorizationRequestResolver(repository);
         pkceResolver.setAuthorizationRequestCustomizer(OAuth2AuthorizationRequestCustomizers.withPkce());
 
         http
                 .securityMatcher(new PathPatternParserServerWebExchangeMatcher("/**"))
                 .addFilterBefore(validateFilterFactory.apply(), SecurityWebFiltersOrder.SERVER_REQUEST_CACHE)
+                .addFilterBefore(authCapturingFilterFactory.apply(), SecurityWebFiltersOrder.SERVER_REQUEST_CACHE)
                 .headers(headers -> headers.contentSecurityPolicy("script-src 'self'"))
                 .authorizeExchange((spec) -> spec.anyExchange().authenticated()) //interesting observation: gateway itself doesn't check/refresh oidc jwt token stored as session attribute
                 .oauth2Login(login -> login.authorizationRequestResolver(pkceResolver))

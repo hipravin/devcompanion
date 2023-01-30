@@ -1,7 +1,10 @@
 package com.hipravin.devcompanion.gateway;
 
+import com.hipravin.devcompanion.gateway.event.OAuthUserAuthenticatedEvent;
 import com.hipravin.devcompanion.gateway.filter.BasicAuthGatewayFilterFactory;
 import com.hipravin.devcompanion.gateway.filter.GatewayLoggingDiagnosticFilterFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,11 +13,15 @@ import org.springframework.cloud.gateway.filter.factory.TokenRelayGatewayFilterF
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.event.EventListener;
+
+import java.util.Optional;
 
 @SpringBootApplication
 @EnableConfigurationProperties({
         AppRouteProperties.class})
 public class GatewayApplication {
+    private static final Logger log = LoggerFactory.getLogger(GatewayApplication.class);
 
     @Autowired
     private TokenRelayGatewayFilterFactory tokenRelayfilterFactory;
@@ -45,6 +52,18 @@ public class GatewayApplication {
                 .route("frontend", r -> r.path("/**")
                         .uri(routeProperties.getFrontendUri()))
                 .build();
+    }
+
+    @EventListener
+    public void onOauthLogin(OAuthUserAuthenticatedEvent oAuthUserAuthenticatedEvent) {
+        var token = oAuthUserAuthenticatedEvent.getOauthToken();
+
+        String userName = Optional.ofNullable(token.getPrincipal())
+                .map(t -> t.getAttribute("preferred_username"))
+                .map(String::valueOf)
+                .orElse(null);
+
+        log.info("OAuthUser logged in: {}", userName);
     }
 
     public static void main(String[] args) {
