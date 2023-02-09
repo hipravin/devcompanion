@@ -36,7 +36,7 @@ spec:
           - name: ARTICLES_REPO_PATH
             value: "/usr/local/article-repo"
           - name: JAVA_TOOL_OPTIONS
-            value: "-Xmx256m"
+            value: "-Xmx256m -XX:StartFlightRecording=duration=200s,filename=/startup.jfr"
           - name: KEYCLOAK_URL
 #            value: "http://keycloak.hipravin.ru:8080"
             value: "http://host.docker.internal:8080"

@@ -33,7 +33,7 @@ spec:
             cpu: "1000m"
         env:
           - name: JAVA_TOOL_OPTIONS
-            value: "-Xmx256m"
+            value: "-Xmx256m -XX:StartFlightRecording=duration=200s,filename=/startup.jfr"
           - name: SESSION_STORE_PROVIDER
             value: "redis"
 #            value: "none"

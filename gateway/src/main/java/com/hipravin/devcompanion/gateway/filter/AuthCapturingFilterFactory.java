@@ -1,8 +1,6 @@
 package com.hipravin.devcompanion.gateway.filter;
 
 import com.hipravin.devcompanion.gateway.event.OAuthUserAuthenticatedEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Component;
@@ -11,8 +9,6 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import org.springframework.web.server.WebSession;
 import reactor.core.publisher.Mono;
-
-import java.util.Optional;
 
 @Component
 public class AuthCapturingFilterFactory {

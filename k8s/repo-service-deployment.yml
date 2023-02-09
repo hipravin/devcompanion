@@ -30,7 +30,10 @@ spec:
             cpu: "1000m"
         env:
           - name: JAVA_TOOL_OPTIONS
-            value: "-Xmx256m"
+            value: |-
+              -Xmx256m 
+              -XX:+UseG1GC 
+              -XX:StartFlightRecording=duration=200s,filename=/startup.jfr
           - name: REPO_DB_URL
             value: "jdbc:postgresql://host.docker.internal:5432/playground"
           - name: REPO_DB_USER

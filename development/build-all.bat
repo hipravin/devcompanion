@@ -5,7 +5,7 @@ call echo building with version=%version%
 
 call npm run --prefix site build --production
 
-call .\mvnw.cmd clean package
+call mvn clean package
 
 call docker build -t hipravin/devcompanion-repo-service:%version% repo-service
 call docker build -t hipravin/devcompanion-article-service:%version% article-service
