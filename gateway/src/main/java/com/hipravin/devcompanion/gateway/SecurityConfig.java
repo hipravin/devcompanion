@@ -28,7 +28,6 @@ public class SecurityConfig {
     private static final String MANAGE_AUTHORITY_NAME = "MANAGE";
     private static final String ACTUATOR_SECURITY_CONTEXT_WS_ATTR_NAME = "SPRING_SECURITY_CONTEXT_ACTUATOR";
 
-
     @Bean
     @Order(SecurityProperties.BASIC_AUTH_ORDER - 110)
     SecurityWebFilterChain apiDocsIgnoreSecurityFilterChain(ServerHttpSecurity http) {

@@ -1,6 +1,25 @@
 server:
-  port: 8086
+  port: 8088
 spring:
   rabbitmq:
+    #user needs to be added via rabbtimq management console
     username: devcompanion
     password: ddevcompanion
+    template:
+      reply-timeout: PT30S
+    listener:
+      simple:
+#        acknowledge-mode: manual
+        concurrency: 5
+        max-concurrency: 5
+        retry:
+          initial-interval: 2000
+          max-attempts: 4
+          multiplier: 2
+          enabled: true
+          max-interval: 60000
+        default-requeue-rejected: false
+
+        #Values in the 100 through 300 range usually offer optimal throughput and do not run significant risk of overwhelming consumers.
+        #Higher values often run into the law of diminishing returns.
+        prefetch: 100

@@ -1,7 +1,6 @@
 application:
   acticles-yaml-path: src/test/resources/article-repo-sample
 
-
 spring:
   security:
     oauth2:
