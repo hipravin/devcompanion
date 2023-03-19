@@ -1,6 +1,6 @@
 ###
 POST http://localhost:8182/api/v1/manage/reindex/all
-Authorization: Basic admin aadmin
+Authorization: Basic admin aaadmin
 
 ###
 GET http://localhost:8082/api/v1/articles/search?q=java
