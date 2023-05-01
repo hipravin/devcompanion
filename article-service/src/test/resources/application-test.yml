@@ -1,6 +1,13 @@
 application:
   acticles-yaml-path: src/test/resources/article-repo-sample
 
+
+  runners:
+    fillinmemory:
+      enabled: true
+    logbuildinfo:
+      enabled: false
+
 spring:
   security:
     oauth2:

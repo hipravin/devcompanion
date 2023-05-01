@@ -67,7 +67,7 @@ class ArticleControllerTest {
         String uri = "http://localhost:" + port + "/api/v1/articles/search?q={query}&page={page}&pageSize={pageSize}";
 
         HttpHeaders headers = new HttpHeaders();
-        if(withBearerAuth) {
+        if (withBearerAuth) {
             headers.add("Authorization", "Bearer " + eternalJwt);
         }
 
@@ -75,7 +75,8 @@ class ArticleControllerTest {
                 uri,
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
-                new ParameterizedTypeReference<>() {},
+                new ParameterizedTypeReference<>() {
+                },
                 Map.of("query", query, "page", page, "pageSize", pageSize));
 
         return response;

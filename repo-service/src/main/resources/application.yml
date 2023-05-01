@@ -2,10 +2,6 @@ spring:
   application:
     name: repo-service
 
-  flyway:
-    enabled: true
-    default-schema: "devcompanion"
-
   datasource:
     url: ${REPO_DB_URL}
     username: ${REPO_DB_USER}
