@@ -14,7 +14,11 @@ codeBlocks:
   - title: Error thrown on collision (lost update simulation)
     code: |-
       [40001] ERROR: could not serialize access due to concurrent update
-      
+  - title: Set RR with Transactional (need to verify, from https://vladmihalcea.com/spring-transaction-best-practices/)
+    code: |-
+      @Transactional(isolation = Isolation.REPEATABLE_READ)
+      public boolean transfer(
+        ...
       
 
       
