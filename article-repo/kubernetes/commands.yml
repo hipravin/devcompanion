@@ -27,8 +27,9 @@ codeBlocks:
       kubectl scale deployment article-service --replicas=0
       kubectl scale deployment article-service --replicas=1
   - title: Configure ingress. https://kubernetes.github.io/ingress-nginx/deploy/
-    code: |-     
-      kubectl describe ingress
+    code: |-
+      kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/cloud/deploy.yaml
+      kubectl get pods --namespace=ingress-nginx
   - title: Copy file from pod to local
     code: |-
       kubectl cp default/article-service-5dc687d598-m2ssc:flight.jfr ./flight.jfr

@@ -248,6 +248,8 @@ select ename, deptno,
 order by 1;
 
 
+
+
 select ename, deptno,
        count(*) over(partition by deptno) as dcnt
     from emp
@@ -282,3 +284,12 @@ where deptno = 10;
 --with
 with emp10 as (select * from emp where deptno = 10)
 select * from emp10;
+
+--SQL:2008
+select * from emp
+    order by empno
+OFFSET 5 rows
+    FETCH FIRST 10 ROWS ONLY;
+
+select * from emp
+order by empno;
