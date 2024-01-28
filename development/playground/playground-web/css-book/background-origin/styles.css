@@ -1,0 +1,13 @@
+div {
+    padding: 10px;
+    background: url(http://csssecrets.io/images/code-pirate.svg)
+    no-repeat bottom right #58a;
+    background-position: right bottom;
+    background-origin: content-box;
+
+    /* Styling */
+    max-width: 10em;
+    min-height: 5em;
+    color: white;
+    font: 100%/1 sans-serif;
+}
