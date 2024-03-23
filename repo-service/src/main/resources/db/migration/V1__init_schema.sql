@@ -25,7 +25,4 @@ CREATE INDEX RF_R_ID_IDX ON REPO_FILE (REPO_ID);
 CREATE INDEX RF_NAME_IDX ON REPO_FILE (NAME);
 CREATE UNIQUE INDEX R_F_NAME_ID_UNIQUE_IDX ON REPO_FILE (REPO_ID, RELATIVE_PATH);
 
-CREATE EXTENSION pg_trgm with schema devcompanion;
-
-SET search_path to public,devcompanion;
 CREATE INDEX rf_content_idx ON repo_file USING gin(content gin_trgm_ops); --for queries of type "like '%term%'"

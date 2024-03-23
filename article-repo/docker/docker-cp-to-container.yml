@@ -19,3 +19,7 @@ codeBlocks:
       No need to start that container. After copy complete it can be removed.
     code: |-
       docker container create --name dummy -v devcompanion_article-repo-volume:/root hello-world
+  - title: |-
+      Also it's possible to import files using Docker desktop built-in facilities.
+    code: |-
+      Container -> Files -> [Right click] -> Import
