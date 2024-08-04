@@ -122,9 +122,17 @@ public class PlaygroundSpringApplication {
     // @SendTo("tut.rpc.replies") used when the
     // client doesn't set replyTo.
     public SampleMessageDto process(SampleMessageDto received, Channel channel,
-                                    @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {
+                                    @Header(AmqpHeaders.DELIVERY_TAG) long tag,
+                                    @Header(AmqpHeaders.REDELIVERED) boolean redelivered) throws IOException {
         log.info("Received with @RabbitListener: " + received);
-//        channel.basicReject(tag, false);
+
+//        if(redelivered) {
+//            channel.basicReject(tag, false);
+//            log.info("Rejected without redelivery");
+//        } else {
+//            channel.basicReject(tag, true);
+//            log.info("Rejected with redelivery");
+//        }
 //        channel.basicNack(tag, false, false);
 
 //        if (true) {
