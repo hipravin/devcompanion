@@ -25,7 +25,7 @@ import java.util.Map;
 public class AwaitApplicationReadyInterceptor implements HandlerInterceptor {
 
     private static Logger log = LoggerFactory.getLogger(AwaitApplicationReadyInterceptor.class);
-    private boolean applicationReady = false;
+    private volatile boolean applicationReady = false;
 
     /**
      * just for logging purposes to monitor when application become fully operational according to probes
